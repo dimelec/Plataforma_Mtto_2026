@@ -1,6 +1,6 @@
 const CACHE = 'mtto-preventivo-pwa-v1';
 const APP_SHELL = [
-  './preventivo.html',
+  './index.html',
   './manifest.json',
   './icon-192.png',
   './icon-512.png'
@@ -39,10 +39,10 @@ self.addEventListener('fetch', event => {
       fetch(req)
         .then(res => {
           const copy = res.clone();
-          caches.open(CACHE).then(cache => cache.put('./preventivo.html', copy));
+          caches.open(CACHE).then(cache => cache.put('./index.html', copy));
           return res;
         })
-        .catch(() => caches.match('./preventivo.html'))
+        .catch(() => caches.match('./index.html'))
     );
     return;
   }
