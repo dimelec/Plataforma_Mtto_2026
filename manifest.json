@@ -2,7 +2,7 @@
   "name": "Mtto Preventivo",
   "short_name": "Mtto Preventivo",
   "description": "Bitácora y gestor operativo de mantenimiento preventivo.",
-  "start_url": "./preventivo.html",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "background_color": "#ffffff",
