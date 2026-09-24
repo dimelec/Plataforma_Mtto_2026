@@ -1,261 +1,257 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>#_Mtto_Preventivo</title>
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#7c3aed">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <link rel="apple-touch-icon" href="icon.png">
-  <style>
-    /* ==================== VARIABLES Y ESTILOS BASE ==================== */
-    :root{
-      --bg:#0d0f14; --card:#191c24; --card2:#212531; --line:#2d3340;
-      --text:#f5f3ff; --sub:#aaa4bd; --accent:#7c3aed; --accent2:#a78bfa; --good:#22c55e;
-      --warn:#f59e0b; --bad:#ef4444; --radius:14px;
-    }
-    *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
-    body{margin:0; background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; padding-bottom:40px;}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>#_Mtto_Preventivo · Gestor</title>
+<meta name="theme-color" content="#7c3aed">
+<style>
+:root{
+  --bg:#0d0f14; --card:#191c24; --card2:#212531; --line:#2d3340;
+  --text:#f5f3ff; --sub:#aaa4bd; --accent:#7c3aed; --accent2:#a78bfa;
+  --good:#22c55e; --warn:#f59e0b; --bad:#ef4444; --radius:14px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;padding-bottom:40px}
+.screen{display:none;padding:16px;max-width:480px;margin:0 auto;min-height:100vh}
+.screen.active{display:block}
+h1{font-size:20px;margin:0 0 4px}
+h2{font-size:13px;color:var(--sub);margin:0 0 20px;font-weight:500}
+h3{font-size:15px;margin:0 0 12px;font-weight:700}
+.card{background:var(--card);border-radius:var(--radius);padding:16px;margin-bottom:14px;border:1px solid var(--line)}
 
-    /* ==================== PANTALLAS ==================== */
-    .screen{display:none; padding:16px; max-width:480px; margin:0 auto; min-height:100vh;}
-    .screen.active{display:block;}
+/* ===== Selector de rol V8 ===== */
+.brand-kicker{font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent2);font-weight:800}
+.brand-title{font-size:26px;font-weight:850;line-height:1.05;margin:5px 0 6px}
+.brand-sub{font-size:13px;color:var(--sub);line-height:1.4}
+.access-hero{padding:22px 18px;background:radial-gradient(circle at 85% 0%,rgba(124,58,237,.28),transparent 42%),linear-gradient(145deg,#191c24,#15141f);border:1px solid #39304f}
+.role-grid-v8{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.role-card-v8{border:1px solid var(--line);background:var(--card2);color:var(--text);border-radius:14px;padding:15px 12px;text-align:left;min-height:92px;cursor:pointer;font-family:inherit}
+.role-card-v8.primary{grid-column:1/3;border-color:var(--accent);background:linear-gradient(135deg,#312052,#241c38)}
+.role-card-v8 .r-ic{font-size:23px;display:block;margin-bottom:7px}
+.role-card-v8 b{display:block;font-size:15px}
+.role-card-v8 small{display:block;color:var(--sub);font-size:11px;margin-top:4px;line-height:1.3}
+.identity-pill{display:flex;align-items:center;gap:9px;border:1px solid var(--line);background:var(--card);border-radius:12px;padding:10px 12px;margin-top:12px}
+.identity-pill input{padding:8px 4px!important;border:0!important;background:transparent!important;font-size:15px!important;width:100%;color:var(--text);font-family:inherit}
+#v8-trigger-rol{cursor:pointer;user-select:none;padding:4px 6px;border-radius:8px;transition:background .15s}
+#v8-trigger-rol:active{background:rgba(124,58,237,.18)}
 
-    /* ==================== TIPOGRAFÍA ==================== */
-    h1{font-size:20px; margin:0 0 4px;}
-    h2{font-size:14px; color:var(--sub); margin:0 0 20px; font-weight:500;}
+/* ===== Gestor multirrol ===== */
+.v8-topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.v8-user{font-size:12px;color:var(--sub)}
+.v8-user strong{color:var(--text)}
+.v8-tabs{display:flex;gap:7px;overflow:auto;margin:0 -2px 12px;padding:2px 2px 5px}
+.v8-tab{white-space:nowrap;border:1px solid var(--line);background:var(--card2);color:var(--sub);border-radius:999px;padding:9px 12px;font-size:12px;font-weight:750;font-family:inherit}
+.v8-tab.on{background:var(--accent);border-color:var(--accent);color:white}
+.v8-kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.v8-kpi{background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:12px}
+.v8-kpi .n{font-size:23px;font-weight:850}
+.v8-kpi .t{font-size:11px;color:var(--sub);margin-top:2px}
+.v8-item{background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:13px;margin-top:9px}
+.v8-item-head{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.v8-item-title{font-weight:800;font-size:14px}
+.v8-item-meta{font-size:11px;color:var(--sub);margin-top:4px;line-height:1.4}
+.v8-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.v8-action{border:1px solid #5b477c;background:#2a203c;color:#eee7ff;border-radius:9px;padding:9px 10px;font-size:12px;font-weight:750;font-family:inherit}
+.v8-action.good{border-color:#276b47;background:#173626;color:#b9f6d0}
+.v8-action.warn{border-color:#8b621d;background:#3b2c14;color:#fde2a5}
+.v8-action.bad{border-color:#8c3b45;background:#3d1e25;color:#fecdd3}
+.v8-empty{padding:20px 12px;text-align:center;color:var(--sub);font-size:13px}
+.context-strip{border-left:3px solid var(--accent2);padding:8px 10px;background:#211b2c;border-radius:0 9px 9px 0;margin-top:9px;font-size:12px}
+.mini-status{display:inline-block;padding:4px 8px;border-radius:999px;font-size:11px;font-weight:800;background:var(--card2);border:1px solid var(--line)}
+.mini-status.bad{color:var(--bad);border-color:var(--bad)}
+.mini-status.good{color:var(--good);border-color:var(--good)}
+.mini-status.warn{color:var(--warn);border-color:var(--warn)}
 
-    /* ==================== TARJETAS ==================== */
-    .card{background:var(--card); border-radius:var(--radius); padding:16px; margin-bottom:14px; border:1px solid var(--line);}
+/* ===== Bitácora operador ===== */
+label{display:block;font-size:14px;color:var(--sub);margin:16px 0 8px;font-weight:600}
+label:first-child{margin-top:0}
+input[type=text],input[type=number],input[type=password],textarea,select{width:100%;padding:16px;border-radius:12px;border:1px solid var(--line);background:var(--card2);color:var(--text);font-size:18px;font-family:inherit}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
+textarea{resize:vertical}
+.btn{width:100%;padding:18px;border-radius:12px;font-size:18px;font-weight:700;background:var(--accent);color:#fff;margin-top:20px;border:none;cursor:pointer;font-family:inherit}
+.btn:disabled{opacity:.35}
+.btn.secondary{background:var(--card2);color:var(--text);border:1px solid var(--line)}
+.btn.small{padding:10px 14px;font-size:14px;margin-top:8px}
+.toggle2{display:flex;gap:10px;margin-top:6px}
+.toggle2 button{flex:1;padding:16px;border-radius:12px;background:var(--card2);color:var(--text);border:1px solid var(--line);font-size:16px;font-weight:600;cursor:pointer;font-family:inherit}
+.toggle2 button.sel{background:var(--accent);border-color:var(--accent);color:#fff}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.chip{padding:10px 14px;border-radius:20px;background:var(--card2);border:1px solid var(--line);color:var(--text);font-size:14px;font-weight:500;cursor:pointer;font-family:inherit}
+.chip.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.section-label{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--sub);margin:20px 0 10px;border-left:3px solid var(--line);padding-left:8px}
+.grid-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.top-icons{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.icon-btn{background:none;border:none;font-size:24px;cursor:pointer;padding:4px;opacity:.7}
+.info-discreta{text-align:right;font-size:12px;color:var(--sub)}
+.action-btn{padding:16px 10px;border-radius:12px;background:var(--card2);border:1px solid var(--line);color:var(--text);font-size:14px;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;min-height:70px;font-family:inherit}
+.action-btn .ic{font-size:24px}
+.action-btn:disabled{opacity:.3}
+.tramo-open{background:var(--card2);border:1px solid var(--accent);border-radius:12px;padding:14px;margin-bottom:10px}
+.close-tramo-btn{margin-top:12px;background:var(--good);color:#fff;padding:12px;border-radius:10px;width:100%;font-weight:600;border:none;font-size:15px;font-family:inherit}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:50;align-items:flex-end}
+.overlay.active{display:flex}
+.modal{background:var(--card);width:100%;max-width:480px;margin:0 auto;border-radius:18px 18px 0 0;padding:22px 18px 30px;max-height:90vh;overflow-y:auto}
+.modal-close{float:right;background:none;color:var(--sub);font-size:24px;padding:0 4px;cursor:pointer;border:none;line-height:1}
+.summary-line{display:flex;justify-content:space-between;font-size:15px;padding:8px 0;border-bottom:1px solid var(--line)}
+.sync-status{text-align:center;font-size:12px;margin-bottom:10px;color:var(--good)}
+.tramo-sin-cerrar{color:var(--bad);font-weight:700}
+.offline-indicator{display:none;background:var(--bad);color:#fff;text-align:center;font-size:12px;padding:4px;border-radius:6px;margin-bottom:10px}
+.error-msg{color:var(--bad);font-size:12px;margin-top:4px;display:none}
+.error-msg.show{display:block}
+.toast{position:fixed;bottom:16px;left:16px;right:16px;max-width:448px;margin:0 auto;background:var(--card2);border:1px solid var(--accent);padding:12px 14px;border-radius:10px;font-size:13px;display:none;z-index:60;text-align:center}
+.toast.show{display:block}
+.btn-si-apto{position:relative;overflow:hidden;padding:16px;border-radius:12px;background:var(--card2);border:1px solid var(--line);color:var(--text);font-size:16px;font-weight:600;cursor:pointer;text-align:left;width:100%;font-family:inherit}
+.btn-si-apto.activo{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn-si-apto input{display:none;width:100%;margin-top:8px;padding:10px;border-radius:8px;border:1px solid #fff;background:rgba(255,255,255,.9);color:#000;font-size:16px}
+.btn-si-apto.activo input{display:block}
+.btn-no-apto{position:relative;overflow:hidden;padding:16px;border-radius:12px;background:var(--card2);border:1px solid var(--line);color:var(--text);font-size:16px;font-weight:600;cursor:pointer;text-align:left;width:100%;font-family:inherit}
+.btn-no-apto.activo{background:var(--bad);border-color:var(--bad);color:#fff}
+.btn-no-apto input{display:none;width:100%;margin-top:8px;padding:10px;border-radius:8px;border:1px solid #fff;background:rgba(255,255,255,.9);color:#000;font-size:16px}
+.btn-no-apto.activo input{display:block}
+.advertencia{background:var(--bad);color:#fff;padding:12px;border-radius:8px;font-weight:700;text-align:center;margin-top:8px;display:none}
+.advertencia.show{display:block}
 
-    /* ==================== FORMULARIOS ==================== */
-    label{display:block; font-size:14px; color:var(--sub); margin:16px 0 8px; font-weight:600;}
-    label:first-child{margin-top:0;}
-    input[type=text], input[type=number], input[type=time], select, textarea{
-      width:100%; padding:16px; border-radius:12px; border:1px solid var(--line);
-      background:var(--card2); color:var(--text); font-size:18px; font-family:inherit;
-    }
-    input:focus, select:focus, textarea:focus{outline:none; border-color:var(--accent);}
-    .hint{font-size:12px; color:var(--sub); margin-top:4px;}
+/* ===== Llave de acceso ===== */
+.llave-input{
+  width:100%;padding:16px;border-radius:12px;border:1px solid var(--line);
+  background:var(--card2);color:var(--text);font-size:18px;font-family:inherit;
+  letter-spacing:.18em;text-align:center;
+}
+.llave-input:focus{outline:none;border-color:var(--accent)}
+.llave-rol{
+  text-align:center;color:var(--accent2);font-size:14px;
+  font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  margin-bottom:14px;
+}
+.llave-error{
+  color:var(--bad);font-size:13px;text-align:center;margin-top:10px;
+  display:none;
+}
+.llave-error.show{display:block}
+.llave-intentos{
+  color:var(--warn);font-size:12px;text-align:center;margin-top:8px;
+  display:none;
+}
+.llave-intentos.show{display:block}
+.llave-bloqueo{
+  background:#3d1e25;border:1px solid var(--bad);border-radius:10px;
+  padding:14px;margin-top:14px;text-align:center;display:none;
+}
+.llave-bloqueo.show{display:block}
+.llave-bloqueo .lb-titulo{
+  color:var(--bad);font-weight:800;font-size:14px;letter-spacing:.04em;
+  text-transform:uppercase;margin-bottom:6px;
+}
+.llave-bloqueo .lb-tiempo{
+  color:var(--text);font-size:28px;font-weight:850;letter-spacing:.05em;
+  margin:6px 0;
+}
+.llave-bloqueo .lb-sub{
+  color:var(--sub);font-size:12px;line-height:1.4;margin-top:8px;
+}
+.llave-bloqueo .lb-bar{
+  height:6px;background:#1e1014;border-radius:4px;overflow:hidden;margin-top:12px;
+}
+.llave-bloqueo .lb-bar-fill{
+  height:100%;background:var(--bad);transition:width 1s linear;
+}
 
-    /* ==================== BOTONES ==================== */
-    .btn{width:100%; padding:18px; border-radius:12px; font-size:18px; font-weight:700; background:var(--accent); color:#fff; margin-top:20px; border:none; cursor:pointer; font-family:inherit;}
-    .btn:disabled{opacity:.35; cursor:not-allowed;}
-    .btn.secondary{background:var(--card2); color:var(--text); border:1px solid var(--line);}
-    .btn.small{padding:10px 14px; font-size:14px; margin-top:8px;}
+.hint{font-size:12px;color:var(--sub);margin-top:4px;line-height:1.4}
 
-    /* ==================== TOGGLES Y CHIPS ==================== */
-    .toggle2{display:flex; gap:10px; margin-top:6px;}
-    .toggle2 button{flex:1; padding:16px; border-radius:12px; background:var(--card2); color:var(--text); border:1px solid var(--line); font-size:16px; font-weight:600; cursor:pointer;}
-    .toggle2 button.sel{background:var(--accent); border-color:var(--accent); color:#fff;}
-    .chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:6px;}
-    .chip{padding:10px 14px; border-radius:20px; background:var(--card2); border:1px solid var(--line); color:var(--text); font-size:14px; font-weight:500; cursor:pointer;}
-    .chip.active{background:var(--accent); border-color:var(--accent); color:#fff;}
-
-    /* ==================== SECCIONES ==================== */
-    .section-label{font-size:12px; text-transform:uppercase; letter-spacing:.05em; color:var(--sub); margin:20px 0 10px;}
-    .grid-actions{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
-
-    /* ==================== DASHBOARD ==================== */
-    .top-icons{display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;}
-    .icon-btn{background:none; border:none; font-size:24px; cursor:pointer; padding:4px; opacity:0.7;}
-    .info-discreta{text-align:right; font-size:12px; color:var(--sub);}
-    .tramo-input-highlight{animation:pulse-glow 2s ease-in-out infinite;border-color:var(--accent)!important;box-shadow:0 0 15px rgba(124,58,237,0.38);}
-    @keyframes pulse-glow{0%,100%{box-shadow:0 0 10px rgba(124,58,237,0.30);}50%{box-shadow:0 0 25px rgba(124,58,237,0.68);}}
-    .action-btn{padding:16px 10px;border-radius:12px;background:var(--card2);border:1px solid var(--line);color:var(--text);font-size:14px;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;min-height:70px;}
-    .action-btn .ic{font-size:24px;}
-    .action-btn:disabled{opacity:.3;cursor:not-allowed;}
-    .tramo-open{background:var(--card2);border:1px solid var(--accent);border-radius:12px;padding:14px;margin-bottom:10px;}
-    .close-tramo-btn{margin-top:12px;background:var(--bad);color:#fff;padding:12px;border-radius:10px;width:100%;font-weight:600;cursor:pointer;border:none;font-size:15px;}
-
-    /* ==================== MODALES ==================== */
-    .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:50;align-items:flex-end;}
-    .overlay.active{display:flex;}
-    .modal{background:var(--card);width:100%;max-width:480px;margin:0 auto;border-radius:18px 18px 0 0;padding:20px 16px 26px;max-height:88vh;overflow-y:auto;}
-    .modal h3{margin:0 0 14px;font-size:18px;}
-    .modal-close{float:right;background:none;color:var(--sub);font-size:24px;padding:0 4px;cursor:pointer;border:none;}
-
-    /* ==================== RESUMEN ==================== */
-    .summary-line{display:flex;justify-content:space-between;font-size:15px;padding:8px 0;border-bottom:1px solid var(--line);}
-    .legend-box{padding:14px;border-radius:10px;font-weight:600;font-size:14px;text-align:center;margin-top:10px;}
-    .legend-good{background:#123322;color:var(--good);}
-    .justificar-box{padding:14px;border-radius:10px;font-weight:700;font-size:15px;text-align:center;margin-top:10px;background:#3a2410;color:var(--warn);border:2px solid var(--warn);animation:pulse-glow 1.5s ease-in-out infinite;}
-
-    /* ==================== UTILIDADES ==================== */
-    .toast{position:fixed;bottom:16px;left:16px;right:16px;max-width:448px;margin:0 auto;background:var(--card2);border:1px solid var(--accent);padding:12px 14px;border-radius:10px;font-size:13px;display:none;z-index:60;}
-    .toast.show{display:block;}
-    .badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:8px;background:var(--accent);color:#fff;margin-left:6px;}
-    .sync-status{text-align:center;font-size:12px;margin-bottom:10px;color:var(--good);}
-    .tramo-sin-cerrar{color:var(--bad);font-weight:700;}
-    .clipboard-box{background:var(--card2);padding:12px;border-radius:8px;white-space:pre-wrap;font-family:monospace;font-size:13px;max-height:300px;overflow-y:auto;border:1px solid var(--line);}
-    .offline-indicator{display:none;background:var(--bad);color:#fff;text-align:center;font-size:12px;padding:4px;border-radius:6px;margin-bottom:10px;}
-    .error-msg{color:var(--bad); font-size:12px; margin-top:4px; display:none;}
-    .error-msg.show{display:block;}
-
-    /* ==================== PALETA POR ELEMENTO ====================
-       Cada elemento funcional tiene un color propio para identificarlo
-       visualmente en botones, secciones y modales. */
-    :root{
-      --c-tramo:#7c3aed;      /* violeta  - tramos */
-      --c-desob:#ef4444;      /* rojo     - desobstrucción */
-      --c-m3:#3b82f6;         /* azul     - carga de agua */
-      --c-novedad:#f59e0b;    /* ámbar    - novedades */
-      --c-cierre:#22c55e;     /* verde    - cierres (tramo/jornada) */
-      --c-inspector:#a855f7;  /* morado   - modo inspector */
-    }
-    .section-label{border-left:3px solid var(--line);padding-left:8px;}
-    .sl-tramo{border-left-color:var(--c-tramo);color:var(--c-tramo);}
-    .sl-otras{border-left-color:var(--c-m3);color:var(--c-m3);}
-    .sl-novedad{border-left-color:var(--c-novedad);color:var(--c-novedad);}
-    .action-btn.elem-desob{border-top:3px solid var(--c-desob);}
-    .action-btn.elem-desob .ic{color:var(--c-desob);}
-    .action-btn.elem-m3{border-top:3px solid var(--c-m3);}
-    .action-btn.elem-m3 .ic{color:var(--c-m3);}
-    .action-btn.elem-novedad{border-top:3px solid var(--c-novedad);}
-    .action-btn.elem-novedad .ic{color:var(--c-novedad);}
-    #ov-desob h3{color:var(--c-desob);}
-    #ov-m3 h3{color:var(--c-m3);}
-    #ov-novedad h3{color:var(--c-novedad);}
-    #ov-cierre-tramo h3{color:var(--c-tramo);}
-    #ov-bitacora h3{color:var(--c-tramo);}
-    #ov-pregunta-verificar h3{color:var(--c-cierre);}
-    #ov-formulario h3{color:var(--c-m3);}
-    .chip.active{background:var(--c-novedad);border-color:var(--c-novedad);}
-    .close-tramo-btn{background:var(--c-cierre);}
-    .btn-cierre-jornada{border:1px solid var(--c-cierre);color:var(--c-cierre);}
-    #screen-inspector h1{color:var(--c-inspector);}
-    #advertencia-inspector{background:var(--c-inspector);}
-
-
-    /* ==================== CIERRE DE TRAMO ==================== */
-    .btn-si-apto{position:relative;overflow:hidden;transition:all 0.3s;padding:16px;border-radius:12px;background:var(--card2);border:1px solid var(--line);color:var(--text);font-size:16px;font-weight:600;cursor:pointer;text-align:left;width:100%;}
-    .btn-si-apto.activo{background:var(--accent);border-color:var(--accent);color:#fff;}
-    .btn-si-apto input{display:none;width:100%;margin-top:8px;padding:10px;border-radius:8px;border:1px solid #fff;background:rgba(255,255,255,0.9);color:#000;font-size:16px;}
-    .btn-si-apto.activo input{display:block;}
-    .btn-no-apto{position:relative;overflow:hidden;transition:all 0.3s;padding:16px;border-radius:12px;background:var(--card2);border:1px solid var(--line);color:var(--text);font-size:16px;font-weight:600;cursor:pointer;text-align:left;width:100%;}
-    .btn-no-apto.activo{background:var(--bad);border-color:var(--bad);color:#fff;}
-    .btn-no-apto input{display:none;width:100%;margin-top:8px;padding:10px;border-radius:8px;border:1px solid #fff;background:rgba(255,255,255,0.9);color:#000;font-size:16px;}
-    .btn-no-apto.activo input{display:block;}
-
-    /* ==================== ADVERTENCIA INSPECTOR ==================== */
-    .advertencia{background:var(--bad);color:#fff;padding:12px;border-radius:8px;font-weight:700;text-align:center;margin-top:8px;display:none;}
-    .advertencia.show{display:block;}
-
-    /* ==================== CAJA OBSERVACIONES CON SUBCONJUNTOS ==================== */
-    .obs-box{background:var(--card);border-radius:var(--radius);padding:16px;margin-bottom:14px;border:1px solid var(--line);}
-    .obs-diagnostico{padding:14px;border-radius:10px;font-weight:700;font-size:15px;text-align:center;margin-bottom:12px;background:#3a2410;color:var(--warn);border:2px solid var(--warn);}
-    .obs-separador{border-top:1px dashed var(--line);margin:12px 0;}
-    .obs-texto{background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:12px;color:var(--text);font-size:15px;min-height:80px;width:100%;font-family:inherit;}
-  </style>
+@media(max-width:360px){
+  .role-grid-v8{grid-template-columns:1fr}
+  .role-card-v8.primary{grid-column:1}
+}
+</style>
 </head>
 <body>
 
-<!-- ==================== PANTALLA 1: APERTURA ==================== -->
-<div class="screen active" id="screen-apertura">
+<!-- ==================== ACCESO MULTIRROL ==================== -->
+<div class="screen active" id="screen-acceso-v8">
+  <div class="card access-hero">
+    <div class="brand-kicker">Mtto Preventivo 2026</div>
+    <div class="brand-title">Gestión operativa</div>
+    <div class="brand-sub">Selecciona tu rol para continuar.</div>
+  </div>
+
+  <div class="identity-pill">
+    <span title="Usuario">👤</span>
+    <input id="v8-identidad" type="text" placeholder="Nombre / identificación" autocomplete="name">
+  </div>
+
+  <div class="role-grid-v8" id="v8-roles">
+    <button class="role-card-v8" onclick="v8Entrar('inspector')"><span class="r-ic">👁️</span><b>Inspector</b><small>Observa realidad, registra hallazgos.</small></button>
+    <button class="role-card-v8" onclick="v8Entrar('supervisor')"><span class="r-ic">🧭</span><b>Supervisor</b><small>Testigos, tareas, cortes.</small></button>
+    <button class="role-card-v8" onclick="v8Entrar('cliente')"><span class="r-ic">🏗️</span><b>Contratista</b><small>Asigna placas y atiende gestiones.</small></button>
+    <button class="role-card-v8" onclick="v8Entrar('oficina')"><span class="r-ic">📌</span><b>Oficina</b><small>Programa tareas y consulta la operación.</small></button>
+    <button class="role-card-v8" onclick="v8Entrar('cctv')"><span class="r-ic">📹</span><b>CCTV</b><small>Verificación de conformidad.</small></button>
+  </div>
+
+  <div class="hint" style="text-align:center;margin-top:14px">El operador utiliza su aplicación de campo independiente.</div>
+</div>
+
+<!-- ==================== GESTOR MULTIRROL ==================== -->
+<div class="screen" id="screen-rol-v8">
+  <div class="v8-topbar">
+    <div>
+      <div class="brand-kicker">Mtto Preventivo</div>
+      <div class="v8-user"><strong id="v8-user-name">—</strong> · <span id="v8-role-name">—</span></div>
+    </div>
+    <button class="btn secondary small" style="width:auto;margin:0" onclick="v8CambiarRol()">Cambiar rol</button>
+  </div>
+  <div id="v8-role-header"></div>
+  <div class="v8-tabs" id="v8-tabs"></div>
+  <div id="v8-role-body"></div>
+</div>
+
+<!-- ==================== APERTURA (operador) ==================== -->
+<div class="screen" id="screen-apertura">
   <h1>#_Mtto_Preventivo</h1>
   <div class="card">
     <label>Placa</label>
-    <select id="ap-placa">
-      <option value="">Cargando placas...</option>
-    </select>
-
-    <label>Barrio <span class="badge" id="gps-status">GPS...</span></label>
+    <select id="ap-placa"><option value="">Cargando placas...</option></select>
+    <label>Barrio</label>
     <input type="text" id="ap-barrio" placeholder="Se autocompleta por GPS">
-    <div class="advertencia" id="advertencia-inspector">⚠️ MODO INSPECTOR ACTIVADO</div>
-
+    <div class="advertencia" id="advertencia-inspector"></div>
     <button class="btn" id="btn-abrir-jornada" disabled>Iniciar jornada</button>
   </div>
 </div>
 
-<!-- ==================== PANTALLA 2: DASHBOARD (OPERADOR) ==================== -->
+<!-- ==================== DASHBOARD OPERADOR ==================== -->
 <div class="screen" id="screen-dashboard">
   <div class="top-icons">
     <button class="icon-btn" onclick="verBitacoraCompleta()">📋</button>
     <div class="info-discreta" id="info-tramos-ml">0 tramos · 0 ML</div>
   </div>
-
   <div class="sync-status" id="sync-status">● Listo</div>
   <div class="offline-indicator" id="offline-indicator">📡 Sin conexión</div>
-
   <div id="tramo-abierto-box"></div>
-
-  <!-- Tramo (operador: 1 tramo, máx 6 dígitos) -->
-  <div class="section-label sl-tramo">Tramo</div>
+  <div class="section-label">Tramo</div>
   <div class="grid-actions" id="box-sin-tramo">
-    <input type="text" id="nuevo-tramo-nombre" class="tramo-input-highlight" placeholder="Máx 6 números" maxlength="6" inputmode="numeric" style="grid-column:1/3;">
+    <input type="text" id="nuevo-tramo-nombre" placeholder="Máx 6 números" maxlength="6" inputmode="numeric" style="grid-column:1/3;">
     <button class="btn" id="btn-abrir-tramo" style="grid-column:1/3;" disabled onclick="abrirTramo()">Abrir tramo</button>
   </div>
-
-  <!-- Otras actividades -->
-  <div class="section-label sl-otras">Otras actividades</div>
+  <div class="section-label">Otras actividades</div>
   <div class="grid-actions">
-    <button class="action-btn elem-desob" onclick="abrirModal('modal-desob')" id="act-desob" disabled><span class="ic">❗</span>Desobstrucción</button>
-    <button class="action-btn elem-m3" onclick="abrirModal('modal-m3')"><span class="ic">💧</span>Carga de agua</button>
+    <button class="action-btn" onclick="abrirModal('ov-desob')" id="act-desob" disabled><span class="ic">❗</span>Desobstrucción</button>
+    <button class="action-btn" onclick="abrirModal('ov-m3')"><span class="ic">💧</span>Carga de agua</button>
   </div>
-
-  <!-- Novedad (un solo botón) -->
-  <div class="section-label sl-novedad">Novedad</div>
+  <div class="section-label">Novedad</div>
   <div class="grid-actions">
-    <button class="action-btn elem-novedad" onclick="abrirModal('modal-novedad')" style="grid-column:1/3;"><span class="ic">⚠️</span>Novedad</button>
+    <button class="action-btn" onclick="abrirModal('ov-novedad')" style="grid-column:1/3;"><span class="ic">⚠️</span>Novedad</button>
   </div>
-
-  <button class="btn secondary btn-cierre-jornada" style="margin-top:24px;" onclick="preguntarVerificarActividades()">Cerrar jornada</button>
+  <button class="btn secondary" style="margin-top:24px;border:1px solid var(--good);color:var(--good)" onclick="irACierreJornada()">Cerrar jornada</button>
 </div>
 
-<!-- ==================== PANTALLA 3: MODO INSPECTOR ==================== -->
-<div class="screen" id="screen-inspector">
-  <h1>Modo Inspector</h1>
-  <h2 id="inspector-id">KPN603|8/9/2026|D|ML</h2>
-
-  <!-- Tramos varios (inspector) + ML total (sin límite) -->
-  <div class="card">
-    <label>Tramos (separados por coma)</label>
-    <input type="text" id="insp-tramos" placeholder="123, 456, 789">
-    <label>ML total (sin límite)</label>
-    <input type="number" id="insp-ml" min="0" step="1" placeholder="75" oninput="actualizarDiagnosticoInspector()">
-  </div>
-
-  <div class="card">
-    <label>Carga de agua (M3 total)</label>
-    <input type="number" id="insp-m3" min="0" step="0.1" placeholder="0">
-  </div>
-
-  <!-- Novedades (mismas que operador) -->
-  <div class="card">
-    <label>Novedad (si aplica)</label>
-    <div class="chips">
-      <button class="chip" onclick="seleccionarNovedadInspector(this,'Avería')">🔧 Avería</button>
-      <button class="chip" onclick="seleccionarNovedadInspector(this,'Lodos')">🗑️ Lodos</button>
-      <button class="chip" onclick="seleccionarNovedadInspector(this,'Fuerza mayor')">🌧️ F. mayor</button>
-      <button class="chip" onclick="seleccionarNovedadInspector(this,'Factor humano')">👤 F. humano</button>
-    </div>
-    <div id="insp-novedad-sub" style="display:none;">
-      <label>Causa/Motivo</label>
-      <div class="chips" id="insp-novedad-causas"></div>
-    </div>
-    <div id="insp-novedad-regresa" style="display:none;">
-      <label>¿Regresa?</label>
-      <div class="toggle2">
-        <button id="insp-nov-si" onclick="seleccionarRegresaInspector('SI')">Sí</button>
-        <button id="insp-nov-no" onclick="seleccionarRegresaInspector('NO')">No</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Diagnóstico junto a observaciones -->
-  <div id="insp-diagnostico"></div>
-
-  <div class="card">
-    <label>Observaciones</label>
-    <textarea id="insp-obs" rows="4" placeholder="Justificar actividades realizadas"></textarea>
-  </div>
-
-  <button class="btn" onclick="guardarInspector()">Guardar y salir</button>
+<!-- ==================== CCTV ==================== -->
+<div class="screen" id="screen-cctv">
+  <h1>CCTV — Verificación</h1>
+  <div id="cctv-lista"><div class="v8-empty">Conectando al gestor...</div></div>
+  <button class="btn secondary" style="margin-top:20px;" onclick="cerrarJornadaCCTV()">Salir de CCTV</button>
 </div>
 
-<!-- ==================== PANTALLA 4: CIERRE (RESUMEN) ==================== -->
+<!-- ==================== CIERRE OPERADOR ==================== -->
 <div class="screen" id="screen-cierre">
   <h1>Cierre de jornada</h1>
   <h2>Resumen final</h2>
@@ -263,16 +259,16 @@
     <div class="summary-line"><span>Placa</span><strong id="rs-placa"></strong></div>
     <div class="summary-line"><span>Contratista</span><strong id="rs-contratista"></strong></div>
     <div class="summary-line"><span>Barrio</span><strong id="rs-barrio"></strong></div>
-    <label style="margin-top:14px;">Inspector</label>
+    <label>Inspector</label>
     <select id="rs-inspector-select">
-      <option value="">Selecciona quién cierra la jornada...</option>
+      <option value="">Selecciona...</option>
       <option>Marlon Ledezma</option>
       <option>Luis Díaz</option>
       <option>Luis Vergara</option>
       <option>Armando Pájaro</option>
       <option>Eider Mina</option>
     </select>
-    <div class="error-msg" id="rs-inspector-error">⚠️ Debes seleccionar un inspector antes de cerrar</div>
+    <div class="error-msg" id="rs-inspector-error">⚠️ Selecciona un inspector</div>
   </div>
   <div class="card" id="rs-tramos"></div>
   <div class="card">
@@ -280,69 +276,62 @@
     <div class="summary-line"><span>Desobstrucción</span><strong id="rs-desob"></strong></div>
     <div class="summary-line"><span>Carga de agua</span><strong id="rs-m3"></strong></div>
   </div>
-
-  <!-- CAJA OBSERVACIONES CON 2 SUBCONJUNTOS -->
-  <div class="obs-box">
-    <label style="margin-top:0;">Observaciones</label>
-    <div id="rs-justificar" style="margin-bottom:12px;"></div>
-    <div id="rs-avisos-repeticion" style="margin-bottom:12px;"></div>
-    <div class="obs-separador"></div>
-    <textarea id="cierre-obs" rows="4" placeholder="Justifique qué actividades se realizaron" class="obs-texto"></textarea>
+  <div class="card">
+    <label>Actividad complementaria para próxima jornada</label>
+    <textarea id="cierre-solicitud-actividad" rows="3" placeholder="Opcional"></textarea>
   </div>
-
-  <button class="btn secondary" id="btn-volver-dashboard" onclick="volverDashboard()">Volver</button>
-  <button class="btn" id="btn-confirmar-cierre" onclick="confirmarYExportar()">🖨️ Imprimir PDF y Cerrar</button>
+  <div class="card">
+    <label>Observaciones</label>
+    <textarea id="cierre-obs" rows="4" placeholder="Justificación"></textarea>
+  </div>
+  <button class="btn secondary" onclick="volverDashboard()">Volver</button>
+  <button class="btn" id="btn-confirmar-cierre" onclick="confirmarYExportar()">Cerrar jornada</button>
 </div>
 
 <!-- ==================== MODALES ==================== -->
 <div class="overlay" id="ov-bitacora">
   <div class="modal">
-    <button class="modal-close" onclick="cerrarModal('modal-bitacora')">✕</button>
+    <button class="modal-close" onclick="cerrarModal('ov-bitacora')">✕</button>
     <h3>📋 Bitácora</h3>
-    <div class="clipboard-box" id="bitacora-completa-text"></div>
-    <button class="btn" onclick="copiarBitacoraCompleta()">📋 Copiar todo</button>
+    <div id="bitacora-completa-text" style="background:var(--card2);padding:12px;border-radius:8px;white-space:pre-wrap;font-family:monospace;font-size:13px;max-height:300px;overflow-y:auto"></div>
+    <button class="btn" onclick="copiarBitacoraCompleta()">📋 Copiar</button>
   </div>
 </div>
 
 <div class="overlay" id="ov-desob">
   <div class="modal">
-    <button class="modal-close" onclick="cerrarModal('modal-desob')">✕</button>
+    <button class="modal-close" onclick="cerrarModal('ov-desob')">✕</button>
     <h3>Desobstrucción</h3>
     <label>Tramo</label>
-    <input type="text" id="desob-tramo" maxlength="6" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,6)">
-    <div class="error-msg" id="desob-tramo-error">⚠️ Ese tramo está abierto — ingresa uno diferente</div>
+    <input type="text" id="desob-tramo" maxlength="6" inputmode="numeric">
     <button class="btn" onclick="registrarDesobstruccion()">Registrar</button>
   </div>
 </div>
 
 <div class="overlay" id="ov-m3">
   <div class="modal">
-    <button class="modal-close" onclick="cerrarModal('modal-m3')">✕</button>
+    <button class="modal-close" onclick="cerrarModal('ov-m3')">✕</button>
     <h3>Carga de agua</h3>
     <label>M3</label>
-    <input type="number" id="m3-valor" min="0" step="0.1" placeholder="0">
-    <div class="hint" style="margin-top:10px;">Barrio GPS: <span id="m3-barrio-visible">detectando...</span></div>
-    <input type="hidden" id="m3-barrio">
+    <input type="number" id="m3-valor" min="0" step="0.1">
+    <label>Barrio</label>
+    <input type="text" id="m3-barrio">
     <button class="btn" onclick="registrarM3()">Registrar</button>
   </div>
 </div>
 
 <div class="overlay" id="ov-novedad">
   <div class="modal">
-    <button class="modal-close" onclick="cerrarModal('modal-novedad')">✕</button>
+    <button class="modal-close" onclick="cerrarModal('ov-novedad')">✕</button>
     <h3>Novedad</h3>
     <label>Tipo</label>
-    <div class="chips">
+    <div class="chips" id="nov-chips">
       <button class="chip" onclick="seleccionarTipoNovedad(this,'Avería')">🔧 Avería</button>
       <button class="chip" onclick="seleccionarTipoNovedad(this,'Lodos')">🗑️ Lodos</button>
       <button class="chip" onclick="seleccionarTipoNovedad(this,'Fuerza mayor')">🌧️ F. mayor</button>
       <button class="chip" onclick="seleccionarTipoNovedad(this,'Factor humano')">👤 F. humano</button>
     </div>
-    <div id="novedad-sub-box" style="display:none;">
-      <label>Causa/Motivo</label>
-      <div class="chips" id="novedad-causas"></div>
-    </div>
-    <div id="novedad-regresa-box" style="display:none;">
+    <div id="novedad-regresa-box" style="display:none">
       <label>¿Regresa?</label>
       <div class="toggle2">
         <button id="nov-si" onclick="seleccionarRegresa('SI')">Sí</button>
@@ -355,43 +344,37 @@
 
 <div class="overlay" id="ov-cierre-tramo">
   <div class="modal">
-    <button class="modal-close" onclick="cerrarModal('modal-cierre-tramo')">✕</button>
+    <button class="modal-close" onclick="cerrarModal('ov-cierre-tramo')">✕</button>
     <h3>Cerrar tramo</h3>
-    <label>¿Apto para CCTV?</label>
+    <label>¿Apto CCTV?</label>
     <button class="btn-si-apto" id="btn-si-apto" onclick="activarBotonSI()">✅ SÍ<input type="number" id="ct-ml" min="0" max="130" placeholder="ML (máx 130)"></button>
-    <div class="error-msg" id="ct-ml-error">⚠️ El ML debe estar entre 1 y 130</div>
-    <button class="btn-no-apto" id="btn-no-apto" onclick="activarBotonNO()" style="margin-top:10px;">❌ NO<input type="text" id="ct-obs" placeholder="Observación"></button>
+    <div class="error-msg" id="ct-ml-error">⚠️ ML entre 1 y 130</div>
+    <button class="btn-no-apto" id="btn-no-apto" onclick="activarBotonNO()" style="margin-top:10px">❌ NO<input type="text" id="ct-obs" placeholder="Observación"></button>
     <button class="btn" id="btn-confirmar-cierre-tramo" disabled onclick="confirmarCierreTramo()">Confirmar</button>
   </div>
 </div>
 
-<div class="overlay" id="ov-pregunta-verificar">
+<div class="overlay" id="ov-llave">
   <div class="modal">
-    <h3>⚠️ Antes de cerrar</h3>
-    <p>¿Desea verificar o agregar actividades pendientes?</p>
-    <button class="btn secondary" onclick="cerrarModal('modal-pregunta-verificar');mostrarFormularioActividades(true);">✅ SÍ, verificar</button>
-    <button class="btn" onclick="cerrarModal('modal-pregunta-verificar');irACierreJornada();">❌ NO, cerrar directo</button>
-  </div>
-</div>
+    <button class="modal-close" onclick="v8CerrarModalLlave()">✕</button>
+    <h3>Acceso restringido</h3>
+    <div class="llave-rol" id="llave-rol-nombre">—</div>
 
-<div class="overlay" id="ov-formulario">
-  <div class="modal">
-    <button class="modal-close" onclick="cerrarModal('modal-formulario')">✕</button>
-    <h3>Ingreso manual</h3>
+    <label>Llave de acceso</label>
+    <input type="password" id="llave-input" class="llave-input"
+           placeholder="· · · · · ·" autocomplete="off" autocapitalize="off">
 
-    <label>1. Tramos (separados por coma)</label>
-    <input type="text" id="form-tramos" placeholder="123, 456, 789">
+    <div class="llave-error" id="llave-error">Llave incorrecta</div>
+    <div class="llave-intentos" id="llave-intentos"></div>
 
-    <label>2. ML total (sin límite)</label>
-    <input type="number" id="form-ml" min="0" step="1" placeholder="75">
+    <button class="btn" id="llave-btn" onclick="v8ValidarLlave()" disabled>Entrar</button>
 
-    <label>3. Desobstrucción</label>
-    <input type="text" id="form-desob" placeholder="Tramo">
-
-    <label>4. Carga de agua (M3 total)</label>
-    <input type="number" id="form-m3" min="0" step="0.1" placeholder="0">
-
-    <button class="btn" onclick="confirmarFormulario()">Continuar</button>
+    <div class="llave-bloqueo" id="llave-bloqueo">
+      <div class="lb-titulo">🔒 Acceso bloqueado</div>
+      <div class="lb-tiempo" id="llave-bloqueo-tiempo">10:00</div>
+      <div class="lb-sub">Demasiados intentos fallidos. Espera a que se libere o cambia de rol.</div>
+      <div class="lb-bar"><div class="lb-bar-fill" id="llave-bloqueo-bar" style="width:100%"></div></div>
+    </div>
   </div>
 </div>
 
@@ -399,1229 +382,802 @@
 
 <script>
 /* ==================== CONFIG ==================== */
-const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfERpt4S-r5oDgoAsGMDFYq-RdhOiFsszFjjPTnA_Utm3ZSVQ/formResponse";
+const FORM_URL = "PEGA_AQUI_TU_URL_DEL_FORM_UNICO";
+const API_URL = "PEGA_AQUI_TU_URL_EXEC_DEL_GS";
 const PLACAS_CSV_URL = "PEGA_AQUI_TU_URL_CSV";
+const SYNC_QUEUE_KEY = "mtto_prev_sync_v3";
+const STATE_KEY = "mtto_prev_state_v3";
+const PLACAS_CACHE_KEY = "mtto_prev_placas_cache_v3";
 
-const META_ML = 250;
-const HORAS_BASE = 7;
-const RANGO_MIN = 220;
-const RANGO_MAX = 280;
-const ML_MAX_TRAMO = 130;
-const SYNC_QUEUE_KEY = "mtto_prev_sync_v1";
-const STATE_KEY = "mtto_prev_state_v1";
-const PLACAS_CACHE_KEY = "mtto_prev_placas_cache_v1";
+/* ==================== LLAVES DE ACCESO POR ROL ==================== */
+const LLAVES_ROL = {
+  inspector:  'insp-2026-mtto',
+  supervisor: 'sup-2026-mtto',
+  cliente:    'cli-2026-mtto',
+  oficina:    'ofi-2026-mtto',
+  cctv:       'cctv-2026-mtto'
+};
 
+const LLAVE_RECORDAR_DIAS = 30;
+const LLAVE_INTENTOS_MAX  = 5;
+const LLAVE_BLOQUEO_MIN   = 10;
+const LLAVE_STORAGE_KEY   = 'mtto_v81_llaves';
+const LLAVE_BLOQUEO_KEY   = 'mtto_v81_bloqueos';
+
+/* ==================== CATÁLOGOS ==================== */
 const PLACAS_FALLBACK = [
-  {placa: "KPN 603", contratista: "Vactor"},
-  {placa: "LPK 666", contratista: "Vactor"},
-  {placa: "WOW 047", contratista: "Vactor"},
-  {placa: "GFP 750", contratista: "Vactor"},
-  {placa: "GKV 830", contratista: "Succión"},
-  {placa: "JLO 019", contratista: "Succión"},
-  {placa: "LPL301",  contratista: "Ingemac"},
-  {placa: "KPN 602", contratista: "Ingemac"},
-  {placa: "THQ 592", contratista: "Ingemac"},
-  {placa: "Otras", contratista: "Otras"}
+  {placa:"KPN 603",contratista:"Vactor"},{placa:"LPK 666",contratista:"Vactor"},
+  {placa:"WOW 047",contratista:"Vactor"},{placa:"GFP 750",contratista:"Vactor"},
+  {placa:"GKV 830",contratista:"Succión"},{placa:"JLO 019",contratista:"Succión"},
+  {placa:"LPL301",contratista:"Ingemac"},{placa:"KPN 602",contratista:"Ingemac"},
+  {placa:"THQ 592",contratista:"Ingemac"},{placa:"Otras",contratista:"Otras"}
 ];
-
 let PLACAS = [...PLACAS_FALLBACK];
 
-/* ==================== INSPECTORES ==================== */
-const INSPECTORES = {
-  'ML': 'Marlon Ledezma',
-  'LD': 'Luis Díaz',
-  'LV': 'Luis Vergara',
-  'AP': 'Armando Pájaro',
-  'EM': 'Eider Mina'
-};
+const CONTRATISTAS_CONOCIDOS = ['vactor','ingemac','succion','succión','demequipos','zygj'];
 
 /* ==================== ESTADO ==================== */
 let STATE = {
-  placa:null, contratista:null, barrio:null, modo:null, gps:null,
-  horaInicio:null, horaFin:null, inspector:null,
-  tramos:[], novedades:[], cerrada:false,
-  actividadCount:0, bitacoraInterna:"", m3Total:0,
-  desobCount:{}, avisosRepeticion:[], tramoCount:{}, forzadoCierre:false,
-  fechaReporte:null, jornadaReporte:null,
-  cierre:{desob:'', m3:0, obs:'', tramosManuales:'', mlManual:0}
+  placa:null,contratista:null,barrio:null,modo:null,gps:null,
+  horaInicio:null,horaFin:null,inspector:null,
+  tramos:[],novedades:[],cerrada:false,
+  actividadCount:0,bitacoraInterna:"",m3Total:0,
+  desobCount:{},avisosRepeticion:[],tramoCount:{},forzadoCierre:false,
+  fechaReporte:null,jornadaReporte:null,
+  cierre:{desob:'',m3:0,obs:'',tramosManuales:'',mlManual:0}
 };
 
-/* ==================== VARIABLES TEMPORALES ==================== */
-let tempApto=null, tramoACerrar=null, tempTipoNovedad=null, tempCausa=null, tempRegresa=null;
-let formularioConTramos=false;
-let novedadInspectorActual=null, causaInspectorActual=null, regresaInspectorActual=null;
+let tempApto=null,tramoACerrar=null,tempTipoNovedad=null,tempRegresa=null;
 
 /* ==================== UTILIDADES ==================== */
-function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600);}
-function capitalizar(s){if(!s)return s;return s.charAt(0).toUpperCase()+s.slice(1).toLowerCase();}
-function nowISO(){return new Date().toISOString();}
-function fmtHora(iso){const d=new Date(iso);return d.toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit',hour12:true});}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600)}
+function nowISO(){return new Date().toISOString()}
+function fmtHora(iso){return new Date(iso).toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit',hour12:true})}
+function capitalizar(s){if(!s)return s;return s.charAt(0).toUpperCase()+s.slice(1).toLowerCase()}
+function mostrarPantalla(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));const el=document.getElementById(id);if(el)el.classList.add('active');window.scrollTo(0,0)}
+function abrirModal(id){document.getElementById(id).classList.add('active')}
+function cerrarModal(id){document.getElementById(id).classList.remove('active')}
 
-/* ==================== CARGAR PLACAS ==================== */
-async function cargarPlacas(){
-  try{
-    const cache = localStorage.getItem(PLACAS_CACHE_KEY);
-    if(cache){
-      const parsed = JSON.parse(cache);
-      if(Array.isArray(parsed) && parsed.length > 0){
-        PLACAS = parsed;
-        renderPlacasSelect();
-      }
-    }
-  }catch(e){}
+/* ==================== PERSISTENCIA ==================== */
+function guardarEstado(){try{localStorage.setItem(STATE_KEY,JSON.stringify(STATE))}catch(e){}}
+function cargarEstado(){try{const d=localStorage.getItem(STATE_KEY);if(d){const s=JSON.parse(d);if(!s.cerrada)STATE=s}}catch(e){}
+  if(!STATE.desobCount)STATE.desobCount={}; if(!STATE.tramoCount)STATE.tramoCount={};
+  if(!STATE.avisosRepeticion)STATE.avisosRepeticion=[];}
 
-  if(!navigator.onLine){
-    if(PLACAS.length === 0) PLACAS = [...PLACAS_FALLBACK];
-    renderPlacasSelect();
-    return;
-  }
+/* ==================== COLA OFFLINE ==================== */
+function cargarCola(){try{return JSON.parse(localStorage.getItem(SYNC_QUEUE_KEY)||'[]')}catch(e){return[]}}
+function guardarCola(c){try{localStorage.setItem(SYNC_QUEUE_KEY,JSON.stringify(c))}catch(e){}}
+function encolarPayload(p){const c=cargarCola();c.push(p);guardarCola(c);actualizarEstadoSync()}
+function actualizarEstadoSync(){const el=document.getElementById('sync-status');if(!el)return;const c=cargarCola();el.textContent=c.length===0?'● Listo':`● ${c.length} pendiente(s)`;el.style.color=c.length===0?'var(--good)':'var(--warn)'}
+async function procesarCola(){const c=cargarCola();if(!c.length)return;const rest=[];for(const p of c){try{await enviarPayload(p)}catch(e){rest.push(p)}}guardarCola(rest);actualizarEstadoSync()}
 
-  if(PLACAS_CSV_URL === "PEGA_AQUI_TU_URL_CSV"){
-    renderPlacasSelect();
-    return;
-  }
-
-  try{
-    const response = await fetch(PLACAS_CSV_URL);
-    const csvText = await response.text();
-    const nuevasPlacas = parsearCSV(csvText);
-    if(nuevasPlacas.length > 0){
-      PLACAS = nuevasPlacas;
-      localStorage.setItem(PLACAS_CACHE_KEY, JSON.stringify(nuevasPlacas));
-      renderPlacasSelect();
-    } else {
-      renderPlacasSelect();
-    }
-  }catch(e){
-    if(PLACAS.length === 0) PLACAS = [...PLACAS_FALLBACK];
-    renderPlacasSelect();
-  }
-}
-
-function parsearCSV(csvText){
-  const lineas = csvText.split('\n').filter(l => l.trim().length > 0);
-  const placas = [];
-  for(let i = 0; i < lineas.length; i++){
-    const columnas = parsearLineaCSV(lineas[i]);
-    if(i === 0){
-      const p = (columnas[0] || '').toLowerCase().trim();
-      if(p === 'placa') continue;
-    }
-    const placa = (columnas[0] || '').trim();
-    const contratista = (columnas[1] || '').trim();
-    if(placa && contratista) placas.push({placa, contratista});
-  }
-  return placas;
-}
-
-function parsearLineaCSV(linea){
-  const r = []; let a = ''; let c = false;
-  for(let i = 0; i < linea.length; i++){
-    const ch = linea[i];
-    if(ch === '"') c = !c;
-    else if(ch === ',' && !c){ r.push(a); a = ''; }
-    else a += ch;
-  }
-  r.push(a);
-  return r;
-}
-
-function renderPlacasSelect(){
-  const select = document.getElementById('ap-placa');
-  const valorActual = select.value;
-  select.innerHTML = '<option value="">Selecciona placa...</option>' +
-    PLACAS.map(p => `<option value="${p.placa}|${p.contratista}">${p.placa} — ${p.contratista}</option>`).join('');
-  if(valorActual) select.value = valorActual;
-}
-
-/* ==================== GPS ==================== */
-function getGPS(){
-  return new Promise(r=>{
-    if(!navigator.geolocation){r(null);return;}
-    navigator.geolocation.getCurrentPosition(
-      p=>r({lat:p.coords.latitude,lng:p.coords.longitude}),
-      ()=>r(null),{timeout:8000}
-    );
-  });
-}
-
-async function reverseGeocode(gps){
-  if(!gps)return"";
-  try{
-    const r=await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${gps.lat}&lon=${gps.lng}&format=json`);
-    const d=await r.json();
-    const a=d.address||{};
-    return capitalizar(a.suburb||a.neighbourhood||a.quarter||a.city_district||a.village||"");
-  }catch(e){return"";}
-}
-
-function abreviarVia(nombre){
-  return nombre
-    .replace(/^Calle\s+/i, "Cll ")
-    .replace(/^Carrera\s+/i, "Cra ")
-    .replace(/^Avenida Calle\s+/i, "Av Cll ")
-    .replace(/^Avenida Carrera\s+/i, "Av Cra ")
-    .replace(/^Avenida\s+/i, "Av ")
-    .replace(/^Diagonal\s+/i, "Diag ")
-    .replace(/^Transversal\s+/i, "Trans ")
-    .replace(/^Circular\s+/i, "Circ ");
-}
-
-/* ==================== CADENA DE RESOLUCIÓN DE DIRECCIÓN ====================
-   Nivel 1: vía + número de casa (Nominatim)
-   Nivel 2: cruce de calles más cercano (Overpass), cuando no hay número
-   Nivel 3: coordenadas GPS crudas, si no hay ninguna vía cercana
-   Con caché por coordenada redondeada (~10m) para no repetir consultas. */
-const direccionCache={};
-
-function claveCache(gps){return `${gps.lat.toFixed(4)},${gps.lng.toFixed(4)}`;}
-
-async function obtenerCruceOverpass(gps,viaPrincipal){
-  try{
-    const query=`[out:json][timeout:5];way(around:40,${gps.lat},${gps.lng})[highway][name];out tags;`;
-    const r=await fetch('https://overpass-api.de/api/interpreter',{method:'POST',body:query});
-    const d=await r.json();
-    const nombres=[...new Set((d.elements||[]).map(e=>e.tags&&e.tags.name).filter(Boolean))];
-    const otra=nombres.find(n=>n.toLowerCase()!==viaPrincipal.toLowerCase());
-    if(otra) return `${viaPrincipal} con ${abreviarVia(otra)}`;
-    return '';
-  }catch(e){return '';}
-}
-
-async function resolverDireccion(gps){
-  if(!gps) return '';
-  const key=claveCache(gps);
-  if(direccionCache[key]!==undefined) return direccionCache[key];
-
-  let resultado='';
-  try{
-    const r=await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${gps.lat}&lon=${gps.lng}&format=json&addressdetails=1&accept-language=es`);
-    const d=await r.json();
-    const a=d.address||{};
-    const road=a.road||a.pedestrian||a.footway||a.path||"";
-    const num=a.house_number||"";
-    const barrio=a.suburb||a.neighbourhood||a.quarter||a.city_district||a.village||"";
-    if(road){
-      const roadAbbr=abreviarVia(road);
-      if(num){
-        resultado=`${roadAbbr} # ${num}`;
-      } else {
-        const cruce=await obtenerCruceOverpass(gps,roadAbbr);
-        resultado=cruce||(barrio?`${roadAbbr}, ${barrio}`:roadAbbr);
-      }
-    }
-  }catch(e){}
-
-  if(!resultado){
-    resultado=`${gps.lat.toFixed(4)},${gps.lng.toFixed(4)}`; // Nivel 3: respaldo final
-  }
-
-  direccionCache[key]=resultado;
-  return resultado;
-}
-
-/* ==================== PREFETCH DE UBICACIÓN (dispara antes del tap) ==================== */
-let gpsPrefetch=null;
-function prefetchUbicacion(){
-  gpsPrefetch=(async()=>{
-    const gps=await getGPS();
-    const dir=await resolverDireccion(gps);
-    return {gps,dir};
-  })();
-}
-
-function withTimeout(promise,ms,fallback){
-  return Promise.race([
-    promise,
-    new Promise(resolve=>setTimeout(()=>resolve(fallback),ms))
-  ]);
-}
-
-/* Devuelve {gps,dir} para armar un hito. Si el prefetch no alcanzó a resolver
-   en 3s, entrega lo que haya (dir="Resolviendo...") y actualiza el texto ya
-   guardado en la bitácora cuando la dirección real llegue (no bloqueante). */
-async function obtenerUbicacionParaHito(numActividad){
-  const promesa=gpsPrefetch||(async()=>{const gps=await getGPS();const dir=await resolverDireccion(gps);return{gps,dir};})();
-  const resultado=await withTimeout(promesa,3000,null);
-  if(resultado) return resultado;
-  const gps=await getGPS();
-  promesa.then(({dir})=>{
-    if(dir&&dir!=='Resolviendo...'){
-      STATE.bitacoraInterna=STATE.bitacoraInterna.replace(
-        new RegExp(`(\\[Actividad del dia #; ${numActividad}\\][\\s\\S]*?\\[Dir: )Resolviendo\\.\\.\\.(\\])`),
-        `$1${dir}$2`
-      );
-      guardarEstado();
-    }
-  });
-  return {gps,dir:'Resolviendo...'};
-}
-
-async function getDireccion(gps){return resolverDireccion(gps);}
-
-/* ==================== PREFILL BARRIO EN CARGA DE AGUA (GPS fresco) ==================== */
-async function prefillM3Barrio(){
-  const visible=document.getElementById('m3-barrio-visible');
-  if(visible) visible.textContent='detectando...';
-  const gps=await getGPS();
-  const barrio=await reverseGeocode(gps);
-  document.getElementById('m3-barrio').value=barrio||'';
-  if(visible) visible.textContent=barrio||'sin identificar';
-}
-
-/* ==================== DETECCIÓN DE INSPECTOR ==================== */
-function detectarInspector(texto){
-  const match = texto.match(/^(\d{1,2}\/\d{1,2}\/\d{4})\s+([DN])\s+([A-Z]{2})$/);
-  if(match){
-    const fecha = match[1];
-    const jornada = match[2] === 'D' ? 'Diurno' : 'Nocturno';
-    const iniciales = match[3];
-    if(INSPECTORES[iniciales]){
-      return {fecha, jornada, iniciales, nombre: INSPECTORES[iniciales]};
-    }
-  }
-  return null;
-}
-
-/* ==================== PERSISTENCIA DE ESTADO ==================== */
-function guardarEstado(){
-  try{localStorage.setItem(STATE_KEY,JSON.stringify(STATE));}catch(e){}
-}
-
-function cargarEstado(){
-  try{
-    const data=localStorage.getItem(STATE_KEY);
-    if(data){
-      const saved=JSON.parse(data);
-      if(!saved.cerrada)STATE=saved;
-    }
-  }catch(e){}
-  // Defensivo: si la jornada venía de una versión anterior del código, estos campos pueden faltar
-  if(!STATE.desobCount) STATE.desobCount={};
-  if(!STATE.avisosRepeticion) STATE.avisosRepeticion=[];
-  if(!STATE.tramoCount) STATE.tramoCount={};
-  if(STATE.forzadoCierre===undefined) STATE.forzadoCierre=false;
-}
-
-/* ==================== COLA DE SINCRONIZACIÓN OFFLINE + ENVÍO ==================== */
-function cargarCola(){try{return JSON.parse(localStorage.getItem(SYNC_QUEUE_KEY)||'[]');}catch(e){return[];}}
-function guardarCola(c){try{localStorage.setItem(SYNC_QUEUE_KEY,JSON.stringify(c));}catch(e){}}
-function encolarPayload(p){const c=cargarCola();c.push(p);guardarCola(c);actualizarEstadoSync();}
-function actualizarEstadoSync(){
-  const el=document.getElementById('sync-status');
-  if(!el)return;
-  const c=cargarCola();
-  if(c.length===0){el.textContent='● Listo';el.style.color='var(--good)';}
-  else{el.textContent=`● ${c.length} pendiente(s)`;el.style.color='var(--warn)';}
-}
-async function procesarCola(){
-  const c=cargarCola();
-  if(!c.length)return;
-  const rest=[];
-  for(const p of c){
-    try{await enviarPayload(p);}catch(e){rest.push(p);}
-  }
-  guardarCola(rest);
-  actualizarEstadoSync();
-}
 async function enviarPayload(p){
+  if(FORM_URL.includes("PEGA_AQUI")) return {ok:false,offline:true};
   const fd=new URLSearchParams();
   fd.append('entry.698566237',p.tipo||'');
   fd.append('entry.759456156',JSON.stringify(p.datos||{}));
   fd.append('entry.1958505050',p.placa||'');
   fd.append('entry.1438075125',p.contratista||'');
   fd.append('entry.1542290425',p.barrio||'');
-  fd.append('entry.1617359207',p.inspector||'');
+  fd.append('entry.1617359207',p.actor||p.inspector||'');
   await fetch(FORM_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:fd.toString()});
   return{ok:true};
 }
 
-/* Envía el hito ya mismo si hay red; si falla o no hay red, lo encola para reintento */
-async function enviarHitoRemoto(tipo, datos){
-  const payload = {tipo, datos, placa: STATE.placa, contratista: STATE.contratista, barrio: STATE.barrio, inspector: STATE.inspector || ''};
-  if(!navigator.onLine){ encolarPayload(payload); return; }
-  try{
-    await enviarPayload(payload);
-    actualizarEstadoSync();
-    procesarCola();
-  }catch(e){
-    encolarPayload(payload);
-  }
+async function enviarHitoRemoto(tipo,datos){
+  const payload={tipo,datos,placa:STATE.placa,contratista:STATE.contratista,barrio:STATE.barrio,actor:STATE.inspector||V8.nombre||''};
+  if(!navigator.onLine){encolarPayload(payload);return}
+  try{await enviarPayload(payload);actualizarEstadoSync();procesarCola()}catch(e){encolarPayload(payload)}
 }
+
+async function enviarGestion(tipo,datos){
+  const payload={
+    tipo,
+    datos:Object.assign({actor:V8.nombre||'',nombre:V8.nombre||'',rol:V8.rol||'',fechaCliente:nowISO()},datos||{}),
+    placa:datos&&datos.placa||'',
+    contratista:datos&&datos.contratista||'',
+    barrio:datos&&datos.barrio||'',
+    actor:V8.nombre||''
+  };
+  if(!navigator.onLine){encolarPayload(payload);return {ok:true,offline:true}}
+  try{await enviarPayload(payload);return{ok:true}}catch(e){encolarPayload(payload);return{ok:true,offline:true}}
+}
+
+/* ==================== API JSONP ==================== */
+function v8ApiGet(action,params){
+  if(API_URL.includes('PEGA_AQUI'))return Promise.resolve({ok:false,offline:true});
+  return new Promise((resolve,reject)=>{
+    const cb='v8cb_'+Math.random().toString(36).slice(2);
+    const s=document.createElement('script');
+    const timeout=setTimeout(()=>{
+      if(window[cb]){delete window[cb];try{document.body.removeChild(s)}catch(e){}reject(new Error('timeout'));}
+    },12000);
+    window[cb]=data=>{
+      clearTimeout(timeout);
+      delete window[cb];
+      try{document.body.removeChild(s)}catch(e){}
+      resolve(data);
+    };
+    const qs=new URLSearchParams(Object.assign({action,callback:cb},params||{})).toString();
+    s.src=API_URL+'?'+qs;
+    s.onerror=()=>{
+      clearTimeout(timeout);
+      delete window[cb];
+      try{document.body.removeChild(s)}catch(e){}
+      reject(new Error('network'));
+    };
+    document.body.appendChild(s);
+  });
+}
+
+/* ==================== PLACAS ==================== */
+async function cargarPlacas(){
+  try{const cache=localStorage.getItem(PLACAS_CACHE_KEY);if(cache){const p=JSON.parse(cache);if(Array.isArray(p)&&p.length>0){PLACAS=p;renderPlacasSelect()}}}catch(e){}
+  if(!navigator.onLine){renderPlacasSelect();return}
+  if(PLACAS_CSV_URL.includes("PEGA_AQUI")){renderPlacasSelect();return}
+  try{
+    const r=await fetch(PLACAS_CSV_URL);const csv=await r.text();const arr=parsearCSV(csv);
+    if(arr.length>0){PLACAS=arr;localStorage.setItem(PLACAS_CACHE_KEY,JSON.stringify(arr));renderPlacasSelect()}
+  }catch(e){renderPlacasSelect()}
+}
+function parsearCSV(csv){const lineas=csv.split('\n').filter(l=>l.trim());const out=[];
+  for(let i=0;i<lineas.length;i++){const c=parsearLinea(lineas[i]);if(i===0&&(c[0]||'').toLowerCase().trim()==='placa')continue;
+    const placa=(c[0]||'').trim();const contratista=(c[1]||'').trim();if(placa&&contratista)out.push({placa,contratista})}
+  return out}
+function parsearLinea(l){const r=[];let a='';let q=false;for(const ch of l){if(ch==='"')q=!q;else if(ch===','&&!q){r.push(a);a=''}else a+=ch}r.push(a);return r}
+function renderPlacasSelect(){const s=document.getElementById('ap-placa');if(!s)return;const v=s.value;s.innerHTML='<option value="">Selecciona placa...</option>'+PLACAS.map(p=>`<option value="${p.placa}|${p.contratista}">${p.placa} — ${p.contratista}</option>`).join('');if(v)s.value=v}
+
+/* ==================== GPS ==================== */
+function getGPS(){return new Promise(r=>{if(!navigator.geolocation){r(null);return}navigator.geolocation.getCurrentPosition(p=>r({lat:p.coords.latitude,lng:p.coords.longitude}),()=>r(null),{timeout:8000})})}
+async function reverseGeocode(gps){if(!gps)return"";try{const r=await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${gps.lat}&lon=${gps.lng}&format=json`);const d=await r.json();const a=d.address||{};return capitalizar(a.suburb||a.neighbourhood||a.quarter||a.city_district||a.village||"")}catch(e){return""}}
 
 /* ==================== APERTURA ==================== */
-function validarApertura(){
-  const ok=document.getElementById('ap-placa').value&&document.getElementById('ap-barrio').value.trim();
-  document.getElementById('btn-abrir-jornada').disabled=!ok;
-}
+function validarApertura(){const btn=document.getElementById('btn-abrir-jornada');if(!btn)return;btn.disabled=!(document.getElementById('ap-placa').value&&document.getElementById('ap-barrio').value.trim())}
+document.getElementById('ap-placa').addEventListener('change',e=>{const v=e.target.value;if(v){const p=v.split('|');STATE.placa=p[0];STATE.contratista=p[1]}else{STATE.placa=null;STATE.contratista=null}validarApertura()});
+document.getElementById('ap-barrio').addEventListener('input',e=>{STATE.barrio=e.target.value.trim();validarApertura()});
 
-document.getElementById('ap-placa').addEventListener('change',e=>{
-  const val=e.target.value;
-  if(val){const p=val.split('|');STATE.placa=p[0];STATE.contratista=p[1];}else{STATE.placa=null;STATE.contratista=null;}
-  validarApertura();
-});
-
-document.getElementById('ap-barrio').addEventListener('input',e=>{
-  const val=e.target.value.trim();
-  const inspector=detectarInspector(val);
-  const advertencia=document.getElementById('advertencia-inspector');
-  const btn=document.getElementById('btn-abrir-jornada');
-  if(inspector){
-    STATE.modo='inspector';
-    STATE.inspector=inspector.nombre;
-    advertencia.textContent=`⚠️ MODO INSPECTOR ACTIVADO — ${inspector.nombre} (${inspector.jornada})`;
-    advertencia.classList.add('show');
-    btn.textContent='INICIAR MODO INSPECTOR';
-  } else {
-    STATE.modo='operador';
-    STATE.inspector=null;
-    advertencia.classList.remove('show');
-    btn.textContent='Iniciar jornada';
-  }
-  STATE.barrio=val;
-  validarApertura();
-});
-
-function calcularTurno(horaISO){
-  const h=new Date(horaISO).getHours();
-  return (h>=6&&h<18)?'Diurno':'Nocturno'; // corte por defecto: 6:00 a 17:59 = Diurno
-}
+function calcularTurno(horaISO){const h=new Date(horaISO).getHours();return(h>=6&&h<18)?'Diurno':'Nocturno'}
 
 document.getElementById('btn-abrir-jornada').onclick=async function(){
-  const barrioValor=document.getElementById('ap-barrio').value.trim();
-  const inspector=detectarInspector(barrioValor);
-  if(inspector){
-    STATE.modo='inspector';
-    STATE.inspector=inspector.nombre;
-    STATE.horaInicio=nowISO(); // solo para continuidad de la app; la fecha REAL del reporte es la del código
-    STATE.fechaReporte=inspector.fecha;
-    STATE.jornadaReporte=inspector.jornada;
-    guardarEstado();
-    const placaLimpia=STATE.placa.replace(/\s+/g,'');
-    document.getElementById('inspector-id').textContent=`${placaLimpia}|${inspector.fecha}|${inspector.jornada}|${inspector.iniciales}`;
-    document.getElementById('screen-apertura').classList.remove('active');
-    document.getElementById('screen-inspector').classList.add('active');
-  } else {
-    STATE.modo='operador';
-    STATE.barrio=capitalizar(barrioValor);
-    STATE.horaInicio=nowISO();
-    guardarEstado();
-    document.getElementById('screen-apertura').classList.remove('active');
-    document.getElementById('screen-dashboard').classList.add('active');
-    renderDashboard();
-    // Actividad #1: Apertura de jornada
-    const turno=calcularTurno(STATE.horaInicio);
-    const gps=STATE.gps||await getGPS();
-    const dir=await resolverDireccion(gps);
-    enviarHitoRemoto('jornadaInicio', {lat: gps?gps.lat:'', lng: gps?gps.lng:'', direccion: dir, turno});
-    const gpsText=gps?`${gps.lat},${gps.lng}`:'sin GPS';
-    registrarHito(`*Apertura de jornada*\n[Contratista: ${STATE.contratista}]\n[Turno: ${turno}]\n[Hora: ${fmtHora(STATE.horaInicio)}]\n[gps: ${gpsText}]\n[Dir: ${dir}]\n[Actividad del dia #; X]`);
-  }
+  const bv=document.getElementById('ap-barrio').value.trim();
+  STATE.modo='operador';STATE.barrio=capitalizar(bv);STATE.horaInicio=nowISO();guardarEstado();
+  mostrarPantalla('screen-dashboard');renderDashboard();
+  const turno=calcularTurno(STATE.horaInicio);const gps=STATE.gps||await getGPS();const dir=await reverseGeocode(gps);
+  enviarHitoRemoto('jornadaInicio',{lat:gps?gps.lat:'',lng:gps?gps.lng:'',direccion:dir,turno});
+  registrarHito(`*Apertura de jornada*\n[Contratista: ${STATE.contratista}]\n[Turno: ${turno}]\n[Hora: ${fmtHora(STATE.horaInicio)}]\n[Actividad del dia #; X]`);
 };
 
-/* ==================== GPS APERTURA ==================== */
-async function initGPSApertura(){
-  document.getElementById('gps-status').textContent="GPS...";
-  const gps=await getGPS();
-  STATE.gps=gps;
-  const barrio=await reverseGeocode(gps);
-  const val=document.getElementById('ap-barrio').value;
-  if(barrio&&!detectarInspector(val)){
-    document.getElementById('ap-barrio').value=barrio;
-    STATE.barrio=barrio;
-    document.getElementById('gps-status').textContent="✓ auto";
-  } else {
-    document.getElementById('gps-status').textContent="manual";
-  }
-  validarApertura();
-}
+async function initGPSApertura(){const gps=await getGPS();STATE.gps=gps;const barrio=await reverseGeocode(gps);
+  const el=document.getElementById('ap-barrio');if(!el)return;
+  if(barrio&&!el.value.trim()){el.value=barrio;STATE.barrio=barrio}
+  validarApertura()}
 
-// Inicializar al cargar
-window.addEventListener('load',()=>{
-  cargarPlacas();
-  initGPSApertura();
-  cargarEstado();
-  if(STATE.horaInicio&&!STATE.cerrada){
-    document.getElementById('screen-apertura').classList.remove('active');
-    if(STATE.modo==='inspector'){
-      document.getElementById('screen-inspector').classList.add('active');
-    }else{
-      document.getElementById('screen-dashboard').classList.add('active');
-      renderDashboard();
-    }
-  }
-  actualizarEstadoSync();
-  if(navigator.onLine)procesarCola();
-});
-
-/* ==================== DASHBOARD RENDER ==================== */
+/* ==================== DASHBOARD ==================== */
 function renderDashboard(){
-  const box=document.getElementById('tramo-abierto-box');
-  const sin=document.getElementById('box-sin-tramo');
-  const activo=STATE.tramos.find(t=>t.id===STATE.tramoActivoId&&!t.cierre);
+  const act=STATE.tramos.find(t=>t.id===STATE.tramoActivoId&&!t.cierre);
   const totalML=calcularMLTotal();
   document.getElementById('info-tramos-ml').textContent=`${STATE.tramos.length} tramos · ${totalML} ML`;
-  if(activo){
-    sin.style.display="none";
-    document.getElementById('act-desob').disabled=false;
-    box.innerHTML=`<div class="tramo-open"><div class="t-name">${activo.tramo}</div><div class="t-sub">Iniciado ${fmtHora(activo.horaInicio)}</div><button class="close-tramo-btn" onclick="abrirModalCierreTramo('${activo.id}')">Cerrar tramo</button></div>`;
-  } else {
-    box.innerHTML="";sin.style.display="grid";
-    document.getElementById('act-desob').disabled=true;
-  }
+  const box=document.getElementById('tramo-abierto-box'), sin=document.getElementById('box-sin-tramo');
+  if(act){sin.style.display='none';document.getElementById('act-desob').disabled=false;
+    box.innerHTML=`<div class="tramo-open"><div>${act.tramo}</div><div style="color:var(--sub);font-size:12px">Iniciado ${fmtHora(act.horaInicio)}</div><button class="close-tramo-btn" onclick="abrirModalCierreTramo('${act.id}')">Cerrar tramo</button></div>`}
+  else{box.innerHTML='';sin.style.display='grid';document.getElementById('act-desob').disabled=true}
 }
+function calcularMLTotal(){return STATE.tramos.filter(t=>t.cierre&&t.cierre.apto==='SI').reduce((s,t)=>s+(Number(t.cierre.ml)||0),0)}
 
-/* ==================== CÁLCULOS ==================== */
-function calcularMLTotal(){
-  return STATE.tramos.filter(t=>t.cierre&&t.cierre.apto==="SI").reduce((s,t)=>s+(Number(t.cierre.ml)||0),0);
-}
-
-function calcularHorasNoJust(ml){
-  const horasJust=(ml*HORAS_BASE)/META_ML;
-  return Math.max(0,HORAS_BASE-horasJust).toFixed(1);
-}
-
-/* ==================== BITÁCORA ====================
-   Encabezado va UNA sola vez en la bitácora acumulada (primer hito del día).
-   Cada hito adicional entra sin encabezado repetido.
-   El portapapeles de cada hito individual (hito suelto) SÍ conserva su encabezado completo,
-   con una línea en blanco entre encabezado y cuerpo. */
-function fechaReporte(){return STATE.fechaReporte||(STATE.horaInicio?new Date(STATE.horaInicio).toLocaleDateString('es-CO'):'');}
-
-function generarEncabezado(){
-  const placaLimpia=STATE.placa?STATE.placa.replace(/\s+/g,''):'';
-  const fecha=fechaReporte();
-  const barrio=STATE.barrio?STATE.barrio.toUpperCase():'';
-  return `#_Mtto_Preventivo\n${placaLimpia}|${fecha}|${barrio}`;
-}
-
-function registrarHito(bloqueTexto){
-  STATE.actividadCount++;
-  const enc=generarEncabezado();
-  const bloque=bloqueTexto.replace('[Actividad del dia #; X]',`[Actividad del dia #; ${STATE.actividadCount}]`);
-  const completo=enc+'\n\n'+bloque; // hito suelto: encabezado + línea en blanco + cuerpo (va al portapapeles)
-
-  if(!STATE.bitacoraInterna){
-    STATE.bitacoraInterna = enc+'\n\n'+bloque; // primer hito: encabezado + bloque
-  } else {
-    STATE.bitacoraInterna += '\n\n'+bloque; // resto: solo el bloque, sin encabezado repetido
-  }
-
-  guardarEstado();
-  copiarAlPortapapeles(completo);
-}
-
-function copiarAlPortapapeles(texto){
-  if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(texto).then(()=>toast("✅ Copiado — pégalo en WhatsApp 📲")).catch(()=>fallbackCopy(texto));}
-  else{fallbackCopy(texto);}
-}
-function fallbackCopy(texto){
-  const ta=document.createElement('textarea');ta.value=texto;document.body.appendChild(ta);ta.select();
-  try{document.execCommand('copy');toast("✅ Copiado — pégalo en WhatsApp 📲");}catch(e){toast("❌ Error");}
-  document.body.removeChild(ta);
-}
+/* ==================== BITÁCORA ==================== */
+function fechaReporte(){return STATE.fechaReporte||(STATE.horaInicio?new Date(STATE.horaInicio).toLocaleDateString('es-CO'):'')}
+function generarEncabezado(){const p=STATE.placa?STATE.placa.replace(/\s+/g,''):'';const f=fechaReporte();const b=STATE.barrio?STATE.barrio.toUpperCase():'';return `#_Mtto_Preventivo\n${p}|${f}|${b}`}
+function registrarHito(bloque){STATE.actividadCount++;const enc=generarEncabezado();const cuerpo=bloque.replace('[Actividad del dia #; X]',`[Actividad del dia #; ${STATE.actividadCount}]`);const completo=enc+'\n\n'+cuerpo;
+  if(!STATE.bitacoraInterna)STATE.bitacoraInterna=enc+'\n\n'+cuerpo;else STATE.bitacoraInterna+='\n\n'+cuerpo;
+  guardarEstado();copiarAlPortapapeles(completo)}
+function copiarAlPortapapeles(t){if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(t).then(()=>toast("✅ Copiado")).catch(()=>fallbackCopy(t))}else fallbackCopy(t)}
+function fallbackCopy(t){const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');toast("✅ Copiado")}catch(e){}document.body.removeChild(ta)}
 
 /* ==================== TRAMO ==================== */
-document.getElementById('nuevo-tramo-nombre').addEventListener('input',e=>{
-  e.target.value=e.target.value.replace(/[^0-9]/g,'').slice(0,6);
-  document.getElementById('btn-abrir-tramo').disabled=!e.target.value.trim();
-  if(e.target.value.length===1) prefetchUbicacion(); // primer dígito: dispara la ubicación de una vez
-});
+document.getElementById('nuevo-tramo-nombre').addEventListener('input',e=>{e.target.value=e.target.value.replace(/[^0-9]/g,'').slice(0,6);document.getElementById('btn-abrir-tramo').disabled=!e.target.value.trim()});
+async function abrirTramo(){const nombre=document.getElementById('nuevo-tramo-nombre').value.trim();const gps=await getGPS();const dir=await reverseGeocode(gps);
+  const id='t'+Date.now();STATE.tramos.push({id,tramo:nombre,horaInicio:nowISO(),gps,dir,cierre:null});STATE.tramoActivoId=id;
+  if(!STATE.tramoCount)STATE.tramoCount={};STATE.tramoCount[nombre]=(STATE.tramoCount[nombre]||0)+1;
+  if(STATE.tramoCount[nombre]>1){const aviso=`⚠️ Tramo ${nombre} abierto ${STATE.tramoCount[nombre]} veces`;const idx=STATE.avisosRepeticion.findIndex(a=>a.startsWith(`⚠️ Tramo ${nombre} abierto`));if(idx>=0)STATE.avisosRepeticion[idx]=aviso;else STATE.avisosRepeticion.push(aviso)}
+  guardarEstado();registrarHito(`*Apertura de tramo*\n[Tramo: ${nombre}]\n[Hora: ${fmtHora(nowISO())}]\n[Actividad del dia #; X]`);
+  enviarHitoRemoto('tramoInicio',{tramo:nombre,lat:gps?gps.lat:'',lng:gps?gps.lng:'',direccion:dir});
+  document.getElementById('nuevo-tramo-nombre').value='';document.getElementById('btn-abrir-tramo').disabled=true;renderDashboard()}
 
-async function abrirTramo(){
-  const nombre=document.getElementById('nuevo-tramo-nombre').value.trim();
-  const numActividad=STATE.actividadCount+1;
-  const {gps,dir}=await obtenerUbicacionParaHito(numActividad);
-  const id='t'+Date.now();
-  STATE.tramos.push({id,tramo:nombre,horaInicio:nowISO(),gps,dir,cierre:null,eventos:[]});
-  STATE.tramoActivoId=id;
-
-  // Repetición de tramo en la jornada: aviso automático (la reapertura es válida, no se bloquea)
-  if(!STATE.tramoCount) STATE.tramoCount={};
-  STATE.tramoCount[nombre]=(STATE.tramoCount[nombre]||0)+1;
-  if(STATE.tramoCount[nombre]>1){
-    const aviso=`⚠️ Tramo ${nombre} abierto ${STATE.tramoCount[nombre]} veces esta jornada`;
-    const idx=STATE.avisosRepeticion.findIndex(a=>a.startsWith(`⚠️ Tramo ${nombre} abierto`));
-    if(idx>=0) STATE.avisosRepeticion[idx]=aviso; else STATE.avisosRepeticion.push(aviso);
-  }
-  guardarEstado();
-  const gpsText=gps?`${gps.lat},${gps.lng}`:'sin GPS';
-  registrarHito(`*Apertura de tramo*\n[Tramo: ${nombre}]\n[Hora: ${fmtHora(nowISO())}]\n[gps: ${gpsText}]\n[Dir: ${dir}]\n[Actividad del dia #; X]`);
-  enviarHitoRemoto('tramoInicio', {tramo: nombre, lat: gps?gps.lat:'', lng: gps?gps.lng:'', direccion: dir});
-  document.getElementById('nuevo-tramo-nombre').value="";
-  document.getElementById('btn-abrir-tramo').disabled=true;
-  gpsPrefetch=null;
-  renderDashboard();
-}
-
-/* ==================== CIERRE DE TRAMO ==================== */
-function abrirModalCierreTramo(id){
-  tramoACerrar=id;tempApto=null;
-  document.getElementById('btn-si-apto').classList.remove('activo');
-  document.getElementById('btn-no-apto').classList.remove('activo');
-  document.getElementById('ct-ml').value='';document.getElementById('ct-obs').value='';
-  document.getElementById('ct-ml-error').classList.remove('show');
-  document.getElementById('btn-confirmar-cierre-tramo').disabled=true;
-  abrirModal('modal-cierre-tramo');
-}
-function activarBotonSI(){tempApto='SI';document.getElementById('btn-si-apto').classList.add('activo');document.getElementById('btn-no-apto').classList.remove('activo');document.getElementById('ct-obs').value='';document.getElementById('ct-ml').focus();validarCierreTramo();}
-function activarBotonNO(){tempApto='NO';document.getElementById('btn-no-apto').classList.add('activo');document.getElementById('btn-si-apto').classList.remove('activo');document.getElementById('ct-ml').value='';document.getElementById('ct-obs').focus();validarCierreTramo();}
+/* ==================== CIERRE TRAMO ==================== */
+function abrirModalCierreTramo(id){tramoACerrar=id;tempApto=null;
+  document.getElementById('btn-si-apto').classList.remove('activo');document.getElementById('btn-no-apto').classList.remove('activo');
+  document.getElementById('ct-ml').value='';document.getElementById('ct-obs').value='';document.getElementById('ct-ml-error').classList.remove('show');
+  document.getElementById('btn-confirmar-cierre-tramo').disabled=true;abrirModal('ov-cierre-tramo')}
+function activarBotonSI(){tempApto='SI';document.getElementById('btn-si-apto').classList.add('activo');document.getElementById('btn-no-apto').classList.remove('activo');document.getElementById('ct-obs').value='';document.getElementById('ct-ml').focus();validarCierreTramo()}
+function activarBotonNO(){tempApto='NO';document.getElementById('btn-no-apto').classList.add('activo');document.getElementById('btn-si-apto').classList.remove('activo');document.getElementById('ct-ml').value='';document.getElementById('ct-obs').focus();validarCierreTramo()}
 document.getElementById('ct-ml').addEventListener('input',validarCierreTramo);
 document.getElementById('ct-obs').addEventListener('input',validarCierreTramo);
+function validarCierreTramo(){const b=document.getElementById('btn-confirmar-cierre-tramo'),e=document.getElementById('ct-ml-error');let ok=false;
+  if(tempApto==='SI'){const ml=Number(document.getElementById('ct-ml').value);if(ml<=0||ml>130){e.classList.add('show')}else{e.classList.remove('show');ok=true}}
+  else if(tempApto==='NO'){e.classList.remove('show');ok=document.getElementById('ct-obs').value.trim().length>0}
+  b.disabled=!ok}
+async function confirmarCierreTramo(){const btn=document.getElementById('btn-confirmar-cierre-tramo');if(btn.disabled)return;
+  const tramo=STATE.tramos.find(t=>t.id===tramoACerrar);if(!tramo)return;btn.disabled=true;
+  if(tempApto==='SI'){const ml=Number(document.getElementById('ct-ml').value);tramo.cierre={apto:'SI',ml,obs:''}}
+  else{tramo.cierre={apto:'NO',ml:0,obs:capitalizar(document.getElementById('ct-obs').value.trim())}}
+  tramo.cerrado=true;tramo.horaFin=nowISO();guardarEstado();
+  const gps=await getGPS();const dir=await reverseGeocode(gps);
+  registrarHito(`*Cierre de tramo*\n[Tramo: ${tramo.tramo}]\n[Apto CCTV: ${tramo.cierre.apto}]\n${tramo.cierre.apto==='SI'?`[ML: ${tramo.cierre.ml}]`:`[Observación: ${tramo.cierre.obs}]`}\n[Hora: ${fmtHora(nowISO())}]\n[Actividad del dia #; X]`);
+  enviarHitoRemoto('tramoCierre',{tramo:tramo.tramo,aptoCCTV:tramo.cierre.apto,ml:tramo.cierre.ml,observacion:tramo.cierre.obs,lat:gps?gps.lat:'',lng:gps?gps.lng:'',direccion:dir});
+  cerrarModal('ov-cierre-tramo');tramoACerrar=null;renderDashboard()}
 
-function validarCierreTramo(){
-  const btn = document.getElementById('btn-confirmar-cierre-tramo');
-  const errEl = document.getElementById('ct-ml-error');
-  let ok=false;
-  if(tempApto==='SI'){
-    const ml = Number(document.getElementById('ct-ml').value);
-    if(ml <= 0 || ml > ML_MAX_TRAMO){
-      errEl.classList.add('show');
-      ok = false;
-    } else {
-      errEl.classList.remove('show');
-      ok = true;
-    }
-  } else if(tempApto==='NO'){
-    errEl.classList.remove('show');
-    ok = document.getElementById('ct-obs').value.trim().length>0;
-  } else {
-    errEl.classList.remove('show');
-    ok = false;
-  }
-  btn.disabled = !ok;
-}
-
-async function confirmarCierreTramo(){
-  const btn = document.getElementById('btn-confirmar-cierre-tramo');
-  if(btn.disabled) return;
-  const tramo=STATE.tramos.find(t=>t.id===tramoACerrar);
-  if(!tramo)return;
-  btn.disabled=true; // bloqueo anti doble-toque
-  if(tempApto==='SI'){
-    const ml = Number(document.getElementById('ct-ml').value);
-    if(ml <= 0 || ml > ML_MAX_TRAMO){
-      toast(`⚠️ ML inválido (1 a ${ML_MAX_TRAMO})`);
-      btn.disabled=false;
-      return;
-    }
-    tramo.cierre={apto:'SI',ml,obs:''};
-  }else{
-    tramo.cierre={apto:'NO',ml:0,obs:capitalizar(document.getElementById('ct-obs').value.trim())};
-  }
-  tramo.cerrado=true;tramo.horaFin=nowISO();
-  guardarEstado();
-  const {gps,dir}=await obtenerUbicacionParaHito(STATE.actividadCount+1);
-  const gpsText=gps?`${gps.lat},${gps.lng}`:'sin GPS';
-  registrarHito(`*Cierre de tramo*\n[Tramo: ${tramo.tramo}]\n[Apto CCTV: ${tramo.cierre.apto}]\n${tramo.cierre.apto==='SI'?`[ML: ${tramo.cierre.ml}]`:`[Observación: ${tramo.cierre.obs}]`}\n[Hora: ${fmtHora(nowISO())}]\n[gps: ${gpsText}]\n[Dir: ${dir}]\n[Actividad del dia #; X]`);
-  enviarHitoRemoto('tramoCierre', {tramo: tramo.tramo, aptoCCTV: tramo.cierre.apto, ml: tramo.cierre.ml, observacion: tramo.cierre.obs, lat: gps?gps.lat:'', lng: gps?gps.lng:'', direccion: dir});
-  gpsPrefetch=null;
-  cerrarModal('modal-cierre-tramo');tramoACerrar=null;renderDashboard();
-}
-
-/* ==================== DESOBSTRUCCIÓN ====================
-   Regla: mientras el tramo esté abierto, la desobstrucción NO puede usar ese mismo número.
-   Fuera de eso, un mismo tramo sí puede repetirse varias veces en la jornada — pero si se
-   repite, se genera un aviso automático que aparece en observaciones del cierre. */
-async function registrarDesobstruccion(){
-  const activo=STATE.tramos.find(t=>t.id===STATE.tramoActivoId&&!t.cierre);
-  if(!activo){toast("No hay tramo activo");return;}
-  const tramoTxt=document.getElementById('desob-tramo').value.trim();
-  const errEl=document.getElementById('desob-tramo-error');
-  if(!tramoTxt){toast("Ingresa el número de tramo");return;}
-  if(tramoTxt===activo.tramo){
-    errEl.classList.add('show');
-    return;
-  }
-  errEl.classList.remove('show');
-  activo.eventos.push({tipo:'Desobstrucción',tramo:tramoTxt,hora:nowISO()});
-
-  // Contador de repeticiones del mismo tramo en desobstrucción durante la jornada
-  if(!STATE.desobCount) STATE.desobCount={};
-  if(!STATE.avisosRepeticion) STATE.avisosRepeticion=[];
-  STATE.desobCount[tramoTxt]=(STATE.desobCount[tramoTxt]||0)+1;
-  if(STATE.desobCount[tramoTxt]>1){
-    const aviso=`⚠️ Tramo ${tramoTxt} repetido ${STATE.desobCount[tramoTxt]} veces en desobstrucción esta jornada`;
-    const idx=STATE.avisosRepeticion.findIndex(a=>a.startsWith(`⚠️ Tramo ${tramoTxt} repetido`));
-    if(idx>=0) STATE.avisosRepeticion[idx]=aviso; else STATE.avisosRepeticion.push(aviso);
-  }
-
-  guardarEstado();
-  const {gps,dir}=await obtenerUbicacionParaHito(STATE.actividadCount+1);
-  const gpsText=gps?`${gps.lat},${gps.lng}`:'sin GPS';
-  registrarHito(`*Desobstrucción*\n[Tramo: ${tramoTxt}]\n[Hora: ${fmtHora(nowISO())}]\n[gps: ${gpsText}]\n[Dir: ${dir}]\n[Actividad del dia #; X]`);
-  enviarHitoRemoto('desob', {tramo: tramoTxt, lat: gps?gps.lat:'', lng: gps?gps.lng:'', direccion: dir});
-  gpsPrefetch=null;
-  document.getElementById('desob-tramo').value="";
-  cerrarModal('modal-desob');renderDashboard();
-}
-
-/* ==================== CARGA DE AGUA ==================== */
-async function registrarM3(){
-  const valor=Number(document.getElementById('m3-valor').value)||0;
-  const barrioM3=capitalizar(document.getElementById('m3-barrio').value.trim())||STATE.barrio;
-  const {gps,dir}=await obtenerUbicacionParaHito(STATE.actividadCount+1);
-  STATE.m3Total=(STATE.m3Total||0)+valor;
-  guardarEstado();
-  const gpsText=gps?`${gps.lat},${gps.lng}`:'sin GPS';
-  registrarHito(`*Carga de agua*\n[M3: ${valor}]\n[Barrio: ${barrioM3}]\n[Hora: ${fmtHora(nowISO())}]\n[gps: ${gpsText}]\n[Dir: ${dir}]\n[Actividad del dia #; X]`);
-  enviarHitoRemoto('m3', {valor, barrioM3, lat: gps?gps.lat:'', lng: gps?gps.lng:'', direccion: dir});
-  gpsPrefetch=null;
-  document.getElementById('m3-valor').value="";
-  document.getElementById('m3-barrio').value="";
-  const barrioVisible=document.getElementById('m3-barrio-visible');
-  if(barrioVisible) barrioVisible.textContent='detectando...';
-  cerrarModal('modal-m3');
-}
+/* ==================== DESOB / M3 ==================== */
+async function registrarDesobstruccion(){const act=STATE.tramos.find(t=>t.id===STATE.tramoActivoId&&!t.cierre);if(!act){toast("No hay tramo activo");return}
+  const t=document.getElementById('desob-tramo').value.trim();if(!t){toast("Ingresa tramo");return}
+  STATE.desobCount[t]=(STATE.desobCount[t]||0)+1;guardarEstado();
+  registrarHito(`*Desobstrucción*\n[Tramo: ${t}]\n[Hora: ${fmtHora(nowISO())}]\n[Actividad del dia #; X]`);
+  enviarHitoRemoto('desob',{tramo:t});document.getElementById('desob-tramo').value='';cerrarModal('ov-desob');renderDashboard()}
+async function registrarM3(){const v=Number(document.getElementById('m3-valor').value)||0;const b=capitalizar(document.getElementById('m3-barrio').value.trim())||STATE.barrio;
+  STATE.m3Total=(STATE.m3Total||0)+v;guardarEstado();
+  registrarHito(`*Carga de agua*\n[M3: ${v}]\n[Barrio: ${b}]\n[Hora: ${fmtHora(nowISO())}]\n[Actividad del dia #; X]`);
+  enviarHitoRemoto('m3',{valor:v,barrioM3:b});document.getElementById('m3-valor').value='';document.getElementById('m3-barrio').value='';cerrarModal('ov-m3')}
 
 /* ==================== NOVEDAD ==================== */
-function seleccionarTipoNovedad(btn,tipo){
-  tempTipoNovedad=tipo;tempCausa=null;tempRegresa=null;
-  document.querySelectorAll('#ov-novedad .chip').forEach(c=>c.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('novedad-regresa-box').style.display='none';
-  document.getElementById('novedad-sub-box').style.display='none';
-  const causasBox=document.getElementById('novedad-causas');
-  causasBox.innerHTML='';
-  if(tipo==='Avería'){
-    document.getElementById('novedad-sub-box').style.display='block';
-    document.getElementById('novedad-regresa-box').style.display='block';
-    ['Hidráulica','Mecánica/Motor','Succión/Presión','Eléctrica'].forEach(c=>{
-      causasBox.innerHTML+=`<button class="chip" onclick="seleccionarCausa(this,'${c}')">${c}</button>`;
-    });
-  } else if(tipo==='Lodos'){
-    tempCausa='Lodos';
-    document.getElementById('novedad-regresa-box').style.display='block';
-  } else if(tipo==='Fuerza mayor'){
-    // Fuerza mayor: sin Causa/Motivo, sin Observaciones — solo confirmar
-    tempCausa='Fuerza mayor';
-    tempRegresa='NO';
-    document.getElementById('btn-registrar-novedad').disabled=false;
-  } else if(tipo==='Factor humano'){
-    document.getElementById('novedad-sub-box').style.display='block';
-    document.getElementById('novedad-regresa-box').style.display='block';
-    ['Fatiga','Salud'].forEach(c=>{
-      causasBox.innerHTML+=`<button class="chip" onclick="seleccionarCausa(this,'${c}')">${c}</button>`;
-    });
-  }
-  if(tipo!=='Fuerza mayor'){document.getElementById('btn-registrar-novedad').disabled=true;}
-  document.getElementById('nov-si').classList.remove('sel');document.getElementById('nov-no').classList.remove('sel');
-}
+function seleccionarTipoNovedad(btn,tipo){tempTipoNovedad=tipo;tempRegresa=null;
+  document.querySelectorAll('#nov-chips .chip').forEach(c=>c.classList.remove('active'));btn.classList.add('active');
+  document.getElementById('novedad-regresa-box').style.display='block';document.getElementById('nov-si').classList.remove('sel');document.getElementById('nov-no').classList.remove('sel');
+  document.getElementById('btn-registrar-novedad').disabled=true}
+function seleccionarRegresa(v){tempRegresa=v;document.getElementById('nov-si').classList.toggle('sel',v==='SI');document.getElementById('nov-no').classList.toggle('sel',v==='NO');document.getElementById('btn-registrar-novedad').disabled=false}
+async function registrarNovedad(){const btn=document.getElementById('btn-registrar-novedad');if(btn.disabled)return;btn.disabled=true;
+  STATE.novedades.push({tipo:tempTipoNovedad,regresa:tempRegresa,hora:nowISO()});guardarEstado();
+  registrarHito(`*Novedad*\n[Tipo: ${tempTipoNovedad}]\n[Regresa: ${tempRegresa}]\n[Hora: ${fmtHora(nowISO())}]\n[Actividad del dia #; X]`);
+  enviarHitoRemoto('novedad',{causa:tempTipoNovedad,regresa:tempRegresa});
+  cerrarModal('ov-novedad');btn.disabled=false;
+  if(tempRegresa==='NO')await cerrarTramoPorNoRegresa(tempTipoNovedad)}
+async function cerrarTramoPorNoRegresa(motivo){const act=STATE.tramos.find(t=>t.id===STATE.tramoActivoId&&!t.cierre);
+  if(act){act.cierre={apto:'NO',ml:0,obs:motivo};act.cerrado=true;act.horaFin=nowISO();guardarEstado();
+    registrarHito(`*Cierre de tramo*\n[Tramo: ${act.tramo}]\n[Apto CCTV: NO]\n[Observación: ${motivo}]\n[Actividad del dia #; X]`);}
+  STATE.forzadoCierre=true;guardarEstado();irACierreJornada()}
 
-function seleccionarCausa(btn,causa){
-  tempCausa=causa;
-  document.querySelectorAll('#novedad-causas .chip').forEach(c=>c.classList.remove('active'));
-  btn.classList.add('active');validarNovedad();
-}
-
-function seleccionarRegresa(val){
-  tempRegresa=val;
-  document.getElementById('nov-si').classList.toggle('sel',val==='SI');
-  document.getElementById('nov-no').classList.toggle('sel',val==='NO');
-  validarNovedad();
-}
-
-function validarNovedad(){
-  const btn=document.getElementById('btn-registrar-novedad');
-  if(tempTipoNovedad==='Fuerza mayor'){btn.disabled=false;return;}
-  if(tempTipoNovedad==='Avería'||tempTipoNovedad==='Factor humano'){btn.disabled=!(tempCausa&&tempRegresa);return;}
-  btn.disabled=!tempRegresa;
-}
-
-async function registrarNovedad(){
-  const btn=document.getElementById('btn-registrar-novedad');
-  if(btn.disabled) return;
-  const motivo=tempCausa||tempTipoNovedad;
-  const noRegresa = tempRegresa==='NO';
-  btn.disabled=true; // bloqueo anti doble-toque
-  STATE.novedades.push({tipo:motivo,regresa:tempRegresa,hora:nowISO()});
-  guardarEstado();
-  const {gps,dir}=await obtenerUbicacionParaHito(STATE.actividadCount+1);
-  const gpsText=gps?`${gps.lat},${gps.lng}`:'sin GPS';
-  registrarHito(`*Novedad*\n[Tipo: ${motivo}]\n[Regresa: ${tempRegresa||'N/A'}]\n[Hora: ${fmtHora(nowISO())}]\n[gps: ${gpsText}]\n[Dir: ${dir}]\n[Actividad del dia #; X]`);
-  enviarHitoRemoto('novedad', {causa: motivo, regresa: tempRegresa, lat: gps?gps.lat:'', lng: gps?gps.lng:'', direccion: dir});
-  gpsPrefetch=null;
-  cerrarModal('modal-novedad');
-  btn.disabled=false;
-
-  if(noRegresa){
-    await cerrarTramoPorNoRegresa(motivo);
-  }
-}
-
-/* ==================== NO REGRESA: CASCADA AUTOMÁTICA ====================
-   Aplica a cualquier novedad con "Regresa: No" (incluye Fuerza mayor, que
-   siempre fuerza NO). Cierra el tramo abierto (si existe) con Apto CCTV = NO
-   y el motivo de la novedad como observación, y salta directo a la pantalla
-   de Resumen (sin pasar por la pregunta de verificar actividades). */
-async function cerrarTramoPorNoRegresa(motivo){
-  const activo=STATE.tramos.find(t=>t.id===STATE.tramoActivoId&&!t.cierre);
-  if(activo){
-    activo.cierre={apto:'NO',ml:0,obs:motivo};
-    activo.cerrado=true;activo.horaFin=nowISO();
-    guardarEstado();
-    const {gps,dir}=await obtenerUbicacionParaHito(STATE.actividadCount+1);
-    const gpsText=gps?`${gps.lat},${gps.lng}`:'sin GPS';
-    registrarHito(`*Cierre de tramo*\n[Tramo: ${activo.tramo}]\n[Apto CCTV: NO]\n[Observación: ${motivo}]\n[Hora: ${fmtHora(nowISO())}]\n[gps: ${gpsText}]\n[Dir: ${dir}]\n[Actividad del dia #; X]`);
-    enviarHitoRemoto('tramoCierre', {tramo: activo.tramo, aptoCCTV: 'NO', ml: 0, observacion: motivo, lat: gps?gps.lat:'', lng: gps?gps.lng:'', direccion: dir});
-    gpsPrefetch=null;
-  }
-  STATE.forzadoCierre=true;
-  guardarEstado();
-  irACierreJornada();
-}
-
-/* ==================== NOVEDAD INSPECTOR ==================== */
-function seleccionarNovedadInspector(btn,tipo){
-  novedadInspectorActual=tipo;
-  document.querySelectorAll('#screen-inspector .chip').forEach(c=>c.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('insp-novedad-regresa').style.display='none';
-  document.getElementById('insp-novedad-sub').style.display='none';
-  const causasBox=document.getElementById('insp-novedad-causas');
-  causasBox.innerHTML='';
-  if(tipo==='Avería'){
-    document.getElementById('insp-novedad-sub').style.display='block';
-    document.getElementById('insp-novedad-regresa').style.display='block';
-    ['Hidráulica','Mecánica/Motor','Succión/Presión','Eléctrica'].forEach(c=>{
-      causasBox.innerHTML+=`<button class="chip" onclick="seleccionarCausaInspector(this,'${c}')">${c}</button>`;
-    });
-  } else if(tipo==='Lodos'){
-    causaInspectorActual='Lodos';
-    document.getElementById('insp-novedad-regresa').style.display='block';
-  } else if(tipo==='Fuerza mayor'){
-    causaInspectorActual='Fuerza mayor';
-    regresaInspectorActual='NO';
-  } else if(tipo==='Factor humano'){
-    document.getElementById('insp-novedad-sub').style.display='block';
-    document.getElementById('insp-novedad-regresa').style.display='block';
-    ['Fatiga','Salud'].forEach(c=>{
-      causasBox.innerHTML+=`<button class="chip" onclick="seleccionarCausaInspector(this,'${c}')">${c}</button>`;
-    });
-  }
-  document.getElementById('insp-nov-si').classList.remove('sel');document.getElementById('insp-nov-no').classList.remove('sel');
-  actualizarDiagnosticoInspector();
-}
-
-function seleccionarCausaInspector(btn,causa){
-  causaInspectorActual=causa;
-  document.querySelectorAll('#insp-novedad-causas .chip').forEach(c=>c.classList.remove('active'));
-  btn.classList.add('active');
-  actualizarDiagnosticoInspector();
-}
-
-function seleccionarRegresaInspector(val){
-  regresaInspectorActual=val;
-  document.getElementById('insp-nov-si').classList.toggle('sel',val==='SI');
-  document.getElementById('insp-nov-no').classList.toggle('sel',val==='NO');
-  actualizarDiagnosticoInspector();
-}
-
-/* ==================== DIAGNÓSTICO INSPECTOR (diferenciado por causa) ==================== */
-function actualizarDiagnosticoInspector(){
-  const ml=Number(document.getElementById('insp-ml').value)||0;
-  const box=document.getElementById('insp-diagnostico');
-  if(ml>0){
-    const horasNoJust=calcularHorasNoJust(ml);
-    const tiposNov=STATE.novedades.map(n=>n.tipo);
-    if(causaInspectorActual) tiposNov.push(causaInspectorActual);
-    else if(novedadInspectorActual==='Lodos') tiposNov.push('Lodos');
-    const novAveria=tiposNov.filter(t=>['Hidráulica','Mecánica/Motor','Succión/Presión','Eléctrica'].includes(t)).length;
-    const novExplicada=tiposNov.filter(t=>['Fuerza mayor','Fatiga','Salud'].includes(t)).length;
-    const novLodos=tiposNov.filter(t=>t==='Lodos').length;
-    let html='';
-    if(ml>=RANGO_MIN&&ml<=RANGO_MAX){html='<div class="legend-box legend-good">✅ Meta cumplida</div>';}
-    else if(ml<RANGO_MIN&&novAveria>0){html='<div class="justificar-box">🔧 Atención elementos — Horas por justificar: '+horasNoJust+' h</div>';}
-    else if(ml<RANGO_MIN&&novExplicada>0){html='<div class="justificar-box">ℹ️ Déficit justificable — Horas por justificar: '+horasNoJust+' h</div>';}
-    else if(ml<RANGO_MIN&&novLodos>0){html='<div class="justificar-box">📍 Revisar zona/ritmo — Horas por justificar: '+horasNoJust+' h</div>';}
-    else if(ml<RANGO_MIN){html='<div class="justificar-box">📍 Revisar zona/ritmo — Horas por justificar: '+horasNoJust+' h</div>';}
-    else if(ml>RANGO_MAX){html='<div class="justificar-box">📈 Justificar exceso — '+(ml-RANGO_MAX)+' ML</div>';}
-    box.innerHTML=html;
-  } else {box.innerHTML='';}
-}
-
-/* ==================== FLUJO DE CIERRE ==================== */
-function preguntarVerificarActividades(){abrirModal('modal-pregunta-verificar');}
-
-function mostrarFormularioActividades(conTramos){
-  formularioConTramos=conTramos;
-  document.getElementById('form-tramos').value='';
-  document.getElementById('form-ml').value='';
-  document.getElementById('form-desob').value='';
-  document.getElementById('form-m3').value='';
-  abrirModal('modal-formulario');
-}
-
-/* Ingreso manual: valida que ningún tramo escrito ya esté registrado como ejecutado/cerrado */
-function confirmarFormulario(){
-  const tramosManualesRaw=document.getElementById('form-tramos').value.trim();
-  const tramosManualesArr=tramosManualesRaw.split(',').map(s=>s.trim()).filter(Boolean);
-  const tramosEjecutados=STATE.tramos.filter(t=>t.cierre).map(t=>t.tramo);
-  const duplicado=tramosManualesArr.find(t=>tramosEjecutados.includes(t));
-  if(duplicado){
-    toast(`⚠️ Tramo ${duplicado} ya está registrado como ejecutado`);
-    return;
-  }
-
-  STATE.cierre.desob=document.getElementById('form-desob').value.trim();
-  STATE.cierre.m3=Number(document.getElementById('form-m3').value)||0;
-  const mlManual=Number(document.getElementById('form-ml').value)||0;
-  STATE.cierre.tramosManuales=tramosManualesRaw;
-  STATE.cierre.mlManual=mlManual;
-  cerrarModal('modal-formulario');
-  irACierreJornada();
-}
-
-function irACierreJornada(){
-  STATE.horaFin=nowISO();
-  document.getElementById('screen-dashboard').classList.remove('active');
-  document.getElementById('screen-cierre').classList.add('active');
-  document.getElementById('btn-volver-dashboard').style.display=STATE.forzadoCierre?'none':'block';
-  renderResumen();
-}
-
-/* ==================== RESUMEN FINAL ==================== */
+/* ==================== CIERRE JORNADA ==================== */
+function irACierreJornada(){STATE.horaFin=nowISO();mostrarPantalla('screen-cierre');document.getElementById('btn-volver-dashboard').style.display=STATE.forzadoCierre?'none':'block';renderResumen()}
 function renderResumen(){
   document.getElementById('rs-placa').textContent=STATE.placa;
   document.getElementById('rs-contratista').textContent=STATE.contratista;
   document.getElementById('rs-barrio').textContent=STATE.barrio;
-
-  const inspectorSel=document.getElementById('rs-inspector-select');
-  if(STATE.inspector) inspectorSel.value=STATE.inspector;
-  document.getElementById('rs-inspector-error').classList.remove('show');
-
-  const mlSistema=calcularMLTotal();
-  const mlTotal=mlSistema+STATE.cierre.mlManual;
-  const horasNoJust=calcularHorasNoJust(mlTotal);
-  document.getElementById('rs-ml').textContent=mlTotal+' ML';
+  const mlS=calcularMLTotal();const mlT=mlS+STATE.cierre.mlManual;
+  document.getElementById('rs-ml').textContent=mlT+' ML';
   document.getElementById('rs-desob').textContent=STATE.cierre.desob||'—';
   document.getElementById('rs-m3').textContent=(STATE.m3Total||0)+STATE.cierre.m3+' m³';
-
-  const justificarBox=document.getElementById('rs-justificar');
-  const novAveria=STATE.novedades.filter(n=>['Hidráulica','Mecánica/Motor','Succión/Presión','Eléctrica'].includes(n.tipo)).length;
-  const novExplicada=STATE.novedades.filter(n=>['Fuerza mayor','Fatiga','Salud'].includes(n.tipo)).length;
-  const novLodos=STATE.novedades.filter(n=>n.tipo==='Lodos').length;
-  let html='';
-  if(mlTotal>=RANGO_MIN&&mlTotal<=RANGO_MAX){html='<div class="legend-box legend-good">✅ Meta cumplida</div>';}
-  else if(mlTotal<RANGO_MIN&&novAveria>0){html='<div class="obs-diagnostico">🔧 Atención elementos — Horas por justificar: '+horasNoJust+' h<br><span style="font-size:12px;">Justifique en observaciones qué actividades se realizaron</span></div>';}
-  else if(mlTotal<RANGO_MIN&&novExplicada>0){html='<div class="obs-diagnostico">ℹ️ Déficit justificable — Horas por justificar: '+horasNoJust+' h<br><span style="font-size:12px;">Justifique en observaciones qué actividades se realizaron</span></div>';}
-  else if(mlTotal<RANGO_MIN&&novLodos>0){html='<div class="obs-diagnostico">📍 Revisar zona/ritmo — Horas por justificar: '+horasNoJust+' h<br><span style="font-size:12px;">Justifique en observaciones qué actividades se realizaron</span></div>';}
-  else if(mlTotal<RANGO_MIN){html='<div class="obs-diagnostico">📍 Revisar zona/ritmo — Horas por justificar: '+horasNoJust+' h<br><span style="font-size:12px;">Justifique en observaciones qué actividades se realizaron</span></div>';}
-  else if(mlTotal>RANGO_MAX){html='<div class="obs-diagnostico">📈 Justificar exceso — '+(mlTotal-RANGO_MAX)+' ML<br><span style="font-size:12px;">Justifique por qué se lograron más ML en el mismo tiempo</span></div>';}
-  justificarBox.innerHTML=html;
-
-  // Avisos de tramos repetidos en desobstrucción durante la jornada
-  const avisosBox=document.getElementById('rs-avisos-repeticion');
-  avisosBox.innerHTML=(STATE.avisosRepeticion||[]).map(a=>`<div class="obs-diagnostico" style="margin-bottom:8px;">${a}</div>`).join('');
-
-  const tramosBox=document.getElementById('rs-tramos');
-  tramosBox.innerHTML='<div class="section-label">Tramos</div>';
-  STATE.tramos.forEach(t=>{
-    const d=document.createElement('div');d.className='summary-line';
-    if(t.cierre&&t.cierre.apto==='SI'){d.innerHTML=`<span>✅ ${t.tramo}</span><strong>${t.cierre.ml} ML</strong>`;}
-    else if(t.cierre&&t.cierre.apto==='NO'){d.innerHTML=`<span>❌ ${t.tramo}</span><strong>${t.cierre.obs}</strong>`;}
-    else{d.innerHTML=`<span class="tramo-sin-cerrar">⚠️ ${t.tramo} — SIN CERRAR</span><strong>—</strong>`;}
-    tramosBox.appendChild(d);
-  });
-  if(STATE.cierre.tramosManuales){
-    const d=document.createElement('div');d.className='summary-line';
-    d.innerHTML=`<span>📝 ${STATE.cierre.tramosManuales} (manual)</span><strong>${STATE.cierre.mlManual} ML</strong>`;
-    tramosBox.appendChild(d);
-  }
+  const tb=document.getElementById('rs-tramos');tb.innerHTML='<div class="section-label">Tramos</div>';
+  STATE.tramos.forEach(t=>{const d=document.createElement('div');d.className='summary-line';
+    if(t.cierre&&t.cierre.apto==='SI')d.innerHTML=`<span>✅ ${t.tramo}</span><strong>${t.cierre.ml} ML</strong>`;
+    else if(t.cierre&&t.cierre.apto==='NO')d.innerHTML=`<span>❌ ${t.tramo}</span><strong>${t.cierre.obs}</strong>`;
+    else d.innerHTML=`<span class="tramo-sin-cerrar">⚠️ ${t.tramo} — SIN CERRAR</span>`;
+    tb.appendChild(d)})
 }
-
-function volverDashboard(){
-  document.getElementById('screen-cierre').classList.remove('active');
-  document.getElementById('screen-dashboard').classList.add('active');
-  renderDashboard();
-}
-
-/* ==================== TEXTO DEL INFORME (misma fuente para PDF y portapapeles) ==================== */
-function construirTextoInformeCierre(){
-  const mlSistema=calcularMLTotal();
-  const mlTotal=mlSistema+STATE.cierre.mlManual;
-  const fecha=fechaReporte();
-  let txt=`#_Mtto_Preventivo — Cierre de jornada\n`;
-  txt+=`Placa: ${STATE.placa}\nContratista: ${STATE.contratista}\nBarrio: ${STATE.barrio?STATE.barrio.toUpperCase():''}\nFecha: ${fecha}\nInspector: ${STATE.inspector||'—'}\n\n`;
-  txt+=`ML total: ${mlTotal} ML\nDesobstrucción: ${STATE.cierre.desob||'—'}\nCarga de agua: ${(STATE.m3Total||0)+STATE.cierre.m3} m³\n`;
-  if(STATE.avisosRepeticion&&STATE.avisosRepeticion.length){
-    txt+=`\n${STATE.avisosRepeticion.join('\n')}\n`;
-  }
-  txt+=`\nObservaciones:\n${STATE.cierre.obs||'Sin observaciones'}\n\n`;
-  txt+=`Bitácora del día:\n${STATE.bitacoraInterna||'Sin registros'}`;
-  return txt;
-}
-
-/* ==================== PDF ====================
-   Al confirmar el cierre: (1) bloquea el botón para evitar doble toque,
-   (2) copia al portapapeles el mismo texto que se usa para el informe,
-   (3) genera el PDF/impresión. */
-function confirmarYExportar(){
-  const btn=document.getElementById('btn-confirmar-cierre');
-  if(btn.disabled) return;
-
-  const inspectorSel=document.getElementById('rs-inspector-select');
-  const inspectorErr=document.getElementById('rs-inspector-error');
-  if(!inspectorSel.value){
-    inspectorErr.classList.add('show');
-    inspectorSel.focus();
-    return;
-  }
-
-  inspectorErr.classList.remove('show');
-  STATE.inspector=inspectorSel.value;
-  STATE.cierre.obs=document.getElementById('cierre-obs').value.trim();
-  STATE.horaFin=STATE.horaFin||nowISO();
+function volverDashboard(){mostrarPantalla('screen-dashboard');renderDashboard()}
+async function confirmarYExportar(){
+  const sel=document.getElementById('rs-inspector-select');
+  if(!sel.value){document.getElementById('rs-inspector-error').classList.add('show');sel.focus();return}
+  document.getElementById('rs-inspector-error').classList.remove('show');
+  STATE.inspector=sel.value;STATE.cierre.obs=document.getElementById('cierre-obs').value.trim();
+  const sol=document.getElementById('cierre-solicitud-actividad').value.trim();
   guardarEstado();
-
-  btn.disabled=true;
-  btn.textContent='✅ Confirmado — procesando...';
-
-  const mlSistema=calcularMLTotal();
-  const mlManual=Number(STATE.cierre.mlManual)||0;
-  const mlTotal=mlSistema+mlManual;
-  const m3Sistema=Number(STATE.m3Total)||0;
-  const m3Manual=Number(STATE.cierre.m3)||0;
-  const m3Total=m3Sistema+m3Manual;
-  const resumen=construirTextoInformeCierre();
-
-  // Hito final consolidado.
-  // No sustituye los hitos de la jornada: queda como fotografía final para
-  // contrastar posteriormente en el motor contra lo recibido hito por hito.
-  enviarHitoRemoto('jornadaCierre', {
-    fecha: fechaReporte(),
-    horaInicio: STATE.horaInicio||'',
-    horaFin: STATE.horaFin||'',
-    inspector: STATE.inspector||'',
-    barrio: STATE.barrio||'',
-    mlSistema,
-    mlManual,
-    mlTotal,
-    m3Sistema,
-    m3Manual,
-    m3Total,
-    tramosManuales: STATE.cierre.tramosManuales||'',
-    tramos: (STATE.tramos||[]).map(t=>({
-      tramo: t.tramo||'',
-      aptoCCTV: t.cierre&&t.cierre.apto ? t.cierre.apto : '',
-      ml: t.cierre&&t.cierre.ml ? Number(t.cierre.ml)||0 : 0,
-      observacion: t.cierre&&t.cierre.obs ? t.cierre.obs : ''
-    })),
-    desobstruccion: STATE.cierre.desob||'',
-    novedades: STATE.novedades||[],
-    observaciones: STATE.cierre.obs||'',
-    resumen,
-    lat: STATE.gps?STATE.gps.lat:'',
-    lng: STATE.gps?STATE.gps.lng:''
-  });
-
-  // Se conserva exactamente la operación existente:
-  // mismo resumen al portapapeles y mismo PDF.
-  copiarAlPortapapeles(resumen);
-  generarPDFCierre();
+  const mlT=calcularMLTotal()+STATE.cierre.mlManual;
+  enviarHitoRemoto('jornadaCierre',{mlTotal:mlT,observaciones:STATE.cierre.obs});
+  if(sol){await enviarGestion('solicitudOperador',{texto:sol,placa:STATE.placa,contratista:STATE.contratista,barrio:STATE.barrio})}
+  toast('✅ Jornada cerrada');STATE.cerrada=true;guardarEstado();setTimeout(reiniciarApp,1500)
 }
 
-function generarPDFCierre(){
-  const mlSistema=calcularMLTotal();
-  const mlTotal=mlSistema+STATE.cierre.mlManual;
-  const horasNoJust=calcularHorasNoJust(mlTotal);
-  const fecha=fechaReporte();
-  const novAveria=STATE.novedades.filter(n=>['Hidráulica','Mecánica/Motor','Succión/Presión','Eléctrica'].includes(n.tipo)).length;
-  const novExplicada=STATE.novedades.filter(n=>['Fuerza mayor','Fatiga','Salud'].includes(n.tipo)).length;
-  const novLodos=STATE.novedades.filter(n=>n.tipo==='Lodos').length;
-  let diagnostico='';
-  if(mlTotal>=RANGO_MIN&&mlTotal<=RANGO_MAX){diagnostico='✅ Meta cumplida';}
-  else if(mlTotal<RANGO_MIN&&novAveria>0){diagnostico=`🔧 Atención elementos — Horas por justificar: ${horasNoJust} h<br><span style="font-size:11px;">Justifique en observaciones qué actividades se realizaron</span>`;}
-  else if(mlTotal<RANGO_MIN&&novExplicada>0){diagnostico=`ℹ️ Déficit justificable — Horas por justificar: ${horasNoJust} h<br><span style="font-size:11px;">Justifique en observaciones qué actividades se realizaron</span>`;}
-  else if(mlTotal<RANGO_MIN&&novLodos>0){diagnostico=`📍 Revisar zona/ritmo — Horas por justificar: ${horasNoJust} h<br><span style="font-size:11px;">Justifique en observaciones qué actividades se realizaron</span>`;}
-  else if(mlTotal<RANGO_MIN){diagnostico=`📍 Revisar zona/ritmo — Horas por justificar: ${horasNoJust} h<br><span style="font-size:11px;">Justifique en observaciones qué actividades se realizaron</span>`;}
-  else if(mlTotal>RANGO_MAX){diagnostico=`📈 Justificar exceso — ${mlTotal-RANGO_MAX} ML<br><span style="font-size:11px;">Justifique por qué se lograron más ML en el mismo tiempo</span>`;}
-
-  const avisosHTML=(STATE.avisosRepeticion&&STATE.avisosRepeticion.length)
-    ? `<div style="background:#fff8f0;border:2px solid #f59e0b;border-radius:8px;padding:10px;margin-bottom:10px;color:#f59e0b;font-weight:700;">${STATE.avisosRepeticion.join('<br>')}</div>`
-    : '';
-
-  const contenido=`
-    <div style="font-family:Arial,sans-serif;color:#000;background:#fff;padding:20px;max-width:800px;margin:0 auto;">
-      <!-- ENCABEZADO -->
-      <div style="background:#1a1a2e;color:#fff;padding:15px;border-radius:8px;margin-bottom:10px;text-align:center;">
-        <h1 style="font-size:16px;font-weight:800;margin:0;">#_Mtto_Preventivo</h1>
-        <p style="font-size:11px;margin:5px 0 0;">Hoja de Cierre de Jornada</p>
-      </div>
-
-      <!-- DATOS -->
-      <div style="background:#fafafa;border:1px solid #7c3aed;border-radius:8px;padding:12px;margin-bottom:8px;">
-        <div style="font-size:10px;font-weight:800;color:#1a1a2e;margin-bottom:6px;text-transform:uppercase;">Datos de la Jornada</div>
-        <div style="font-size:12px;color:#000;">Placa: ${STATE.placa}<br>Contratista: ${STATE.contratista}<br>Barrio: ${STATE.barrio?STATE.barrio.toUpperCase():''}<br>Fecha: ${fecha}<br>Inspector: ${STATE.inspector||'—'}</div>
-      </div>
-
-      <!-- TRAMOS -->
-      <div style="background:#fafafa;border:1px solid #7c3aed;border-radius:8px;padding:12px;margin-bottom:8px;">
-        <div style="font-size:10px;font-weight:800;color:#1a1a2e;margin-bottom:6px;text-transform:uppercase;">Tramos Aptos CCTV</div>
-        ${STATE.tramos.filter(t=>t.cierre&&t.cierre.apto==='SI').map(t=>`<div style="font-size:12px;color:#000;">✅ ${t.tramo} — ${t.cierre.ml} ML</div>`).join('')||'<div style="font-size:12px;color:#000;">Sin tramos</div>'}
-        ${STATE.cierre.tramosManuales?`<div style="font-size:12px;color:#000;">📝 ${STATE.cierre.tramosManuales} (manual) — ${STATE.cierre.mlManual} ML</div>`:''}
-      </div>
-
-      <!-- ACTIVIDADES -->
-      <div style="background:#fafafa;border:1px solid #7c3aed;border-radius:8px;padding:12px;margin-bottom:8px;">
-        <div style="font-size:10px;font-weight:800;color:#1a1a2e;margin-bottom:6px;text-transform:uppercase;">Actividades</div>
-        <div style="font-size:12px;color:#000;">Desobstrucción: ${STATE.cierre.desob||'—'}<br>Carga de agua: ${(STATE.m3Total||0)+STATE.cierre.m3} m³</div>
-      </div>
-
-      <!-- MÉTRICAS -->
-      <div style="background:#fafafa;border:1px solid #7c3aed;border-radius:8px;padding:12px;margin-bottom:8px;">
-        <div style="font-size:10px;font-weight:800;color:#1a1a2e;margin-bottom:6px;text-transform:uppercase;">Métricas</div>
-        <div style="font-size:12px;color:#000;">ML total: ${mlTotal} ML<br>Meta: 250 ML</div>
-      </div>
-
-      <!-- OBSERVACIONES CON 2 SUBCONJUNTOS -->
-      <div style="background:#fafafa;border:1px solid #7c3aed;border-radius:8px;padding:12px;margin-bottom:8px;">
-        <div style="font-size:10px;font-weight:800;color:#1a1a2e;margin-bottom:6px;text-transform:uppercase;">Observaciones</div>
-        <div style="background:#fff8f0;border:2px solid #f59e0b;border-radius:8px;padding:10px;margin-bottom:10px;text-align:center;font-weight:700;color:#f59e0b;">${diagnostico}</div>
-        ${avisosHTML}
-        <div style="border-top:1px dashed #7c3aed;margin:10px 0;"></div>
-        <div style="font-size:12px;color:#000;min-height:60px;">${STATE.cierre.obs||'Sin observaciones'}</div>
-      </div>
-
-      <!-- SEPARADOR -->
-      <div style="border-top:2px solid #1a1a2e;margin:10px 0;"></div>
-
-      <!-- BITÁCORA DETALLADA (encabezado único, hitos sin repetirlo) -->
-      <div style="background:#fff;border:1px solid #333;border-radius:8px;padding:12px;">
-        <div style="font-size:10px;font-weight:800;color:#1a1a2e;margin-bottom:6px;text-transform:uppercase;">📋 Bitácora Detallada del Día</div>
-        <pre style="font-size:11px;color:#000;white-space:pre-wrap;font-family:monospace;margin:0;">${STATE.bitacoraInterna||'Sin registros'}</pre>
-      </div>
-
-      <!-- FIRMA -->
-      <div style="display:flex;justify-content:space-between;font-size:10px;margin-top:15px;color:#000;">
-        <div>Firma: ______________________</div>
-        <div>Fecha: ${fecha}</div>
-      </div>
-    </div>
-  `;
-
-  const iframe=document.createElement('iframe');
-  iframe.style.position='fixed';iframe.style.right='0';iframe.style.bottom='0';
-  iframe.style.width='0';iframe.style.height='0';iframe.style.border='0';
-  document.body.appendChild(iframe);
-  const doc=iframe.contentWindow.document;
-  doc.open();
-  doc.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>#_Mtto_Preventivo</title></head><body>${contenido}</body></html>`);
-  doc.close();
-  iframe.contentWindow.onafterprint=()=>{
-    setTimeout(()=>{
-      document.body.removeChild(iframe);
-      STATE.cerrada=true;
-      guardarEstado();
-      toast('✅ Jornada cerrada');
-      setTimeout(reiniciarApp,2000);
-    },500);
-  };
-  setTimeout(()=>{iframe.contentWindow.focus();iframe.contentWindow.print();},500);
-}
-
-/* ==================== BITÁCORA COMPLETA ==================== */
-function verBitacoraCompleta(){
-  document.getElementById('bitacora-completa-text').textContent=STATE.bitacoraInterna||"No hay registros";
-  abrirModal('modal-bitacora');
-}
-function copiarBitacoraCompleta(){copiarAlPortapapeles(STATE.bitacoraInterna||"No hay registros");}
-
-/* ==================== GUARDAR INSPECTOR ==================== */
-function guardarInspector(){
-  if(!confirm('¿Acepta y cierra?')) return;
-  const tramosManuales=document.getElementById('insp-tramos').value.trim();
-  const mlManual=Number(document.getElementById('insp-ml').value)||0;
-  const m3=Number(document.getElementById('insp-m3').value)||0;
-  STATE.cierre.obs=document.getElementById('insp-obs').value.trim();
-  STATE.cierre.tramosManuales=tramosManuales;
-  STATE.cierre.mlManual=mlManual;
-  STATE.cierre.m3=m3;
-  if(novedadInspectorActual){
-    STATE.novedades.push({tipo:causaInspectorActual||novedadInspectorActual,regresa:regresaInspectorActual,hora:nowISO()});
-  }
-  STATE.horaFin=nowISO();
-  guardarEstado();
-
-  // UN solo bloque consolidado: el inspector resume eventos YA OCURRIDOS.
-  // No emite hitos en vivo ni GPS — lo que importa es su reporte, no la información del sistema.
-  const partes=['*Resumen de inspector*'];
-  partes.push(`[Fecha reportada: ${STATE.fechaReporte||'—'}]`);
-  partes.push(`[Jornada: ${STATE.jornadaReporte||'—'}]`);
-  partes.push(`[Inspector: ${STATE.inspector||'—'}]`);
-  if(tramosManuales) partes.push(`[Tramos: ${tramosManuales}]`);
-  partes.push(`[ML: ${mlManual}]`);
-  if(m3>0) partes.push(`[Carga de agua: ${m3} m3]`);
-  if(novedadInspectorActual) partes.push(`[Novedad: ${causaInspectorActual||novedadInspectorActual} — Regresa: ${regresaInspectorActual||'N/A'}]`);
-  if(STATE.cierre.obs) partes.push(`[Observaciones: ${STATE.cierre.obs}]`);
-  registrarHito(partes.join('\n')+'\n[Actividad del dia #; X]');
-
-  // Un solo payload consolidado — no tres eventos sueltos
-  enviarHitoRemoto('resumenInspector', {fecha: STATE.fechaReporte||'', jornada: STATE.jornadaReporte||'', tramos: tramosManuales, mlManual, m3, novedad: novedadInspectorActual?(causaInspectorActual||novedadInspectorActual):'', regresa: regresaInspectorActual||'', observaciones: STATE.cierre.obs});
-  copiarAlPortapapeles(construirTextoInformeCierre());
-  generarPDFCierre();
-}
+/* ==================== BITÁCORA MODAL ==================== */
+function verBitacoraCompleta(){document.getElementById('bitacora-completa-text').textContent=STATE.bitacoraInterna||"Sin registros";abrirModal('ov-bitacora')}
+function copiarBitacoraCompleta(){copiarAlPortapapeles(STATE.bitacoraInterna||"Sin registros")}
 
 /* ==================== REINICIAR ==================== */
 function reiniciarApp(){
-  STATE = {
-    placa:null, contratista:null, barrio:null, modo:null, gps:null,
-    horaInicio:null, horaFin:null, inspector:null,
-    tramos:[], novedades:[], cerrada:false,
-    actividadCount:0, bitacoraInterna:"", m3Total:0,
-    desobCount:{}, avisosRepeticion:[], tramoCount:{}, forzadoCierre:false,
-    fechaReporte:null, jornadaReporte:null,
-    cierre:{desob:'', m3:0, obs:'', tramosManuales:'', mlManual:0}
-  };
-  tempApto=null;tramoACerrar=null;tempTipoNovedad=null;tempCausa=null;tempRegresa=null;
-  formularioConTramos=false;
-  novedadInspectorActual=null;causaInspectorActual=null;regresaInspectorActual=null;
-  document.getElementById('screen-cierre').classList.remove('active');
-  document.getElementById('screen-dashboard').classList.remove('active');
-  document.getElementById('screen-inspector').classList.remove('active');
-  document.getElementById('screen-apertura').classList.add('active');
-  document.getElementById('ap-placa').value='';
-  document.getElementById('ap-barrio').value='';
+  STATE={placa:null,contratista:null,barrio:null,modo:null,gps:null,horaInicio:null,horaFin:null,inspector:null,tramos:[],novedades:[],cerrada:false,actividadCount:0,bitacoraInterna:"",m3Total:0,desobCount:{},avisosRepeticion:[],tramoCount:{},forzadoCierre:false,fechaReporte:null,jornadaReporte:null,cierre:{desob:'',m3:0,obs:'',tramosManuales:'',mlManual:0}};
+  mostrarPantalla('screen-acceso-v8');
+  document.getElementById('ap-placa').value='';document.getElementById('ap-barrio').value='';
   document.getElementById('btn-abrir-jornada').disabled=true;
-  document.getElementById('advertencia-inspector').classList.remove('show');
-  document.getElementById('btn-confirmar-cierre').disabled=false;
-  document.getElementById('btn-confirmar-cierre').textContent='🖨️ Imprimir PDF y Cerrar';
-  document.getElementById('btn-volver-dashboard').style.display='block';
-  initGPSApertura();
+  v8Init();
 }
 
-/* ==================== MODALES ==================== */
-const MODAL_MAP={
-  'modal-bitacora':'ov-bitacora','modal-desob':'ov-desob','modal-m3':'ov-m3',
-  'modal-novedad':'ov-novedad','modal-cierre-tramo':'ov-cierre-tramo',
-  'modal-pregunta-verificar':'ov-pregunta-verificar','modal-formulario':'ov-formulario'
-};
-
-function abrirModal(id){
-  document.getElementById(MODAL_MAP[id]).classList.add('active');
-  if(id==='modal-m3'){ prefillM3Barrio(); prefetchUbicacion(); }
-  if(['modal-desob','modal-novedad','modal-cierre-tramo'].includes(id)) prefetchUbicacion();
-}
-
-function cerrarModal(id){document.getElementById(MODAL_MAP[id]).classList.remove('active');}
-
-/* ==================== VERIFICAR CONEXIÓN ==================== */
-function verificarConexion(){
-  const offlineEl=document.getElementById('offline-indicator');
-  if(!navigator.onLine){offlineEl.style.display='block';}
-  else{offlineEl.style.display='none';}
-}
-window.addEventListener('online',()=>{verificarConexion();procesarCola();cargarPlacas();});
+/* ==================== CONEXIÓN ==================== */
+function verificarConexion(){const el=document.getElementById('offline-indicator');if(el)el.style.display=navigator.onLine?'none':'block'}
+window.addEventListener('online',()=>{verificarConexion();procesarCola();cargarPlacas()});
 window.addEventListener('offline',verificarConexion);
 
-/* ==================== PWA: SERVICE WORKER ==================== */
-if('serviceWorker' in navigator){
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('service-worker.js')
-      .then(reg => console.log('✅ SW registrado'))
-      .catch(err => console.error('❌ SW:', err));
-  });
+/* ==================== V8 RUNTIME ==================== */
+const V8={ rol:null, nombre:'', tab:'inicio' };
+const V8_ROLE_NAMES={inspector:'Inspector',supervisor:'Supervisor',
+  cliente:'Contratista',oficina:'Oficina',cctv:'CCTV'};
+
+let V8_rol_pendiente=null;
+let V8_bloqueoTimer=null;
+
+function v8Init(){
+  const inp=document.getElementById('v8-identidad');
+  if(inp){
+    const ultimoNombre=localStorage.getItem('mtto_v8_nombre')||'';
+    if(ultimoNombre && !/^[A-Z]{3}\s?\d{3}$/i.test(ultimoNombre)) inp.value=ultimoNombre;
+  }
+  mostrarPantalla('screen-acceso-v8');
 }
+
+/* ==================== OTROS ROLES: piden llave ==================== */
+function v8Entrar(rol){
+  const bloqueo=v8BloqueoActivo(rol);
+  if(bloqueo){
+    v8AbrirModalLlave(rol);
+    v8MostrarBloqueo(bloqueo);
+    return;
+  }
+
+  if(v8LlaveRecordadaValida(rol)){
+    v8AplicarRol(rol);
+    return;
+  }
+
+  v8AbrirModalLlave(rol);
+}
+
+function v8AbrirModalLlave(rol){
+  V8_rol_pendiente=rol;
+  document.getElementById('llave-rol-nombre').textContent=V8_ROLE_NAMES[rol]||rol;
+  document.getElementById('llave-input').value='';
+  document.getElementById('llave-error').classList.remove('show');
+  document.getElementById('llave-bloqueo').classList.remove('show');
+  document.getElementById('llave-input').disabled=false;
+
+  const info=v8InfoIntentos(rol);
+  const restantes=Math.max(0, LLAVE_INTENTOS_MAX - info.fallos);
+  const elIntentos=document.getElementById('llave-intentos');
+  if(info.fallos>0 && !v8BloqueoActivo(rol)){
+    elIntentos.textContent = 'Intentos restantes: ' + restantes;
+    elIntentos.classList.add('show');
+  } else {
+    elIntentos.classList.remove('show');
+  }
+
+  const btn=document.getElementById('llave-btn');
+  btn.disabled=true;
+  const inp=document.getElementById('llave-input');
+  inp.oninput=e=>{ btn.disabled = e.target.value.length < 4; };
+  inp.onkeydown=e=>{ if(e.key==='Enter' && e.target.value.length>=4) v8ValidarLlave(); };
+
+  abrirModal('ov-llave');
+  setTimeout(()=>inp.focus(),150);
+}
+
+function v8CerrarModalLlave(){
+  V8_rol_pendiente=null;
+  if(V8_bloqueoTimer){ clearInterval(V8_bloqueoTimer); V8_bloqueoTimer=null; }
+  cerrarModal('ov-llave');
+}
+
+function v8ValidarLlave(){
+  if(!V8_rol_pendiente) return;
+
+  const bloqueo=v8BloqueoActivo(V8_rol_pendiente);
+  if(bloqueo){ v8MostrarBloqueo(bloqueo); return; }
+
+  const valor=(document.getElementById('llave-input').value||'').trim();
+  if(!valor) return;
+
+  const esperada=LLAVES_ROL[V8_rol_pendiente]||'';
+  if(valor===esperada){
+    v8RecordarLlave(V8_rol_pendiente);
+    v8ResetIntentos(V8_rol_pendiente);
+    const rol=V8_rol_pendiente;
+    V8_rol_pendiente=null;
+    cerrarModal('ov-llave');
+    v8AplicarRol(rol);
+    return;
+  }
+
+  const info=v8RegistrarFallo(V8_rol_pendiente);
+  document.getElementById('llave-error').classList.add('show');
+  document.getElementById('llave-input').value='';
+  document.getElementById('llave-btn').disabled=true;
+
+  if(info.fallos>=LLAVE_INTENTOS_MAX){
+    v8AplicarBloqueo(V8_rol_pendiente);
+    const b=v8BloqueoActivo(V8_rol_pendiente);
+    v8MostrarBloqueo(b);
+  } else {
+    const restantes=LLAVE_INTENTOS_MAX - info.fallos;
+    const el=document.getElementById('llave-intentos');
+    el.textContent = 'Intentos restantes: ' + restantes;
+    el.classList.add('show');
+    document.getElementById('llave-input').focus();
+  }
+}
+
+function v8AplicarRol(rol){
+  const inp=document.getElementById('v8-identidad');
+  const nombre=(inp && inp.value.trim()) || '';
+  V8.rol=rol;
+  V8.nombre = nombre || V8_ROLE_NAMES[rol];
+  localStorage.setItem('mtto_v8_nombre',V8.nombre);
+  localStorage.setItem('mtto_v8_rol',rol);
+
+  if(rol==='cctv'){
+    mostrarPantalla('screen-cctv');
+    cargarListaCCTV();
+    return;
+  }
+  v8RenderRol();
+}
+
+/* ==================== LLAVES: RECORDAR ==================== */
+function v8LlaveRecordadaValida(rol){
+  if(LLAVE_RECORDAR_DIAS===0) return false;
+  try{
+    const bolsa=JSON.parse(localStorage.getItem(LLAVE_STORAGE_KEY)||'{}');
+    const e=bolsa[rol];
+    if(!e) return false;
+    if(Date.now() - e.ts > LLAVE_RECORDAR_DIAS*86400000) return false;
+    return e.llave === LLAVES_ROL[rol];
+  }catch(err){ return false; }
+}
+function v8RecordarLlave(rol){
+  try{
+    const bolsa=JSON.parse(localStorage.getItem(LLAVE_STORAGE_KEY)||'{}');
+    bolsa[rol]={llave:LLAVES_ROL[rol], ts:Date.now()};
+    localStorage.setItem(LLAVE_STORAGE_KEY,JSON.stringify(bolsa));
+  }catch(e){}
+}
+function v8OlvidarLlaves(){
+  localStorage.removeItem(LLAVE_STORAGE_KEY);
+  localStorage.removeItem(LLAVE_BLOQUEO_KEY);
+}
+
+/* ==================== LLAVES: BLOQUEO POR INTENTOS ==================== */
+function v8InfoIntentos(rol){
+  try{
+    const bolsa=JSON.parse(localStorage.getItem(LLAVE_BLOQUEO_KEY)||'{}');
+    return bolsa[rol]||{fallos:0, bloqueadoHasta:0};
+  }catch(e){ return {fallos:0, bloqueadoHasta:0}; }
+}
+function v8GuardarIntentos(rol,info){
+  try{
+    const bolsa=JSON.parse(localStorage.getItem(LLAVE_BLOQUEO_KEY)||'{}');
+    bolsa[rol]=info;
+    localStorage.setItem(LLAVE_BLOQUEO_KEY,JSON.stringify(bolsa));
+  }catch(e){}
+}
+function v8RegistrarFallo(rol){
+  const info=v8InfoIntentos(rol);
+  info.fallos=(info.fallos||0)+1;
+  v8GuardarIntentos(rol,info);
+  return info;
+}
+function v8ResetIntentos(rol){
+  const info=v8InfoIntentos(rol);
+  info.fallos=0;
+  info.bloqueadoHasta=0;
+  v8GuardarIntentos(rol,info);
+}
+function v8AplicarBloqueo(rol){
+  const info=v8InfoIntentos(rol);
+  info.bloqueadoHasta=Date.now() + LLAVE_BLOQUEO_MIN*60000;
+  info.fallos=LLAVE_INTENTOS_MAX;
+  v8GuardarIntentos(rol,info);
+}
+function v8BloqueoActivo(rol){
+  const info=v8InfoIntentos(rol);
+  if(!info.bloqueadoHasta) return null;
+  const restante=info.bloqueadoHasta - Date.now();
+  if(restante<=0){
+    info.bloqueadoHasta=0;
+    info.fallos=0;
+    v8GuardarIntentos(rol,info);
+    return null;
+  }
+  return {restante, hasta:info.bloqueadoHasta};
+}
+
+function v8MostrarBloqueo(b){
+  if(!b) return;
+  const total=LLAVE_BLOQUEO_MIN*60000;
+  const elTiempo=document.getElementById('llave-bloqueo-tiempo');
+  const elBar=document.getElementById('llave-bloqueo-bar');
+  document.getElementById('llave-bloqueo').classList.add('show');
+  document.getElementById('llave-error').classList.remove('show');
+  document.getElementById('llave-intentos').classList.remove('show');
+  document.getElementById('llave-btn').disabled=true;
+  document.getElementById('llave-input').disabled=true;
+
+  const pintar=()=>{
+    const restante=v8BloqueoActivo(V8_rol_pendiente);
+    if(!restante){
+      document.getElementById('llave-bloqueo').classList.remove('show');
+      document.getElementById('llave-input').disabled=false;
+      document.getElementById('llave-input').value='';
+      document.getElementById('llave-intentos').classList.remove('show');
+      document.getElementById('llave-btn').disabled=true;
+      document.getElementById('llave-input').focus();
+      if(V8_bloqueoTimer){ clearInterval(V8_bloqueoTimer); V8_bloqueoTimer=null; }
+      return;
+    }
+    const seg=Math.ceil(restante.restante/1000);
+    const mm=String(Math.floor(seg/60)).padStart(2,'0');
+    const ss=String(seg%60).padStart(2,'0');
+    elTiempo.textContent=`${mm}:${ss}`;
+    elBar.style.width=Math.max(0, (restante.restante/total*100))+'%';
+  };
+  pintar();
+  if(V8_bloqueoTimer) clearInterval(V8_bloqueoTimer);
+  V8_bloqueoTimer=setInterval(pintar,1000);
+}
+
+/* ==================== CAMBIAR DE ROL ==================== */
+function v8CambiarRol(){
+  V8.rol=null;
+  mostrarPantalla('screen-acceso-v8');
+  const inp=document.getElementById('v8-identidad');
+  if(inp) inp.value=localStorage.getItem('mtto_v8_nombre')||'';
+}
+
+/* ==================== VISTAS POR ROL ==================== */
+function v8RenderRol(){
+  mostrarPantalla('screen-rol-v8');
+  document.getElementById('v8-user-name').textContent=V8.nombre;
+  document.getElementById('v8-role-name').textContent=V8_ROLE_NAMES[V8.rol]||V8.rol;
+  const defs={
+    supervisor:{title:'Control por excepción',sub:'¿Qué necesita una decisión mía?',tabs:['inicio','cortes']},
+    inspector:{title:'Sensor de campo',sub:'¿Qué tengo que verificar?',tabs:['observar']},
+    cliente:{title:'Contratista',sub:'Asigna placas y gestiona sus obligaciones.',tabs:['pendientes']},
+    oficina:{title:'Programación y consolidado',sub:'Programa tareas; las placas las asigna el contratista.',tabs:['tareas','agua']}
+  };
+  const d=defs[V8.rol]||defs.supervisor;
+  document.getElementById('v8-role-header').innerHTML=`<div class="card access-hero"><div class="brand-title" style="font-size:21px">${d.title}</div><div class="brand-sub">${d.sub}</div></div>`;
+  if(!d.tabs.includes(V8.tab))V8.tab=d.tabs[0];
+  document.getElementById('v8-tabs').innerHTML=d.tabs.map(t=>`<button class="v8-tab ${V8.tab===t?'on':''}" onclick="v8Tab('${t}')">${v8LabelTab(t)}</button>`).join('');
+  v8CargarVista();
+}
+function v8LabelTab(t){return ({inicio:'Decisiones',testigos:'Testigos',tareas:'Tareas',cortes:'Corte semanal',observar:'Misiones',pendientes:'Tareas y gestión',agua:'Agua m³'})[t]||t}
+function v8Tab(t){V8.tab=t;v8RenderRol()}
+function v8Esc(x){return String(x??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function v8DetectarContratista(){
+  const n=(V8.nombre||'').toLowerCase();
+  const c=CONTRATISTAS_CONOCIDOS.find(x=>n.includes(x));
+  return c==='succión'?'Succión':(c?capitalizar(c):'');
+}
+
+async function v8CargarVista(){
+  const b=document.getElementById('v8-role-body');if(!b)return;
+  if(API_URL.includes('PEGA_AQUI')){b.innerHTML=v8VistaLocal();return}
+  b.innerHTML='<div class="v8-empty">Cargando…</div>';
+  try{
+    if(V8.rol==='supervisor'){
+      const [ex,tar]=await Promise.all([v8ApiGet('excepciones',{}),v8ApiGet('tareas',{})]);
+      b.innerHTML=v8SupervisorVista(ex,tar);
+    }else if(V8.rol==='cliente'){
+      const contratista=v8DetectarContratista();
+      const tar=await v8ApiGet('tareas',contratista?{contratista}:{});
+      b.innerHTML=v8ClienteVista(tar);
+    }else if(V8.rol==='oficina'){
+      const tar=await v8ApiGet('tareas',{});
+      b.innerHTML=v8OficinaVista(tar);
+    }else if(V8.rol==='inspector'){
+      b.innerHTML=v8InspectorVista();
+    }
+  }catch(e){b.innerHTML=v8VistaLocal()+`<div class="hint">Sin conexión al gestor. La bitácora operador no se afecta.</div>`}
+}
+function v8VistaLocal(){
+  if(V8.rol==='inspector')return v8InspectorVista();
+  return `<div class="card"><div class="v8-empty">Esperando conexión con el gestor.<br><small>Verifica que API_URL esté configurada y que el Web App del .gs esté publicado con "Cualquier usuario".</small></div></div>`;
+}
+function v8SupervisorVista(ex,tar){
+  const exs=(ex.excepciones||[]).slice(0,20);
+  const tars=(tar.tareas||[]).filter(t=>t.ESTADO==='ACTIVA').slice(0,10);
+  let h=`<div class="v8-kpi-grid"><div class="v8-kpi"><div class="n">${exs.length}</div><div class="t">Testigos abiertos</div></div><div class="v8-kpi"><div class="n">${tars.length}</div><div class="t">Tareas activas</div></div></div>`;
+  if(!exs.length&&!tars.length)return h+'<div class="card"><div class="v8-empty">Nada reclama intervención.</div></div>';
+  exs.forEach(x=>{
+    const exId=v8Esc(x.ID_EXCEPCION||'');
+    h+=`<div class="v8-item"><div class="v8-item-head"><div><div class="v8-item-title">${v8Esc(x.ASUNTO||x.TIPO)}</div><div class="v8-item-meta">${v8Esc(x.PLACA||'')} · ${v8Esc(x.CONTEXTO||'')}</div></div><span class="mini-status ${x.GRAVEDAD==='CRITICA'?'bad':'warn'}">${v8Esc(x.GRAVEDAD||'')}</span></div>
+      <div class="v8-actions"><button class="v8-action warn" onclick="v8AccionMover('${exId}')">Mover</button><button class="v8-action good" onclick="v8AccionResolver('${exId}')">Resolver</button></div></div>`;
+  });
+  tars.forEach(t=>{
+    h+=`<div class="v8-item"><div class="v8-item-title">${v8Esc(t.NOMBRE||'')}</div><div class="v8-item-meta">${v8Esc(t.CONTRATISTA||'')} · ${v8Esc(t.BARRIO||'')} · Meta ${t.META_ML||0} ML</div></div>`;
+  });
+  return h;
+}
+function v8ClienteVista(tar){
+  const tars=(tar.tareas||[]).slice(0,20);
+  if(!tars.length)return '<div class="card"><div class="v8-empty">Sin tareas asignadas.<br><small>Si escribiste tu nombre con el contratista incluido (ej: "Ingemac Admin"), aparecerán aquí.</small></div></div>';
+  return tars.map(t=>`<div class="v8-item"><div class="v8-item-title">${v8Esc(t.NOMBRE||'')}</div><div class="v8-item-meta">${v8Esc(t.BARRIO||'')} · Meta ${t.META_ML||0} ML · ${v8Esc(t.ESTADO||'')}</div>
+    <div class="v8-actions"><button class="v8-action good" onclick="v8AsignarPlaca('${v8Esc(t.ID_TAREA||'')}')">Asignar placa</button></div></div>`).join('');
+}
+function v8OficinaVista(tar){
+  const tars=(tar.tareas||[]).slice(0,20);
+  let h='<div class="v8-actions" style="margin-bottom:12px"><button class="v8-action" onclick="v8NuevaTarea()">+ Nueva tarea</button></div>';
+  if(!tars.length)return h+'<div class="card"><div class="v8-empty">Sin tareas registradas.</div></div>';
+  tars.forEach(t=>{h+=`<div class="v8-item"><div class="v8-item-title">${v8Esc(t.NOMBRE||'')}</div><div class="v8-item-meta">${v8Esc(t.CONTRATISTA||'')} · ${v8Esc(t.BARRIO||'')} · ${v8Esc(t.ESTADO||'')}</div></div>`});
+  return h;
+}
+function v8InspectorVista(){
+  return `<div class="card">
+    <div class="section-label">Observación independiente</div>
+    <label>Placa</label><input id="v8-i-placa" type="text" placeholder="Ej. KPN 602">
+    <label>Barrio / zona</label><input id="v8-i-barrio" type="text" placeholder="Ej. El pozón">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div><label>ML reportado</label><input id="v8-i-mlr" type="number"></div>
+      <div><label>ML observado</label><input id="v8-i-mlo" type="number"></div>
+    </div>
+    <label>¿Coincide con estado reportado?</label>
+    <select id="v8-i-coincide"><option value="">No comprobado</option><option value="SI">Sí</option><option value="NO">No</option></select>
+    <label>Contexto de campo</label><textarea id="v8-i-contexto" rows="3"></textarea>
+    <label>Hallazgo</label><textarea id="v8-i-hallazgo" rows="2"></textarea>
+    <div class="toggle2"><button id="v8-i-no" class="sel" onclick="v8Interv(false)">Solo evidencia</button><button id="v8-i-si" onclick="v8Interv(true)">Requiere intervención</button></div>
+    <button class="btn" onclick="v8GuardarObservacion()">Guardar observación</button>
+  </div>`;
+}
+let V8_INTERV=false;
+function v8Interv(v){V8_INTERV=v;document.getElementById('v8-i-no').classList.toggle('sel',!v);document.getElementById('v8-i-si').classList.toggle('sel',v)}
+
+async function v8GuardarObservacion(){
+  const b={
+    placa:document.getElementById('v8-i-placa').value.trim(),
+    barrio:document.getElementById('v8-i-barrio').value.trim(),
+    mlReportado:Number(document.getElementById('v8-i-mlr').value)||null,
+    mlEstimado:Number(document.getElementById('v8-i-mlo').value)||null,
+    estadoCoincide:document.getElementById('v8-i-coincide').value||null,
+    contexto:document.getElementById('v8-i-contexto').value.trim(),
+    hallazgo:document.getElementById('v8-i-hallazgo').value.trim(),
+    reclamaIntervencion:V8_INTERV
+  };
+  if(!b.placa||!b.barrio){toast('Placa y barrio son necesarios');return}
+  await enviarGestion('observacionInspector',b);
+  toast('✅ Observación registrada');
+  document.getElementById('v8-i-placa').value='';
+  document.getElementById('v8-i-barrio').value='';
+  document.getElementById('v8-i-mlr').value='';
+  document.getElementById('v8-i-mlo').value='';
+  document.getElementById('v8-i-contexto').value='';
+  document.getElementById('v8-i-hallazgo').value='';
+}
+async function v8AccionMover(id){
+  const rol=prompt('Nuevo rol (supervisor/cliente/cctv/inspector)','supervisor');
+  if(!rol)return;
+  await enviarGestion('moverTestigo',{idTestigo:id,nuevoRol:rol});
+  toast('✅ Movido');v8CargarVista();
+}
+async function v8AccionResolver(id){
+  const nota=prompt('Nota de resolución','')||'';
+  await enviarGestion('resolverTestigo',{idTestigo:id,resultado:'NORMALIZADO',nota});
+  toast('✅ Resuelto');v8CargarVista();
+}
+async function v8AsignarPlaca(idTarea){
+  const placa=prompt('Placa a asignar','');
+  if(!placa)return;
+  await enviarGestion('asignarPlaca',{idTarea,placa});
+  toast('✅ Placa asignada');v8CargarVista();
+}
+async function v8NuevaTarea(){
+  const nombre=prompt('Nombre de la tarea','');if(!nombre)return;
+  const contratista=prompt('Contratista','')||'';
+  const barrio=prompt('Barrio','')||'';
+  const metaML=Number(prompt('Meta ML','0'))||0;
+  const metaJornadas=Number(prompt('Meta jornadas','0'))||0;
+  await enviarGestion('crearTarea',{nombre,contratista,barrio,metaML,metaJornadas});
+  toast('✅ Tarea creada');v8CargarVista();
+}
+
+/* ==================== CCTV ==================== */
+async function cargarListaCCTV(){
+  const cont=document.getElementById('cctv-lista');
+  if(API_URL.includes('PEGA_AQUI')){cont.innerHTML='<div class="v8-empty">Configura API_URL.</div>';return}
+  cont.innerHTML='<div class="v8-empty">Cargando tramos…</div>';
+  try{
+    const d=await v8ApiGet('excepciones',{});
+    const tramos=(d.excepciones||[]).filter(x=>x.TIPO==='TRAMO_REINCIDENTE');
+    if(!tramos.length){cont.innerHTML='<div class="v8-empty">Sin tramos pendientes.</div>';return}
+    cont.innerHTML=tramos.map(t=>{
+      const id=v8Esc(t.ID_EXCEPCION||'');
+      const ctx=v8Esc(t.CONTEXTO||'');
+      return `<div class="v8-item">
+        <div class="v8-item-title">${v8Esc(t.PLACA||'')} · ${ctx}</div>
+        <div class="v8-actions">
+          <button class="v8-action good" onclick="cctvVerificar('${id}','${ctx}','CONFORME')">Conforme</button>
+          <button class="v8-action bad" onclick="cctvVerificar('${id}','${ctx}','NO CONFORME')">No conforme</button>
+        </div></div>`;
+    }).join('');
+  }catch(e){cont.innerHTML='<div class="v8-empty">Error de conexión al gestor.</div>'}
+}
+async function cctvVerificar(idTestigo,contexto,resultado){
+  const obs=prompt('Observación','')||'';
+  if(resultado==='CONFORME'){
+    await enviarGestion('resolverTestigo',{idTestigo,resultado:'CONFORME_CCTV',nota:obs});
+  }else{
+    const tramo=(contexto.match(/Tramo\s+(\S+)/)||[])[1]||'';
+    await enviarGestion('verificacionCCTV',{placa:'',tramo,resultado:'NO CONFORME',observacion:obs});
+  }
+  toast('✅ Registrado');cargarListaCCTV();
+}
+function cerrarJornadaCCTV(){
+  toast('Cerrando CCTV');
+  setTimeout(()=>{mostrarPantalla('screen-acceso-v8');V8.rol=null;v8Init();},800);
+}
+
+
+/* ==================== V9.17 PREVENTIVO · VISTAS POR MISIÓN ==================== */
+async function v917CargarSupervisor(){
+  if(V8.tab==='cortes'){
+    const d=await v8ApiGet('cortesPendientes',{}), xs=d.cortes||[];
+    return `<div class="card"><div class="section-label">Corte semanal</div><div class="hint">El corte no modifica el pasado; decide qué continúa, qué se ajusta y qué se cierra.</div></div>`+
+      (xs.length?xs.map(x=>`<div class="v8-item"><div class="v8-item-title">${v8Esc(x.nombre||x.idTarea)}</div><div class="v8-item-meta">${v8Esc(x.contratista)} · ${v8Esc(x.barrio)}${x.corteAbierto?' · CORTE ABIERTO':''}</div><div class="v8-actions"><button class="v8-action" onclick="v917AbrirCorte('${v8Esc(x.idTarea)}')">${x.corteAbierto?'Ver corte':'Preparar corte'}</button></div></div>`).join(''):'<div class="card"><div class="v8-empty">Sin tareas activas para corte.</div></div>');
+  }
+  const d=await v8ApiGet('supervisorBandeja',{}), c=d.conteos||{}, dec=d.requiereDecision||[], ges=d.enGestion||[];
+  let h=`<div class="v8-kpi-grid"><div class="v8-kpi"><div class="n">${c.requiereDecision||0}</div><div class="t">Requieren decisión</div></div><div class="v8-kpi"><div class="n">${c.enGestion||0}</div><div class="t">En gestión</div></div></div>`;
+  if(!dec.length)h+='<div class="card"><div class="v8-empty">Nada reclama una decisión del Supervisor.</div></div>';
+  dec.forEach(x=>h+=`<div class="v8-item"><div class="v8-item-head"><div><div class="v8-item-title">${v8Esc(x.asunto)}</div><div class="v8-item-meta">${v8Esc(x.placa)} · ${v8Esc(x.contexto)}</div></div><span class="mini-status ${String(x.efecto).toUpperCase()==='PARALIZA'?'bad':'warn'}">${v8Esc(x.efecto)}</span></div><div class="v8-actions"><button class="v8-action warn" onclick="v8AccionMover('${v8Esc(x.idTestigo)}')">Gestionar</button><button class="v8-action good" onclick="v8AccionResolver('${v8Esc(x.idTestigo)}')">Cerrar testigo</button></div></div>`);
+  if(ges.length)h+=`<div class="card"><div class="section-label">En gestión · ${ges.length}</div><div class="hint">Visibles como contexto; no reclaman decisión mientras su responsable natural gestiona.</div></div>`;
+  return h;
+}
+async function v917AbrirCorte(idTarea){
+  try{const d=await v8ApiGet('corteSemanal',{idTarea}); const c=d.corte||d;
+    const decision=prompt('Decisión del corte: CONTINUA, AJUSTA o CIERRA','CONTINUA'); if(!decision)return;
+    const nota=prompt('Nota breve del corte','')||'';
+    let extra={};if(decision.toUpperCase()==='CIERRA'){extra.queSalioBien=prompt('¿Qué salió bien?','')||'';extra.queSalioMal=prompt('¿Qué salió mal?','')||'';extra.aprendizaje=prompt('Aprendizaje','')||'';if(!extra.queSalioBien||!extra.queSalioMal||!extra.aprendizaje){toast('El cierre requiere las tres respuestas');return}}await enviarGestion('decisionCorte',Object.assign({idCorte:c.ID_CORTE||c.idCorte,decision:decision.toUpperCase(),nota},extra)); toast('✅ Corte registrado');v8CargarVista();
+  }catch(e){toast('No fue posible preparar el corte: '+e.message)}
+}
+function v917InspectorVista(misiones){
+  const ms=misiones||[];
+  let h='<div class="card"><div class="section-label">Misiones de verificación</div><div class="hint">Observa primero. El Motor interpreta el efecto.</div></div>';
+  if(!ms.length)h+='<div class="card"><div class="v8-empty">Sin misiones pendientes. Puedes reportar un hallazgo espontáneo.</div></div>';
+  ms.slice(0,20).forEach(m=>h+=`<div class="v8-item"><div class="v8-item-title">${v8Esc(m.TIPO_MISION||m.TIPO||'Verificación')}</div><div class="v8-item-meta">${v8Esc(m.PLACA||'')} · ${v8Esc(m.BARRIO||'')} · ${v8Esc(m.OBJETO_VERIFICACION||m.COMPONENTE||'')}</div></div>`);
+  h+=`<div class="card"><div class="section-label">Reportar condición / hallazgo</div><label>Placa</label><input id="v917-i-placa"><label>Barrio / zona</label><input id="v917-i-barrio"><label>Dominio</label><select id="v917-i-dom"><option>EQUIPO</option><option>DOTACION</option><option>PERSONAL</option><option>SST</option><option>SEÑALIZACION</option><option>PROCEDIMIENTO</option><option>OTRA</option></select><label>Hecho observado</label><textarea id="v917-i-hecho" rows="3"></textarea><label>Evidencia</label><textarea id="v917-i-evid" rows="2"></textarea><button class="btn" onclick="v917GuardarCondicion()">Registrar observación</button></div>`;
+  return h;
+}
+async function v917GuardarCondicion(){
+  const b={placa:document.getElementById('v917-i-placa').value.trim(),barrio:document.getElementById('v917-i-barrio').value.trim(),dominio:document.getElementById('v917-i-dom').value,hecho:document.getElementById('v917-i-hecho').value.trim(),evidencia:document.getElementById('v917-i-evid').value.trim(),origenConocimiento:'DIRECTO'};
+  if(!b.hecho){toast('Describe el hecho observado');return} await enviarGestion('condicionInspector',b);toast('✅ Observación enviada al Motor');v8CargarVista();
+}
+function v917AguaVista(){return `<div class="card"><div class="section-label">Consumo de agua</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div><label>Desde</label><input id="v917-agua-desde" type="date"></div><div><label>Hasta</label><input id="v917-agua-hasta" type="date"></div></div><button class="btn" onclick="v917ConsultarAgua()">Consultar m³</button><div id="v917-agua-res" style="margin-top:12px"></div></div>`}
+async function v917ConsultarAgua(){const desde=document.getElementById('v917-agua-desde').value,hasta=document.getElementById('v917-agua-hasta').value;if(!desde||!hasta){toast('Selecciona desde y hasta');return}const d=await v8ApiGet('oficinaAgua',{desde,hasta});document.getElementById('v917-agua-res').innerHTML=`<div class="v8-kpi"><div class="n">${Number(d.m3Total||0).toLocaleString('es-CO')}</div><div class="t">m³ trazables</div></div>`}
+function v917ClienteVista(tar,ex){
+  const contratista=v8DetectarContratista(), tars=(tar.tareas||[]).filter(t=>!contratista||normHtml_(t.CONTRATISTA)===normHtml_(contratista));
+  const xs=(ex.excepciones||[]).filter(x=>String(x.RESPONSABLE_ROL||'').toLowerCase()==='cliente'&&(!contratista||normHtml_(x.RESPONSABLE||x.CONTRATISTA)===normHtml_(contratista)));
+  let h='<div class="card"><div class="section-label">Programación propia</div><div class="hint">Asigna una placa disponible. El Motor rechazará solapamientos.</div></div>';
+  tars.slice(0,30).forEach(t=>h+=`<div class="v8-item"><div class="v8-item-title">${v8Esc(t.NOMBRE||t.ID_TAREA)}</div><div class="v8-item-meta">${v8Esc(t.BARRIO||'')} · ${v8Esc(t.ESTADO||'')}</div><div class="v8-actions"><button class="v8-action good" onclick="v8AsignarPlaca('${v8Esc(t.ID_TAREA||'')}')">Asignar placa</button></div></div>`);
+  h+=`<div class="card"><div class="section-label">Gestiones abiertas · ${xs.length}</div></div>`;
+  xs.slice(0,30).forEach(x=>h+=`<div class="v8-item"><div class="v8-item-title">${v8Esc(x.ASUNTO||x.TIPO)}</div><div class="v8-item-meta">${v8Esc(x.PLACA||'')} · ${v8Esc(x.CONTEXTO||'')}</div><div class="v8-actions"><button class="v8-action" onclick="v917GestionContratista('${v8Esc(x.ID_EXCEPCION)}')">Reportar gestión</button></div></div>`); return h;
+}
+function normHtml_(x){return String(x||'').trim().toLowerCase()}
+async function v917GestionContratista(id){const respuesta=prompt('Gestión realizada / estado actual','');if(!respuesta)return;await enviarGestion('respuestaContratista',{idTestigo:id,accion:'REPORTAR_GESTION',respuesta});toast('✅ Gestión reportada');v8CargarVista()}
+function v917OficinaVista(tar){
+  const tars=tar.tareas||[]; let h='<div class="v8-actions" style="margin-bottom:12px"><button class="v8-action" onclick="v8NuevaTarea()">+ Programar tarea</button></div>';
+  tars.slice(0,30).forEach(t=>h+=`<div class="v8-item"><div class="v8-item-title">${v8Esc(t.NOMBRE||t.ID_TAREA)}</div><div class="v8-item-meta">${v8Esc(t.CONTRATISTA||'')} · ${v8Esc(t.BARRIO||'')} · ${v8Esc(t.ESTADO||'')}</div></div>`); return h;
+}
+async function v8CargarVista(){
+  const b=document.getElementById('v8-role-body');if(!b)return;if(API_URL.includes('PEGA_AQUI')){b.innerHTML=v8VistaLocal();return}b.innerHTML='<div class="v8-empty">Cargando…</div>';
+  try{
+    if(V8.rol==='supervisor')b.innerHTML=await v917CargarSupervisor();
+    else if(V8.rol==='cliente'){const [tar,ex]=await Promise.all([v8ApiGet('tareas',{}),v8ApiGet('excepciones',{})]);b.innerHTML=v917ClienteVista(tar,ex);}
+    else if(V8.rol==='oficina'){if(V8.tab==='agua')b.innerHTML=v917AguaVista();else b.innerHTML=v917OficinaVista(await v8ApiGet('tareas',{}));}
+    else if(V8.rol==='inspector'){const d=await v8ApiGet('misionesInspector',{});b.innerHTML=v917InspectorVista(d.misiones||d.verificaciones||[]);}
+  }catch(e){b.innerHTML=`<div class="card"><div class="v8-empty">No fue posible cargar esta vista.<br><small>${v8Esc(e.message||e)}</small></div></div>`}
+}
+async function v8NuevaTarea(){
+  const nombre=prompt('Frente / nombre de la tarea','');if(!nombre)return;const contratista=prompt('Contratista','')||'';const barrio=prompt('Barrio / sector','')||'';const objetivo=prompt('Objetivo / directriz','Mantenimiento preventivo de los tramos programados')||'';const vigenciaIni=prompt('Inicio (AAAA-MM-DD)','')||'';const vigenciaFin=prompt('Fin (AAAA-MM-DD)','')||'';
+  if(!contratista||!barrio){toast('Contratista y barrio/sector son necesarios');return}await enviarGestion('crearTarea',{nombre,contratista,barrio,objetivo,vigenciaIni,vigenciaFin});toast('✅ Tarea programada');v8CargarVista();
+}
+
+async function cargarListaCCTV(){
+  const cont=document.getElementById('cctv-lista');if(!cont)return;cont.innerHTML='<div class="v8-empty">Cargando selección del Motor…</div>';
+  try{const [d,g]=await Promise.all([v8ApiGet('cctv',{estado:'PENDIENTE'}),v8ApiGet('cctvGrupos',{})]);const xs=d.cctv||[],gs=(g.grupos||[]).filter(x=>String(x.ESTADO||'')==='PENDIENTE_DECISION');
+    let h='<div class="card"><div class="section-label">Tramos seleccionados por el Motor</div><div class="hint">CCTV califica; no vuelve a escribir placa, barrio ni contexto.</div></div>';
+    if(!xs.length)h+='<div class="card"><div class="v8-empty">Sin tramos pendientes.</div></div>';
+    xs.slice(0,40).forEach(x=>h+=`<div class="v8-item"><div class="v8-item-title">Tramo ${v8Esc(x.TRAMO||'')}</div><div class="v8-item-meta">${v8Esc(x.PLACA||'')} · ${v8Esc(x.SECTOR||'')} · ${Number(x.ML||0)} ML</div><div class="v8-actions"><button class="v8-action good" onclick="v917CctvResultado('${v8Esc(x.ID_CCTV)}','CONFORME')">Conforme</button><button class="v8-action bad" onclick="v917CctvResultado('${v8Esc(x.ID_CCTV)}','NO_CONFORME')">No conforme</button></div></div>`);
+    if(gs.length)h+='<div class="card"><div class="section-label">Grupos pendientes de decisión</div></div>'+gs.map(x=>`<div class="v8-item"><div class="v8-item-title">Grupo ${v8Esc(x.ID_GRUPO)}</div><div class="v8-item-meta">${v8Esc(x.PLACA||'')} · ${v8Esc(x.SECTOR||'')}</div><div class="v8-actions"><button class="v8-action good" onclick="v917DecisionGrupo('${v8Esc(x.ID_GRUPO)}','APROBADO')">Aprobado</button><button class="v8-action bad" onclick="v917DecisionGrupo('${v8Esc(x.ID_GRUPO)}','NO_APROBADO')">No aprobado</button></div></div>`).join('');
+    cont.innerHTML=h;
+  }catch(e){cont.innerHTML=`<div class="v8-empty">No fue posible cargar CCTV.<br><small>${v8Esc(e.message||e)}</small></div>`}
+}
+async function v917CctvResultado(idCCTV,resultado){const observacion=prompt('Observación técnica','')||'';await enviarGestion('verificacionCCTV',{idCCTV,resultado,observacion});toast('✅ Resultado registrado');cargarListaCCTV()}
+async function v917DecisionGrupo(idGrupo,decision){const nota=prompt('Nota de decisión del grupo','')||'';await enviarGestion('decisionGrupoCCTV',{idGrupo,decision,nota});toast('✅ Decisión registrada');cargarListaCCTV()}
+
+/* ==================== ARRANQUE ==================== */
+window.addEventListener('load', ()=>{
+  v8Init();
+});
 </script>
 </body>
 </html>
