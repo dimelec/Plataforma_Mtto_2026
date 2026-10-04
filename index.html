@@ -1153,7 +1153,7 @@ async function v8CargarVista(){
     if(V8.rol==='supervisor')b.innerHTML=await v917CargarSupervisor();
     else if(V8.rol==='cliente'){const [tar,ex]=await Promise.all([v8ApiGet('tareas',{}),v8ApiGet('excepciones',{})]);b.innerHTML=v917ClienteVista(tar,ex);}
     else if(V8.rol==='oficina'){if(V8.tab==='agua')b.innerHTML=v917AguaVista();else b.innerHTML=v917OficinaVista(await v8ApiGet('tareas',{}));}
-    else if(V8.rol==='inspector'){const d=await v8ApiGet('misionesInspector',{});b.innerHTML=v917InspectorVista(d.misiones||d.verificaciones||[]);}
+    else if(V8.rol==='inspector'){const d=await v8ApiGet('testigosPorRol',{rol:'inspector'});b.innerHTML=v917InspectorVista(d.testigos||[]);}
   }catch(e){b.innerHTML=`<div class="card"><div class="v8-empty">No fue posible cargar esta vista.<br><small>${v8Esc(e.message||e)}</small></div></div>`}
 }
 async function v8NuevaTarea(){
