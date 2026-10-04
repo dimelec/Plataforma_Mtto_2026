@@ -93,7 +93,7 @@ textarea{resize:vertical}
 .overlay.active{display:flex}
 .modal{background:var(--card);width:100%;max-width:480px;margin:0 auto;border-radius:18px 18px 0 0;padding:22px 18px 30px;max-height:90vh;overflow-y:auto}
 .modal-close{float:right;background:none;color:var(--sub);font-size:24px;padding:0 4px;cursor:pointer;border:none;line-height:1}
-.summary-line{display:flex;justify-content:space-between;font-size:15px;padding:8px 0;border-bottom:1px solid var(--line)}
+.summary-line{display:flex;justify-content:space-between;fonasync function v8AccionMovert-size:15px;padding:8px 0;border-bottom:1px solid var(--line)}
 .sync-status{text-align:center;font-size:12px;margin-bottom:10px;color:var(--good)}
 .tramo-sin-cerrar{color:var(--bad);font-weight:700}
 .offline-indicator{display:none;background:var(--bad);color:#fff;text-align:center;font-size:12px;padding:4px;border-radius:6px;margin-bottom:10px}
@@ -1035,10 +1035,69 @@ async function v8GuardarObservacion(){
   document.getElementById('v8-i-hallazgo').value='';
 }
 async function v8AccionMover(id){
-  const rol=prompt('Nuevo rol (supervisor/cliente/cctv/inspector)','supervisor');
-  if(!rol)return;
-  await enviarGestion('moverTestigo',{idTestigo:id,nuevoRol:rol});
-  toast('✅ Movido');v8CargarVista();
+  // 1. Elegir el rol destino
+  const rol = prompt('¿A qué rol asignar? (inspector/supervisor/cctv/cliente)', 'inspector');
+  if (!rol) return;
+  const rolNorm = rol.trim().toLowerCase();
+
+  // 2. Roles que tienen usuarios específicos
+  const rolesConUsuarios = ['inspector', 'cliente', 'cctv', 'oficina'];
+  let idUsuarioEspecifico = null;
+  let nombreEspecifico = '';
+
+  if (rolesConUsuarios.includes(rolNorm)) {
+    try {
+      const d = await v8ApiGet('inspectoresDisponibles', { rol: rolNorm });
+      const usuarios = d.usuarios || [];
+
+      if (usuarios.length === 0) {
+        toast('No hay usuarios con rol ' + rolNorm);
+        return;
+      }
+
+      if (usuarios.length === 1) {
+        // Solo uno: asignar directo
+        idUsuarioEspecifico = usuarios[0].idUsuario;
+        nombreEspecifico = usuarios[0].nombre;
+      } else {
+        // Varios: mostrar lista numerada
+        const lineas = usuarios.map((u, i) => (i + 1) + '. ' + u.nombre + ' (' + u.idUsuario + ')');
+        const seleccion = prompt(
+          'Selecciona el usuario (' + usuarios.length + '):\n\n' +
+          lineas.join('\n') +
+          '\n\nEscribe el número:',
+          '1'
+        );
+        if (!seleccion) return;
+
+        const idx = parseInt(seleccion.trim(), 10) - 1;
+        if (isNaN(idx) || idx < 0 || idx >= usuarios.length) {
+          toast('Selección no válida');
+          return;
+        }
+        idUsuarioEspecifico = usuarios[idx].idUsuario;
+        nombreEspecifico = usuarios[idx].nombre;
+      }
+    } catch (e) {
+      toast('No se pudo consultar usuarios: ' + (e.message || e));
+      return;
+    }
+  }
+
+  // 3. Enviar la gestión
+  const datos = { idTestigo: id };
+  if (idUsuarioEspecifico) {
+    datos.idUsuario = idUsuarioEspecifico;
+    datos.nuevoRol = rolNorm;
+    datos.nota = 'asignado a ' + nombreEspecifico;
+  } else {
+    datos.nuevoRol = rolNorm;
+  }
+
+  await enviarGestion('moverTestigo', datos);
+  toast('✅ Movido a ' + (nombreEspecifico || rolNorm));
+  v8CargarVista();
+}
 }
 async function v8AccionResolver(id){
   const nota=prompt('Nota de resolución','')||'';
