@@ -474,9 +474,9 @@ async function enviarGestion(tipo,datos){
   const payload={
     tipo,
     datos:Object.assign({actor:V8.nombre||'',nombre:V8.nombre||'',rol:V8.rol||'',fechaCliente:nowISO()},datos||{}),
-    placa:datos&&datos.placa||'',
-    contratista:datos&&datos.contratista||'',
-    barrio:datos&&datos.barrio||'',
+    placa:(datos&&datos.placa)||'N/A',
+    contratista:(datos&&datos.contratista)||'N/A',
+    barrio:(datos&&datos.barrio)||'N/A',
     actor:V8.nombre||''
   };
   if(!navigator.onLine){encolarPayload(payload);return {ok:true,offline:true}}
