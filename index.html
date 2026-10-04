@@ -1056,11 +1056,9 @@ async function v8AccionMover(id){
       }
 
       if (usuarios.length === 1) {
-        // Solo uno: asignar directo
         idUsuarioEspecifico = usuarios[0].idUsuario;
         nombreEspecifico = usuarios[0].nombre;
       } else {
-        // Varios: mostrar lista numerada
         const lineas = usuarios.map((u, i) => (i + 1) + '. ' + u.nombre + ' (' + u.idUsuario + ')');
         const seleccion = prompt(
           'Selecciona el usuario (' + usuarios.length + '):\n\n' +
@@ -1084,7 +1082,21 @@ async function v8AccionMover(id){
     }
   }
 
-  // 3. Enviar la gestión
+  // 3. Enviar la gestión al motor
+  const datos = { idTestigo: id };
+  if (idUsuarioEspecifico) {
+    datos.idUsuario = idUsuarioEspecifico;
+    datos.nuevoRol = rolNorm;
+    datos.nota = 'asignado a ' + nombreEspecifico;
+  } else {
+    datos.nuevoRol = rolNorm;
+  }
+
+  await enviarGestion('moverTestigo', datos);
+  toast('✅ Movido a ' + (nombreEspecifico || rolNorm));
+  v8CargarVista();
+}
+// 3. Enviar la gestión
   const datos = { idTestigo: id };
   if (idUsuarioEspecifico) {
     datos.idUsuario = idUsuarioEspecifico;
