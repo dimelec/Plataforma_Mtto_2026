@@ -1096,21 +1096,7 @@ async function v8AccionMover(id){
   toast('✅ Movido a ' + (nombreEspecifico || rolNorm));
   v8CargarVista();
 }
-// 3. Enviar la gestión
-  const datos = { idTestigo: id };
-  if (idUsuarioEspecifico) {
-    datos.idUsuario = idUsuarioEspecifico;
-    datos.nuevoRol = rolNorm;
-    datos.nota = 'asignado a ' + nombreEspecifico;
-  } else {
-    datos.nuevoRol = rolNorm;
-  }
 
-  await enviarGestion('moverTestigo', datos);
-  toast('✅ Movido a ' + (nombreEspecifico || rolNorm));
-  v8CargarVista();
-}
-}
 async function v8AccionResolver(id){
   const nota=prompt('Nota de resolución','')||'';
   await enviarGestion('resolverTestigo',{idTestigo:id,resultado:'NORMALIZADO',nota});
