@@ -1482,185 +1482,34 @@ function v932VistaGestion(d){
   const xs=(d.gestion&&d.gestion.cctvPendientes)||[];if(!xs.length)return h+'<div class="v932-empty">✓ Sin gestiones CCTV pendientes.</div>';
   return h+xs.map(x=>`<div class="v932-card"><span class="v932-tag bad">NO APTO CCTV</span><div class="v932-title">Tramo ${v8Esc(x.tramo||'')}</div><div class="v932-meta">${v8Esc(x.idTarea||'')} · ${v8Esc(x.barrio||'')}<br>${v8Esc(x.placa||'')} · ${Number(x.ml||0).toLocaleString('es-CO')} ML</div><button class="v932-action" onclick='v932AbrirRelimpieza(${JSON.stringify(JSON.stringify(x))})'>Reportar relimpieza</button></div>`).join('');
 }
+function v932HoraHumana(h){
+  h=String(h||'').trim();
+  if(!h)return '';
+  const p=h.split(':');
+  let n=Number(p[0]);
+  if(!Number.isFinite(n))return h;
+  const suf=n>=12?'p. m.':'a. m.';
+  const hh=n%12||12;
+  return hh+':'+String(p[1]||'00').padStart(2,'0')+' '+suf;
+}
+function v932EtiquetaJornada(j){
+  const hora=j.horaInicio||v932HoraHumana(j.horaInicio24||'');
+  return v8Esc(j.fecha||'')+(hora?' · '+v8Esc(hora):'');
+}
 function v932VistaJornadas(d){
-
-  let h =
-    v932Kpis(d) +
-    '<div class="card">' +
-      '<div class="section-label">Reportar Jornada</div>' +
-      '<div class="hint">' +
-        'Identifica la Jornada por fecha y hora de inicio. ' +
-        'Declara tus datos; la evidencia del Operador se conserva por separado.' +
-      '</div>' +
-    '</div>';
-
-  const xs = (d.jornadas || [])
-    .filter(j => !j.reportadaContratista);
-
-  if(!xs.length){
-    return h +
-      '<div class="v932-empty">' +
-        '✓ No tienes jornadas pendientes de reporte.' +
-      '</div>';
-  }
-
-  return h + xs.map(j => `
-
-    <div class="v932-card">
-
-      <span class="v932-tag">
-        ${v8Esc(j.fecha || '')}
-        ·
-        ${v8Esc(j.horaInicio || 'Hora no disponible')}
-      </span>
-
-      <div class="v932-title">
-        ${v8Esc(j.placa || '')}
-        ·
-        ${v8Esc(j.barrio || '')}
-      </div>
-
-      <div class="v932-meta">
-
-        ${j.turno
-          ? 'Turno: ' + v8Esc(j.turno) + '<br>'
-          : ''
-        }
-
-        ${v8Esc(j.idTarea || '')}
-
-        <br>
-
-        Referencia Operador:
-        ${Number(j.mlTrazable || 0).toLocaleString('es-CO')} ML
-        ·
-        ${Number(j.m3Trazable || 0).toLocaleString('es-CO')} m³
-
-      </div>
-
-      <button
-        class="v932-action"
-        onclick='v932AbrirReporte(${JSON.stringify(JSON.stringify(j))})'>
-        Reportar esta Jornada
-      </button>
-
-    </div>
-
-  `).join('');
+  let h=v932Kpis(d)+'<div class="card"><div class="section-label">Reportar Jornada</div><div class="hint">Identifica la Jornada por fecha y hora de inicio. Tu declaración se conserva separada de la evidencia del Operador.</div></div>';
+  const xs=(d.jornadas||[]).filter(j=>!j.reportadaContratista);
+  if(!xs.length)return h+'<div class="v932-empty">✓ No tienes jornadas pendientes de reporte.</div>';
+  return h+xs.map(j=>`<div class="v932-card"><span class="v932-tag">${v932EtiquetaJornada(j)}</span><div class="v932-title">${v8Esc(j.placa||'')} · ${v8Esc(j.barrio||'')}</div><div class="v932-meta">${j.turno?'Turno: '+v8Esc(j.turno)+'<br>':''}${v8Esc(j.idTarea||'')}<br>Referencia Operador: ${Number(j.mlTrazable||0).toLocaleString('es-CO')} ML · ${Number(j.m3Trazable||0).toLocaleString('es-CO')} m³</div><button class="v932-action" onclick='v932AbrirReporte(${JSON.stringify(JSON.stringify(j))})'>Reportar esta Jornada</button><button class="v932-cancel" onclick='v932AbrirDescartar(${JSON.stringify(JSON.stringify(j))})'>Descartar Jornada</button></div>`).join('');
 }
 function v932CerrarModal(){document.getElementById('v932-modal').classList.remove('on');document.getElementById('v932-sheet').innerHTML='';}
 function v932AbrirRelimpieza(raw){const x=JSON.parse(raw);const sh=document.getElementById('v932-sheet');sh.innerHTML=`<h3>Reportar relimpieza</h3><div class="v932-meta">Tramo ${v8Esc(x.tramo||'')} · ${v8Esc(x.placa||'')}</div><label>Tramo(s) realmente relimpiados</label><input id="v932-re-tramos" value="${v8Esc(x.tramo||'')}"><label>Observación</label><textarea id="v932-re-obs" placeholder="Opcional"></textarea><button class="v932-action" onclick="v932EnviarRelimpieza('${v8Esc(x.idCCTV||'')}',this)">Confirmar relimpieza</button><button class="v932-cancel" onclick="v932CerrarModal()">Cancelar</button>`;document.getElementById('v932-modal').classList.add('on');}
 async function v932EnviarRelimpieza(idCCTV,btn){const tr=document.getElementById('v932-re-tramos').value.trim();if(!tr){toast('Indica el tramo relimpiado');return;}btn.disabled=true;try{await v932Jsonp('cctvRelimpieza',{token:V8.token,idCCTV,tramos:tr,observacion:document.getElementById('v932-re-obs').value.trim(),actionId:'REL-'+Date.now()});toast('✅ Relimpieza registrada');v932CerrarModal();v8CargarVista();}catch(e){toast('⛔ '+e.message);btn.disabled=false;}}
-function v932AbrirReporte(raw){
-
-  const j = JSON.parse(raw);
-  const sh = document.getElementById('v932-sheet');
-
-  sh.innerHTML = `
-
-    <h3>Reportar Jornada</h3>
-
-    <div class="v932-meta">
-
-      <strong>
-        ${v8Esc(j.fecha || '')}
-        ·
-        ${v8Esc(j.horaInicio || 'Hora no disponible')}
-      </strong>
-
-      <br>
-
-      ${v8Esc(j.placa || '')}
-      ·
-      ${v8Esc(j.barrio || '')}
-
-      ${j.turno
-        ? '<br>Turno: ' + v8Esc(j.turno)
-        : ''
-      }
-
-      <br>
-
-      ${v8Esc(j.idTarea || '')}
-
-      <br><br>
-
-      Referencia Operador:
-      ${Number(j.mlTrazable || 0).toLocaleString('es-CO')} ML
-      ·
-      ${Number(j.m3Trazable || 0).toLocaleString('es-CO')} m³
-
-    </div>
-
-    <div class="v932-row">
-
-      <div>
-        <label>Hora inicio declarada</label>
-        <input
-          id="v932-r-ini"
-          type="time">
-      </div>
-
-      <div>
-        <label>Hora fin declarada</label>
-        <input
-          id="v932-r-fin"
-          type="time">
-      </div>
-
-    </div>
-
-    <div class="v932-row">
-
-      <div>
-        <label>ML declarados</label>
-        <input
-          id="v932-r-ml"
-          type="number"
-          min="0"
-          step="0.01"
-          inputmode="decimal">
-      </div>
-
-      <div>
-        <label>m³ declarados</label>
-        <input
-          id="v932-r-m3"
-          type="number"
-          min="0"
-          step="0.01"
-          inputmode="decimal">
-      </div>
-
-    </div>
-
-    <label>Novedad / observación</label>
-
-    <textarea
-      id="v932-r-obs"
-      placeholder="Opcional"></textarea>
-
-    <button
-      class="v932-action"
-      onclick="v932EnviarReporte(
-        '${v8Esc(j.idJornada || '')}',
-        '${v8Esc(j.fecha || '')}',
-        this
-      )">
-      Registrar declaración
-    </button>
-
-    <button
-      class="v932-cancel"
-      onclick="v932CerrarModal()">
-      Cancelar
-    </button>
-  `;
-
-  document
-    .getElementById('v932-modal')
-    .classList.add('on');
-}
+function v932AbrirReporte(raw){const j=JSON.parse(raw);const sh=document.getElementById('v932-sheet');sh.innerHTML=`<h3>Reportar Jornada</h3><div class="v932-meta"><strong>${v932EtiquetaJornada(j)}</strong><br>${v8Esc(j.placa||'')} · ${v8Esc(j.barrio||'')}${j.turno?'<br>Turno: '+v8Esc(j.turno):''}<br>${v8Esc(j.idTarea||'')}<br><br>Referencia Operador: ${Number(j.mlTrazable||0).toLocaleString('es-CO')} ML · ${Number(j.m3Trazable||0).toLocaleString('es-CO')} m³</div><div class="v932-row"><div><label>Hora inicio declarada</label><input id="v932-r-ini" type="time"></div><div><label>Hora fin declarada</label><input id="v932-r-fin" type="time"></div></div><div class="v932-row"><div><label>ML declarados</label><input id="v932-r-ml" type="number" min="0" step="0.01" inputmode="decimal"></div><div><label>m³ declarados</label><input id="v932-r-m3" type="number" min="0" step="0.01" inputmode="decimal"></div></div><label>Novedad / observación</label><textarea id="v932-r-obs" placeholder="Opcional"></textarea><button class="v932-action" onclick="v932EnviarReporte('${v8Esc(j.idJornada||'')}','${v8Esc(j.fecha||'')}',this)">Registrar declaración</button><button class="v932-cancel" onclick="v932CerrarModal()">Cancelar</button>`;document.getElementById('v932-modal').classList.add('on');}
+function v932AbrirDescartar(raw){const j=JSON.parse(raw);const sh=document.getElementById('v932-sheet');sh.innerHTML=`<h3>Descartar Jornada</h3><div class="v932-meta"><strong>${v932EtiquetaJornada(j)}</strong><br>${v8Esc(j.placa||'')} · ${v8Esc(j.barrio||'')}<br>${v8Esc(j.idTarea||'')}</div><div class="hint" style="margin:12px 0">Esta acción no borra la evidencia del Operador. Registra que el Contratista no reconoce esta Jornada como válida.</div><label>Motivo</label><select id="v932-d-motivo"><option value="">Selecciona un motivo</option><option>Jornada no realizada</option><option>Inicio accidental</option><option>Registro duplicado</option><option>Equipo no operó en ese turno</option><option>Otro</option></select><label>Observación</label><textarea id="v932-d-obs" placeholder="Explica brevemente qué ocurrió"></textarea><button class="v932-action" onclick="v932EnviarDescartar('${v8Esc(j.idJornada||'')}','${v8Esc(j.fecha||'')}',this)">Confirmar descarte</button><button class="v932-cancel" onclick="v932CerrarModal()">Cancelar</button>`;document.getElementById('v932-modal').classList.add('on');}
+async function v932EnviarReporte(idJornada,fecha,btn){const ini=document.getElementById('v932-r-ini').value,fin=document.getElementById('v932-r-fin').value,ml=document.getElementById('v932-r-ml').value,m3=document.getElementById('v932-r-m3').value;if(!ini||ml===''){toast('Hora de inicio y ML son obligatorios');return;}btn.disabled=true;try{await v932Jsonp('contratistaReportarJornada',{token:V8.token,idJornada,fecha,horaInicio:ini,horaFin:fin,mlDeclarado:ml,m3Declarado:m3,novedad:document.getElementById('v932-r-obs').value.trim(),actionId:'DJC-'+Date.now()});toast('✅ Jornada reportada');v932CerrarModal();v8CargarVista();}catch(e){toast('⛔ '+e.message);btn.disabled=false;}}
+async function v932EnviarDescartar(idJornada,fecha,btn){const motivo=document.getElementById('v932-d-motivo').value.trim(),obs=document.getElementById('v932-d-obs').value.trim();if(!motivo){toast('Selecciona el motivo del descarte');return;}btn.disabled=true;try{await v932Jsonp('contratistaReportarJornada',{token:V8.token,idJornada,fecha,decision:'DESCARTAR',motivo,observacion:obs,actionId:'DJD-'+Date.now()});toast('✅ Descarte registrado');v932CerrarModal();v8CargarVista();}catch(e){toast('⛔ '+e.message);btn.disabled=false;}}
+</script>
 
 
 <script>
