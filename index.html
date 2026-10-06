@@ -1292,6 +1292,15 @@ async function v8CargarVista(){
 const V924_NAV_KEY='mtto_multirrol_nav_v924';
 /* V9.24: una sola cola offline. La cola canónica SYNC_QUEUE_KEY conserva el payload completo,
    incluido actionId y fechaHoraEvento. Evita que una misma acción viva en dos colas. */
+function v924LoadNav(){
+  try{return JSON.parse(sessionStorage.getItem('mtto_v924_nav')||'null');}catch(e){return null;}
+}
+function v924SaveNav(extra){
+  try{
+    var data=Object.assign({ts:Date.now(),nombre:V8.nombre||'',rol:V8.rol||'',tab:V8.tab||''},extra||{});
+    sessionStorage.setItem('mtto_v924_nav',JSON.stringify(data));
+  }catch(e){}
+}
 function v924Flush(){return procesarCola()}
 window.addEventListener('online',v924Flush);
 const _v8Tab924=v8Tab;v8Tab=function(t){V8.tab=t;v924SaveNav();return v8RenderRol()};
@@ -1485,6 +1494,50 @@ function v932AbrirReporte(raw){const j=JSON.parse(raw);const sh=document.getElem
 async function v932EnviarReporte(idJornada,fecha,btn){const ini=document.getElementById('v932-r-ini').value,fin=document.getElementById('v932-r-fin').value,ml=document.getElementById('v932-r-ml').value,m3=document.getElementById('v932-r-m3').value;if(!ini||ml===''){toast('Hora de inicio y ML son obligatorios');return;}btn.disabled=true;try{await v932Jsonp('contratistaReportarJornada',{token:V8.token,idJornada,fecha,horaInicio:ini,horaFin:fin,mlDeclarado:ml,m3Declarado:m3,novedad:document.getElementById('v932-r-obs').value.trim(),actionId:'DJC-'+Date.now()});toast('✅ Jornada reportada');v932CerrarModal();v8CargarVista();}catch(e){toast('⛔ '+e.message);btn.disabled=false;}}
 </script>
 
-\n<script>\n/* V10 · ACCESO ÚNICO VALIDADO POR MOTOR */\nasync function v10Ingresar(){\n  const usuario=(document.getElementById('v8-identidad').value||'').trim();\n  const token=(document.getElementById('v10-token').value||'').trim();\n  const err=document.getElementById('v10-login-error');\n  const btn=document.getElementById('v10-login-btn');\n  err.classList.remove('show'); err.textContent='';\n  if(!usuario||!token){err.textContent='Ingresa usuario/identificación y token.';err.classList.add('show');return;}\n  btn.disabled=true; btn.textContent='Validando…';\n  try{\n    const d=await v932Jsonp('autenticarUsuario',{usuario,token});\n    const rol=String(d.usuario.rol||'').toLowerCase();\n    if(!['supervisor','inspector','cliente'].includes(rol)) throw new Error('Rol no habilitado en esta aplicación');\n    V8.token=token; V8.rol=rol; V8.nombre=d.usuario.nombre||usuario;\n    sessionStorage.setItem('mtto_v10_token',token);\n    sessionStorage.setItem('mtto_v10_usuario',usuario);\n    if(rol==='cliente'){\n      V932_DATA=await v932Jsonp('contratistaVista',{token});\n      V8.tab='tareasContratista';\n      sessionStorage.setItem('mtto_v932_token',token);\n    } else {\n      V8.tab=rol==='supervisor'?'inicio':'observar';\n    }\n    v8RenderRol();\n  }catch(e){err.textContent=e.message||'No fue posible validar el acceso';err.classList.add('show');}\n  finally{btn.disabled=false;btn.textContent='Ingresar';}\n}\n\nconst v8CambiarRolV10Base=v8CambiarRol;\nv8CambiarRol=function(){\n  V932_DATA=null; V8.token=''; V8.rol=null; V8.nombre='';\n  sessionStorage.removeItem('mtto_v10_token');\n  sessionStorage.removeItem('mtto_v10_usuario');\n  sessionStorage.removeItem('mtto_v932_token');\n  document.getElementById('v10-token').value='';\n  mostrarPantalla('screen-acceso-v8');\n};\n\ndocument.addEventListener('keydown',function(e){\n  if(e.key==='Enter' && document.getElementById('screen-acceso-v8').classList.contains('active')) v10Ingresar();\n});\n</script>\n
+
+<script>
+/* V10 · ACCESO ÚNICO VALIDADO POR MOTOR */
+async function v10Ingresar(){
+  const usuario=(document.getElementById('v8-identidad').value||'').trim();
+  const token=(document.getElementById('v10-token').value||'').trim();
+  const err=document.getElementById('v10-login-error');
+  const btn=document.getElementById('v10-login-btn');
+  err.classList.remove('show'); err.textContent='';
+  if(!usuario||!token){err.textContent='Ingresa usuario/identificación y token.';err.classList.add('show');return;}
+  btn.disabled=true; btn.textContent='Validando…';
+  try{
+    const d=await v932Jsonp('autenticarUsuario',{usuario,token});
+    const rol=String(d.usuario.rol||'').toLowerCase();
+    if(!['supervisor','inspector','cliente'].includes(rol)) throw new Error('Rol no habilitado en esta aplicación');
+    V8.token=token; V8.rol=rol; V8.nombre=d.usuario.nombre||usuario;
+    sessionStorage.setItem('mtto_v10_token',token);
+    sessionStorage.setItem('mtto_v10_usuario',usuario);
+    if(rol==='cliente'){
+      V932_DATA=await v932Jsonp('contratistaVista',{token});
+      V8.tab='tareasContratista';
+      sessionStorage.setItem('mtto_v932_token',token);
+    } else {
+      V8.tab=rol==='supervisor'?'inicio':'observar';
+    }
+    v8RenderRol();
+  }catch(e){err.textContent=e.message||'No fue posible validar el acceso';err.classList.add('show');}
+  finally{btn.disabled=false;btn.textContent='Ingresar';}
+}
+
+const v8CambiarRolV10Base=v8CambiarRol;
+v8CambiarRol=function(){
+  V932_DATA=null; V8.token=''; V8.rol=null; V8.nombre='';
+  sessionStorage.removeItem('mtto_v10_token');
+  sessionStorage.removeItem('mtto_v10_usuario');
+  sessionStorage.removeItem('mtto_v932_token');
+  document.getElementById('v10-token').value='';
+  mostrarPantalla('screen-acceso-v8');
+};
+
+document.addEventListener('keydown',function(e){
+  if(e.key==='Enter' && document.getElementById('screen-acceso-v8').classList.contains('active')) v10Ingresar();
+});
+</script>
+
 </body>
 </html>
