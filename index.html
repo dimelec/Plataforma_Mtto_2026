@@ -1483,16 +1483,184 @@ function v932VistaGestion(d){
   return h+xs.map(x=>`<div class="v932-card"><span class="v932-tag bad">NO APTO CCTV</span><div class="v932-title">Tramo ${v8Esc(x.tramo||'')}</div><div class="v932-meta">${v8Esc(x.idTarea||'')} · ${v8Esc(x.barrio||'')}<br>${v8Esc(x.placa||'')} · ${Number(x.ml||0).toLocaleString('es-CO')} ML</div><button class="v932-action" onclick='v932AbrirRelimpieza(${JSON.stringify(JSON.stringify(x))})'>Reportar relimpieza</button></div>`).join('');
 }
 function v932VistaJornadas(d){
-  let h=v932Kpis(d)+'<div class="card"><div class="section-label">Reportar Jornada</div><div class="hint">Declara tus datos. El sistema conserva por separado la evidencia del Operador.</div></div>';
-  const xs=(d.jornadas||[]).filter(j=>!j.reportadaContratista);if(!xs.length)return h+'<div class="v932-empty">✓ No tienes jornadas pendientes de reporte.</div>';
-  return h+xs.map(j=>`<div class="v932-card"><span class="v932-tag">${v8Esc(j.fecha||'')}</span><div class="v932-title">${v8Esc(j.placa||'')} · ${v8Esc(j.barrio||'')}</div><div class="v932-meta">${v8Esc(j.idTarea||'')}<br>Referencia Operador: ${Number(j.mlTrazable||0).toLocaleString('es-CO')} ML · ${Number(j.m3Trazable||0).toLocaleString('es-CO')} m³</div><button class="v932-action" onclick='v932AbrirReporte(${JSON.stringify(JSON.stringify(j))})'>Reportar esta Jornada</button></div>`).join('');
+
+  let h =
+    v932Kpis(d) +
+    '<div class="card">' +
+      '<div class="section-label">Reportar Jornada</div>' +
+      '<div class="hint">' +
+        'Identifica la Jornada por fecha y hora de inicio. ' +
+        'Declara tus datos; la evidencia del Operador se conserva por separado.' +
+      '</div>' +
+    '</div>';
+
+  const xs = (d.jornadas || [])
+    .filter(j => !j.reportadaContratista);
+
+  if(!xs.length){
+    return h +
+      '<div class="v932-empty">' +
+        '✓ No tienes jornadas pendientes de reporte.' +
+      '</div>';
+  }
+
+  return h + xs.map(j => `
+
+    <div class="v932-card">
+
+      <span class="v932-tag">
+        ${v8Esc(j.fecha || '')}
+        ·
+        ${v8Esc(j.horaInicio || 'Hora no disponible')}
+      </span>
+
+      <div class="v932-title">
+        ${v8Esc(j.placa || '')}
+        ·
+        ${v8Esc(j.barrio || '')}
+      </div>
+
+      <div class="v932-meta">
+
+        ${j.turno
+          ? 'Turno: ' + v8Esc(j.turno) + '<br>'
+          : ''
+        }
+
+        ${v8Esc(j.idTarea || '')}
+
+        <br>
+
+        Referencia Operador:
+        ${Number(j.mlTrazable || 0).toLocaleString('es-CO')} ML
+        ·
+        ${Number(j.m3Trazable || 0).toLocaleString('es-CO')} m³
+
+      </div>
+
+      <button
+        class="v932-action"
+        onclick='v932AbrirReporte(${JSON.stringify(JSON.stringify(j))})'>
+        Reportar esta Jornada
+      </button>
+
+    </div>
+
+  `).join('');
 }
 function v932CerrarModal(){document.getElementById('v932-modal').classList.remove('on');document.getElementById('v932-sheet').innerHTML='';}
 function v932AbrirRelimpieza(raw){const x=JSON.parse(raw);const sh=document.getElementById('v932-sheet');sh.innerHTML=`<h3>Reportar relimpieza</h3><div class="v932-meta">Tramo ${v8Esc(x.tramo||'')} · ${v8Esc(x.placa||'')}</div><label>Tramo(s) realmente relimpiados</label><input id="v932-re-tramos" value="${v8Esc(x.tramo||'')}"><label>Observación</label><textarea id="v932-re-obs" placeholder="Opcional"></textarea><button class="v932-action" onclick="v932EnviarRelimpieza('${v8Esc(x.idCCTV||'')}',this)">Confirmar relimpieza</button><button class="v932-cancel" onclick="v932CerrarModal()">Cancelar</button>`;document.getElementById('v932-modal').classList.add('on');}
 async function v932EnviarRelimpieza(idCCTV,btn){const tr=document.getElementById('v932-re-tramos').value.trim();if(!tr){toast('Indica el tramo relimpiado');return;}btn.disabled=true;try{await v932Jsonp('cctvRelimpieza',{token:V8.token,idCCTV,tramos:tr,observacion:document.getElementById('v932-re-obs').value.trim(),actionId:'REL-'+Date.now()});toast('✅ Relimpieza registrada');v932CerrarModal();v8CargarVista();}catch(e){toast('⛔ '+e.message);btn.disabled=false;}}
-function v932AbrirReporte(raw){const j=JSON.parse(raw);const sh=document.getElementById('v932-sheet');sh.innerHTML=`<h3>Reportar Jornada</h3><div class="v932-meta">${v8Esc(j.fecha||'')} · ${v8Esc(j.placa||'')} · ${v8Esc(j.barrio||'')}</div><div class="v932-row"><div><label>Hora inicio</label><input id="v932-r-ini" type="time"></div><div><label>Hora fin</label><input id="v932-r-fin" type="time"></div></div><div class="v932-row"><div><label>ML declarados</label><input id="v932-r-ml" type="number" min="0" step="0.01" inputmode="decimal"></div><div><label>m³ declarados</label><input id="v932-r-m3" type="number" min="0" step="0.01" inputmode="decimal"></div></div><label>Novedad / observación</label><textarea id="v932-r-obs" placeholder="Opcional"></textarea><button class="v932-action" onclick="v932EnviarReporte('${v8Esc(j.idJornada||'')}','${v8Esc(j.fecha||'')}',this)">Registrar declaración</button><button class="v932-cancel" onclick="v932CerrarModal()">Cancelar</button>`;document.getElementById('v932-modal').classList.add('on');}
-async function v932EnviarReporte(idJornada,fecha,btn){const ini=document.getElementById('v932-r-ini').value,fin=document.getElementById('v932-r-fin').value,ml=document.getElementById('v932-r-ml').value,m3=document.getElementById('v932-r-m3').value;if(!ini||ml===''){toast('Hora de inicio y ML son obligatorios');return;}btn.disabled=true;try{await v932Jsonp('contratistaReportarJornada',{token:V8.token,idJornada,fecha,horaInicio:ini,horaFin:fin,mlDeclarado:ml,m3Declarado:m3,novedad:document.getElementById('v932-r-obs').value.trim(),actionId:'DJC-'+Date.now()});toast('✅ Jornada reportada');v932CerrarModal();v8CargarVista();}catch(e){toast('⛔ '+e.message);btn.disabled=false;}}
-</script>
+function v932AbrirReporte(raw){
+
+  const j = JSON.parse(raw);
+  const sh = document.getElementById('v932-sheet');
+
+  sh.innerHTML = `
+
+    <h3>Reportar Jornada</h3>
+
+    <div class="v932-meta">
+
+      <strong>
+        ${v8Esc(j.fecha || '')}
+        ·
+        ${v8Esc(j.horaInicio || 'Hora no disponible')}
+      </strong>
+
+      <br>
+
+      ${v8Esc(j.placa || '')}
+      ·
+      ${v8Esc(j.barrio || '')}
+
+      ${j.turno
+        ? '<br>Turno: ' + v8Esc(j.turno)
+        : ''
+      }
+
+      <br>
+
+      ${v8Esc(j.idTarea || '')}
+
+      <br><br>
+
+      Referencia Operador:
+      ${Number(j.mlTrazable || 0).toLocaleString('es-CO')} ML
+      ·
+      ${Number(j.m3Trazable || 0).toLocaleString('es-CO')} m³
+
+    </div>
+
+    <div class="v932-row">
+
+      <div>
+        <label>Hora inicio declarada</label>
+        <input
+          id="v932-r-ini"
+          type="time">
+      </div>
+
+      <div>
+        <label>Hora fin declarada</label>
+        <input
+          id="v932-r-fin"
+          type="time">
+      </div>
+
+    </div>
+
+    <div class="v932-row">
+
+      <div>
+        <label>ML declarados</label>
+        <input
+          id="v932-r-ml"
+          type="number"
+          min="0"
+          step="0.01"
+          inputmode="decimal">
+      </div>
+
+      <div>
+        <label>m³ declarados</label>
+        <input
+          id="v932-r-m3"
+          type="number"
+          min="0"
+          step="0.01"
+          inputmode="decimal">
+      </div>
+
+    </div>
+
+    <label>Novedad / observación</label>
+
+    <textarea
+      id="v932-r-obs"
+      placeholder="Opcional"></textarea>
+
+    <button
+      class="v932-action"
+      onclick="v932EnviarReporte(
+        '${v8Esc(j.idJornada || '')}',
+        '${v8Esc(j.fecha || '')}',
+        this
+      )">
+      Registrar declaración
+    </button>
+
+    <button
+      class="v932-cancel"
+      onclick="v932CerrarModal()">
+      Cancelar
+    </button>
+  `;
+
+  document
+    .getElementById('v932-modal')
+    .classList.add('on');
+}
 
 
 <script>
