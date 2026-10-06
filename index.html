@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>#_Mtto_Preventivo · Gestor</title>
+<title>#_Mtto_Preventivo · Roles V9.26</title>
 <meta name="theme-color" content="#7c3aed">
 <style>
 :root{
@@ -93,7 +93,7 @@ textarea{resize:vertical}
 .overlay.active{display:flex}
 .modal{background:var(--card);width:100%;max-width:480px;margin:0 auto;border-radius:18px 18px 0 0;padding:22px 18px 30px;max-height:90vh;overflow-y:auto}
 .modal-close{float:right;background:none;color:var(--sub);font-size:24px;padding:0 4px;cursor:pointer;border:none;line-height:1}
-.summary-line{display:flex;justify-content:space-between;fonasync function v8AccionMovert-size:15px;padding:8px 0;border-bottom:1px solid var(--line)}
+.summary-line{display:flex;justify-content:space-between;font-size:15px;padding:8px 0;border-bottom:1px solid var(--line)}
 .sync-status{text-align:center;font-size:12px;margin-bottom:10px;color:var(--good)}
 .tramo-sin-cerrar{color:var(--bad);font-weight:700}
 .offline-indicator{display:none;background:var(--bad);color:#fff;text-align:center;font-size:12px;padding:4px;border-radius:6px;margin-bottom:10px}
@@ -167,28 +167,22 @@ textarea{resize:vertical}
 </head>
 <body>
 
-<!-- ==================== ACCESO MULTIRROL ==================== -->
+<!-- ==================== ACCESO ÚNICO ==================== -->
 <div class="screen active" id="screen-acceso-v8">
   <div class="card access-hero">
     <div class="brand-kicker">Mtto Preventivo 2026</div>
     <div class="brand-title">Gestión operativa</div>
-    <div class="brand-sub">Selecciona tu rol para continuar.</div>
+    <div class="brand-sub">Ingresa con tus credenciales. El sistema abrirá tu espacio de trabajo.</div>
   </div>
-
-  <div class="identity-pill">
-    <span title="Usuario">👤</span>
-    <input id="v8-identidad" type="text" placeholder="Nombre / identificación" autocomplete="name">
+  <div class="card" style="margin-top:12px">
+    <label>Usuario / identificación</label>
+    <input id="v8-identidad" type="text" placeholder="Ej. SUP-001 o nombre" autocomplete="username">
+    <label style="margin-top:12px">Token</label>
+    <input id="v10-token" type="password" placeholder="Token de acceso" autocomplete="current-password">
+    <div id="v10-login-error" class="llave-error"></div>
+    <button class="btn" id="v10-login-btn" onclick="v10Ingresar()" style="margin-top:14px">Ingresar</button>
   </div>
-
-  <div class="role-grid-v8" id="v8-roles">
-    <button class="role-card-v8" onclick="v8Entrar('inspector')"><span class="r-ic">👁️</span><b>Inspector</b><small>Observa realidad, registra hallazgos.</small></button>
-    <button class="role-card-v8" onclick="v8Entrar('supervisor')"><span class="r-ic">🧭</span><b>Supervisor</b><small>Testigos, tareas, cortes.</small></button>
-    <button class="role-card-v8" onclick="v8Entrar('cliente')"><span class="r-ic">🏗️</span><b>Contratista</b><small>Asigna placas y atiende gestiones.</small></button>
-    <button class="role-card-v8" onclick="v8Entrar('oficina')"><span class="r-ic">📌</span><b>Oficina</b><small>Programa tareas y consulta la operación.</small></button>
-    <button class="role-card-v8" onclick="v8Entrar('cctv')"><span class="r-ic">📹</span><b>CCTV</b><small>Verificación de conformidad.</small></button>
-  </div>
-
-  <div class="hint" style="text-align:center;margin-top:14px">El operador utiliza su aplicación de campo independiente.</div>
+  <div class="hint" style="text-align:center;margin-top:14px">Supervisor · Inspector · Contratista<br>Operador y CCTV utilizan sus aplicaciones independientes.</div>
 </div>
 
 <!-- ==================== GESTOR MULTIRROL ==================== -->
@@ -198,7 +192,7 @@ textarea{resize:vertical}
       <div class="brand-kicker">Mtto Preventivo</div>
       <div class="v8-user"><strong id="v8-user-name">—</strong> · <span id="v8-role-name">—</span></div>
     </div>
-    <button class="btn secondary small" style="width:auto;margin:0" onclick="v8CambiarRol()">Cambiar rol</button>
+    <button class="btn secondary small" style="width:auto;margin:0" onclick="v8CambiarRol()">Cerrar sesión</button>
   </div>
   <div id="v8-role-header"></div>
   <div class="v8-tabs" id="v8-tabs"></div>
@@ -382,8 +376,8 @@ textarea{resize:vertical}
 
 <script>
 /* ==================== CONFIG ==================== */
-const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfERpt4S-r5oDgoAsGMDFYq-RdhOiFsszFjjPTnA_Utm3ZSVQ/formResponse";
-const API_URL = "https://script.google.com/macros/s/AKfycbwDy1V9_-gn0p4fNwVFnQJKJgYewW5ZfjmkRJpV8ckUwXzXWExAIgbuw0x-dUXORV4T/exec";
+const FORM_URL = "PEGA_AQUI_TU_URL_DEL_FORM_UNICO";
+const API_URL = "PEGA_AQUI_TU_URL_EXEC_DEL_GS";
 const PLACAS_CSV_URL = "PEGA_AQUI_TU_URL_CSV";
 const SYNC_QUEUE_KEY = "mtto_prev_sync_v3";
 const STATE_KEY = "mtto_prev_state_v3";
@@ -394,7 +388,6 @@ const LLAVES_ROL = {
   inspector:  'insp-2026-mtto',
   supervisor: 'sup-2026-mtto',
   cliente:    'cli-2026-mtto',
-  oficina:    'ofi-2026-mtto',
   cctv:       'cctv-2026-mtto'
 };
 
@@ -474,9 +467,9 @@ async function enviarGestion(tipo,datos){
   const payload={
     tipo,
     datos:Object.assign({actor:V8.nombre||'',nombre:V8.nombre||'',rol:V8.rol||'',fechaCliente:nowISO()},datos||{}),
-    placa:(datos&&datos.placa)||'N/A',
-    contratista:(datos&&datos.contratista)||'N/A',
-    barrio:(datos&&datos.barrio)||'N/A',
+    placa:datos&&datos.placa||'',
+    contratista:datos&&datos.contratista||'',
+    barrio:datos&&datos.barrio||'',
     actor:V8.nombre||''
   };
   if(!navigator.onLine){encolarPayload(payload);return {ok:true,offline:true}}
@@ -1035,68 +1028,11 @@ async function v8GuardarObservacion(){
   document.getElementById('v8-i-hallazgo').value='';
 }
 async function v8AccionMover(id){
-  // 1. Elegir el rol destino
-  const rol = prompt('¿A qué rol asignar? (inspector/supervisor/cctv/cliente)', 'inspector');
-  if (!rol) return;
-  const rolNorm = rol.trim().toLowerCase();
-
-  // 2. Roles que tienen usuarios específicos
-  const rolesConUsuarios = ['inspector', 'cliente', 'cctv', 'oficina'];
-  let idUsuarioEspecifico = null;
-  let nombreEspecifico = '';
-
-  if (rolesConUsuarios.includes(rolNorm)) {
-    try {
-      const d = await v8ApiGet('inspectoresDisponibles', { rol: rolNorm });
-      const usuarios = d.usuarios || [];
-
-      if (usuarios.length === 0) {
-        toast('No hay usuarios con rol ' + rolNorm);
-        return;
-      }
-
-      if (usuarios.length === 1) {
-        idUsuarioEspecifico = usuarios[0].idUsuario;
-        nombreEspecifico = usuarios[0].nombre;
-      } else {
-        const lineas = usuarios.map((u, i) => (i + 1) + '. ' + u.nombre + ' (' + u.idUsuario + ')');
-        const seleccion = prompt(
-          'Selecciona el usuario (' + usuarios.length + '):\n\n' +
-          lineas.join('\n') +
-          '\n\nEscribe el número:',
-          '1'
-        );
-        if (!seleccion) return;
-
-        const idx = parseInt(seleccion.trim(), 10) - 1;
-        if (isNaN(idx) || idx < 0 || idx >= usuarios.length) {
-          toast('Selección no válida');
-          return;
-        }
-        idUsuarioEspecifico = usuarios[idx].idUsuario;
-        nombreEspecifico = usuarios[idx].nombre;
-      }
-    } catch (e) {
-      toast('No se pudo consultar usuarios: ' + (e.message || e));
-      return;
-    }
-  }
-
-  // 3. Enviar la gestión al motor
-  const datos = { idTestigo: id };
-  if (idUsuarioEspecifico) {
-    datos.idUsuario = idUsuarioEspecifico;
-    datos.nuevoRol = rolNorm;
-    datos.nota = 'asignado a ' + nombreEspecifico;
-  } else {
-    datos.nuevoRol = rolNorm;
-  }
-
-  await enviarGestion('moverTestigo', datos);
-  toast('✅ Movido a ' + (nombreEspecifico || rolNorm));
-  v8CargarVista();
+  const rol=prompt('Nuevo rol (supervisor/cliente/cctv/inspector)','supervisor');
+  if(!rol)return;
+  await enviarGestion('moverTestigo',{idTestigo:id,nuevoRol:rol});
+  toast('✅ Movido');v8CargarVista();
 }
-
 async function v8AccionResolver(id){
   const nota=prompt('Nota de resolución','')||'';
   await enviarGestion('resolverTestigo',{idTestigo:id,resultado:'NORMALIZADO',nota});
@@ -1210,7 +1146,7 @@ async function v8CargarVista(){
     if(V8.rol==='supervisor')b.innerHTML=await v917CargarSupervisor();
     else if(V8.rol==='cliente'){const [tar,ex]=await Promise.all([v8ApiGet('tareas',{}),v8ApiGet('excepciones',{})]);b.innerHTML=v917ClienteVista(tar,ex);}
     else if(V8.rol==='oficina'){if(V8.tab==='agua')b.innerHTML=v917AguaVista();else b.innerHTML=v917OficinaVista(await v8ApiGet('tareas',{}));}
-    else if(V8.rol==='inspector'){const d=await v8ApiGet('testigosPorRol',{rol:'inspector'});b.innerHTML=v917InspectorVista(d.testigos||[]);}
+    else if(V8.rol==='inspector'){const d=await v8ApiGet('misionesInspector',{});b.innerHTML=v917InspectorVista(d.misiones||d.verificaciones||[]);}
   }catch(e){b.innerHTML=`<div class="card"><div class="v8-empty">No fue posible cargar esta vista.<br><small>${v8Esc(e.message||e)}</small></div></div>`}
 }
 async function v8NuevaTarea(){
@@ -1236,5 +1172,319 @@ window.addEventListener('load', ()=>{
   v8Init();
 });
 </script>
+
+
+<!-- ===== V9.23 MÓVIL · TAREA → CIRCUNSTANCIA → ROL → CORTE ===== -->
+<style>
+:root{--touch:48px}
+html{font-size:16px} body{overscroll-behavior-y:none}
+.screen{width:100%;max-width:480px;padding:14px 12px 34px}
+.card{padding:14px;border-radius:16px;margin-bottom:12px}
+.v8-topbar{position:sticky;top:0;z-index:12;background:rgba(13,15,20,.96);padding:8px 0 10px;backdrop-filter:blur(10px)}
+.v8-tabs{position:sticky;top:58px;z-index:11;background:rgba(13,15,20,.96);padding-top:5px}
+.v8-tab,.v8-action,.role-card-v8,.btn,.action-btn{min-height:var(--touch);touch-action:manipulation}
+.v8-action{padding:11px 12px}.v8-item{padding:14px;border-radius:14px}
+.v8-item-title{font-size:15px}.v8-item-meta{font-size:12px;line-height:1.5}
+.v923-context{background:#171923;border:1px solid var(--line);border-radius:12px;padding:11px;margin:9px 0;font-size:12px;line-height:1.5}
+.v923-row{display:flex;gap:8px;align-items:center;justify-content:space-between}.v923-grow{flex:1}
+.v923-badge{display:inline-flex;align-items:center;min-height:28px;padding:4px 9px;border-radius:999px;border:1px solid var(--line);font-size:11px;font-weight:800;color:var(--sub)}
+.v923-badge.bad{color:#fecdd3;border-color:#8c3b45;background:#3d1e25}.v923-badge.warn{color:#fde2a5;border-color:#8b621d;background:#3b2c14}.v923-badge.good{color:#b9f6d0;border-color:#276b47;background:#173626}
+.v923-form label{font-size:12px;margin:12px 0 6px}.v923-form input,.v923-form select,.v923-form textarea{font-size:16px;padding:13px}
+.v923-inline{display:grid;grid-template-columns:1fr 1fr;gap:8px}.v923-inline.one{grid-template-columns:1fr}
+.v923-lock{opacity:.65;pointer-events:none}.v923-sending{position:relative}.v923-sending:after{content:'Enviando…';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:inherit;border-radius:inherit}
+.v923-safe{font-size:11px;color:var(--sub);margin-top:7px;line-height:1.35}
+@media(max-width:360px){.screen{padding-left:9px;padding-right:9px}.v923-inline{grid-template-columns:1fr}.v8-kpi-grid{grid-template-columns:1fr 1fr}}
+</style>
+<script>
+/* V9.23 UI: compatible con V9.17 y preparada para Motor V9.23 */
+const V923_UI={locks:new Set(),cache:{},lastAction:null};
+function v923Id(){try{return crypto.randomUUID()}catch(e){return 'a_'+Date.now()+'_'+Math.random().toString(36).slice(2)}}
+function v923BtnLock(btn,on,label){if(!btn)return; if(on){btn.dataset.v923Text=btn.textContent;btn.disabled=true;btn.classList.add('v923-sending');if(label)btn.textContent=label}else{btn.disabled=false;btn.classList.remove('v923-sending');if(btn.dataset.v923Text)btn.textContent=btn.dataset.v923Text}}
+async function v923Once(key,btn,fn){if(V923_UI.locks.has(key))return {ok:false,duplicada:true};V923_UI.locks.add(key);v923BtnLock(btn,true);try{return await fn()}finally{setTimeout(()=>{V923_UI.locks.delete(key);v923BtnLock(btn,false)},650)}}
+function v923ActionData(datos){const d=Object.assign({},datos||{});if(!d.actionId)d.actionId=v923Id();return d}
+
+/* Sustitución autoritativa: todo envío de gestión lleva actionId. */
+async function enviarGestion(tipo,datos){
+  const d=v923ActionData(datos);
+  const payload={tipo,datos:Object.assign({actor:V8.nombre||'',nombre:V8.nombre||'',rol:V8.rol||'',fechaCliente:nowISO()},d),placa:d.placa||'',contratista:d.contratista||'',barrio:d.barrio||'',actor:V8.nombre||''};
+  V923_UI.lastAction={tipo,datos:d,ts:Date.now()};
+  if(!navigator.onLine){encolarPayload(payload);return {ok:true,offline:true,actionId:d.actionId}}
+  try{await enviarPayload(payload);return{ok:true,actionId:d.actionId}}catch(e){encolarPayload(payload);return{ok:true,offline:true,actionId:d.actionId}}
+}
+
+async function v923ApiPreferida(nueva,antigua,params){
+  try{const d=await v8ApiGet(nueva,params||{});if(d&&d.ok!==false&&!d.offline)return d}catch(e){}
+  return antigua?await v8ApiGet(antigua,params||{}):{ok:false};
+}
+function v923Status(x){const s=String(x||'PENDIENTE').toUpperCase();const c=/CERR|ATEND|CONFORME|COMPLET/.test(s)?'good':/CRIT|NO_CONFORME|VENC/.test(s)?'bad':'warn';return `<span class="v923-badge ${c}">${v8Esc(s.replaceAll('_',' '))}</span>`}
+function v923Empty(t){return `<div class="card"><div class="v8-empty">${v8Esc(t)}</div></div>`}
+function v923Val(id){const e=document.getElementById(id);return e?String(e.value||'').trim():''}
+
+/* ---------------- SUPERVISOR ---------------- */
+async function v923Supervisor(){
+  const d=await v923ApiPreferida('supervisorV923','supervisorBandeja',{});
+  if(d.resumen){
+    let h=`<div class="v8-kpi-grid"><div class="v8-kpi"><div class="n">${d.resumen.requiereDecision||0}</div><div class="t">Decisiones</div></div><div class="v8-kpi"><div class="n">${d.resumen.enGestion||0}</div><div class="t">En gestión</div></div><div class="v8-kpi"><div class="n">${d.resumen.necesidadesSinAsignar||0}</div><div class="t">Por asignar</div></div><div class="v8-kpi"><div class="n">${d.resumen.cortesAbiertos||0}</div><div class="t">Cortes</div></div></div>`;
+    const xs=d.bandeja||[]; if(!xs.length)h+=v923Empty('✓ Sin acciones pendientes para el Supervisor.');
+    xs.slice(0,40).forEach(x=>{h+=`<div class="v8-item"><div class="v8-item-head"><div class="v923-grow"><div class="v8-item-title">${v8Esc(x.ASUNTO||x.TIPO||'Asunto')}</div><div class="v8-item-meta">${v8Esc(x.ID_TAREA||'')} ${x.PLACA?'· '+v8Esc(x.PLACA):''} ${x.TRAMO?'· Tramo '+v8Esc(x.TRAMO):''}</div></div>${v923Status(x.ESTADO||x.CIRCUNSTANCIA)}</div><div class="v923-context">${v8Esc(x.CONTEXTO||'')}</div>${x.TIPO==='NECESIDAD_VERIFICACION'?`<div class="v8-actions"><button class="v8-action warn" onclick="v923AbrirMision('${v8Esc(x.REFERENCIA)}','${v8Esc(x.ID_TAREA)}','${v8Esc(x.PLACA||'')}')">Asignar misión</button></div>`:''}</div>`});
+    return h;
+  }
+  return await v917CargarSupervisor();
+}
+function v923AbrirMision(idNecesidad,idTarea,placa){
+  const inspector=prompt('Inspector a asignar','');if(!inspector)return;
+  const tipo=(prompt('Tipo: OPERATIVA, ADMINISTRATIVA o DE_INTERES','OPERATIVA')||'').toUpperCase();if(!tipo)return;
+  const motivo=prompt('Qué necesita observar / conocer','');if(!motivo)return;
+  if(!confirm(`Asignar misión a ${inspector}?\n\n${idTarea}${placa?' · '+placa:''}\n${motivo}`))return;
+  v923Once('mision:'+idNecesidad,null,async()=>{await enviarGestion('crearMisionInspector',{idNecesidad,idTarea,placa,inspector,tipoMision:tipo,relevancia:'IMPORTANTE',prioridad:'PARA_CORTE',objeto:placa?'PLACA':'TAREA',motivo,contexto:motivo});toast('✅ Misión asignada');v8CargarVista()});
+}
+
+/* ---------------- INSPECTOR ---------------- */
+async function v923Inspector(){
+  const d=await v923ApiPreferida('inspectorV923','misionesInspector',{inspector:V8.nombre||''});
+  const ms=d.misiones||d.verificaciones||[], tareas=d.tareas||[];V923_UI.cache.inspectorTareas=tareas;
+  let h='<div class="card"><div class="section-label">Mis misiones</div><div class="hint">El sistema muestra el contexto conocido. Tú reportas únicamente lo que observas.</div></div>';
+  if(!ms.length)h+=v923Empty('✓ Sin misiones pendientes.');
+  ms.slice(0,25).forEach(m=>{h+=`<div class="v8-item"><div class="v8-item-head"><div><div class="v8-item-title">${v8Esc(m.TIPO_MISION||m.TIPO||'Verificación')}</div><div class="v8-item-meta">${v8Esc(m.ID_TAREA||'')} ${m.PLACA?'· '+v8Esc(m.PLACA):''}</div></div>${v923Status(m.ESTADO)}</div><div class="v923-context">${v8Esc(m.CONTEXTO_MISION||m.MOTIVO||'')}</div></div>`});
+  const opts=tareas.map(t=>`<option value="${v8Esc(t.idTarea||t.ID_TAREA||'')}">${v8Esc((t.nombre||t.NOMBRE||t.idTarea||t.ID_TAREA||'')+' · '+(t.barrio||t.BARRIO||''))}</option>`).join('');
+  h+=`<div class="card v923-form"><div class="section-label">Cierre de contexto</div><div class="hint">Solo informa lo que conoces. El Motor completa y contrasta el resto.</div><label>Tarea</label><select id="v923-ctx-tarea"><option value="">Seleccionar…</option>${opts}</select><div class="v923-inline"><div><label>Fecha</label><input id="v923-ctx-fecha" type="date"></div><div><label>Hora inicio</label><input id="v923-ctx-hora" type="time"></div></div><div class="v923-inline"><div><label>Placa</label><input id="v923-ctx-placa" autocomplete="off"></div><div><label>ML totales</label><input id="v923-ctx-ml" type="number" min="0" step="0.01" inputmode="decimal"></div></div><button class="btn" onclick="v923EnviarContexto(this)">Enviar cierre de contexto</button><div class="v923-safe">No se solicita barrio, contratista, duración ni turno: el sistema ya los conoce o los deduce.</div></div>`;
+  h+=`<div class="card v923-form"><div class="section-label">Reportar observación</div><label>Tarea relacionada</label><select id="v923-obs-tarea"><option value="">Sin Tarea / no puedo determinar</option>${opts}</select><label>Placa, si la conoces</label><input id="v923-obs-placa" autocomplete="off"><label>¿Qué observaste?</label><textarea id="v923-obs-hecho" rows="3"></textarea><button class="btn secondary" onclick="v923EnviarObservacion(this)">Registrar observación</button></div>`;
+  return h;
+}
+async function v923EnviarContexto(btn){const idTarea=v923Val('v923-ctx-tarea'),fecha=v923Val('v923-ctx-fecha'),horaInicio=v923Val('v923-ctx-hora'),placa=v923Val('v923-ctx-placa').toUpperCase(),mlTotal=v923Val('v923-ctx-ml');if(!idTarea||!fecha||!horaInicio||!placa||mlTotal===''){toast('Completa Tarea, fecha, hora, placa y ML');return}await v923Once('ctx:'+idTarea+':'+fecha+':'+placa,btn,async()=>{await enviarGestion('contextoInspectorTarea',{idTarea,fecha,registros:[{placa,horaInicio,mlTotal:Number(mlTotal)}]});toast('✅ Contexto registrado');v8CargarVista()})}
+async function v923EnviarObservacion(btn){const idTarea=v923Val('v923-obs-tarea'),placa=v923Val('v923-obs-placa').toUpperCase(),hecho=v923Val('v923-obs-hecho');if(!hecho){toast('Describe lo observado');return}await v923Once('obs:'+Date.now(),btn,async()=>{await enviarGestion('condicionInspector',{idTarea,placa,hecho,evidencia:'',origenConocimiento:'DIRECTO'});toast('✅ Observación enviada');v8CargarVista()})}
+
+/* ---------------- CONTRATISTA ---------------- */
+async function v923Contratista(){
+  const contratista=v8DetectarContratista();
+  const d=await v923ApiPreferida('contratistaV923',null,{contratista});
+  if(d&&Array.isArray(d.pendientes)){
+    const xs=d.pendientes;let h='<div class="card"><div class="section-label">Gestiones pendientes</div><div class="hint">El sistema muestra Tarea, placa, tramo y origen. Reporta solo la gestión realizada o el estado actual.</div></div>';if(!xs.length)h+=v923Empty('✓ Sin gestiones pendientes.');xs.slice(0,40).forEach(x=>{h+=`<div class="v8-item"><div class="v8-item-head"><div><div class="v8-item-title">${v8Esc(x.ASUNTO||x.TIPO)}</div><div class="v8-item-meta">${v8Esc(x.ID_TAREA||'')} ${x.PLACA?'· '+v8Esc(x.PLACA):''} ${x.TRAMO?'· Tramo '+v8Esc(x.TRAMO):''}</div></div>${v923Status(x.ESTADO)}</div><div class="v923-context">${v8Esc(x.CONTEXTO||'')}</div><div class="v8-actions"><button class="v8-action" onclick="v923GestionContratista('${v8Esc(x.REFERENCIA||'')}','${v8Esc(x.TIPO||'')}',this)">Reportar gestión</button></div></div>`});return h;
+  }
+  const [tar,ex]=await Promise.all([v8ApiGet('tareas',{}),v8ApiGet('excepciones',{})]);return v917ClienteVista(tar,ex);
+}
+async function v923GestionContratista(ref,tipo,btn){const respuesta=prompt('Gestión realizada / estado actual','');if(!respuesta)return;const evento=tipo==='CCTV_NO_CONFORME'?'gestionContratistaCCTV':'respuestaContratista';const datos=evento==='gestionContratistaCCTV'?{idCCTV:ref,respuesta}:{idTestigo:ref,accion:'REPORTAR_GESTION',respuesta};await v923Once('ges:'+ref,btn,async()=>{await enviarGestion(evento,datos);toast('✅ Gestión reportada');v8CargarVista()})}
+
+/* ---------------- CCTV ---------------- */
+async function v917CctvResultado(idCCTV,resultado,btn){let observacion='';if(resultado==='NO_CONFORME'){observacion=prompt('Describe brevemente la condición observada','')||'';if(!observacion){toast('El NO APTO requiere una observación');return}}else if(!confirm('¿Registrar este tramo como CONFORME?'))return;await v923Once('cctv:'+idCCTV,btn,async()=>{await enviarGestion('verificacionCCTV',{idCCTV,resultado,observacion});toast('✅ Resultado registrado');cargarListaCCTV()})}
+
+/* Sustitución CCTV para pasar el botón y bloquear doble toque. */
+async function cargarListaCCTV(){
+  const cont=document.getElementById('cctv-lista');if(!cont)return;cont.innerHTML='<div class="v8-empty">Cargando selección del Motor…</div>';
+  try{const [d,g]=await Promise.all([v8ApiGet('cctv',{estado:'PENDIENTE'}),v8ApiGet('cctvGrupos',{})]);const xs=d.cctv||[],gs=(g.grupos||[]).filter(x=>String(x.ESTADO||'')==='PENDIENTE_DECISION');let h='<div class="card"><div class="section-label">Pendientes CCTV</div><div class="hint">Placa, tramo y contexto vienen del sistema. CCTV solo califica lo observado.</div></div>';if(!xs.length)h+=v923Empty('✓ Sin tramos pendientes.');xs.slice(0,40).forEach(x=>h+=`<div class="v8-item"><div class="v8-item-title">Tramo ${v8Esc(x.TRAMO||'')}</div><div class="v8-item-meta">${v8Esc(x.ID_TAREA||'')} ${x.PLACA?'· '+v8Esc(x.PLACA):''} ${x.SECTOR?'· '+v8Esc(x.SECTOR):''} ${x.ML!==undefined?'· '+Number(x.ML||0)+' ML':''}</div><div class="v8-actions"><button class="v8-action good" onclick="v917CctvResultado('${v8Esc(x.ID_CCTV)}','CONFORME',this)">Conforme</button><button class="v8-action bad" onclick="v917CctvResultado('${v8Esc(x.ID_CCTV)}','NO_CONFORME',this)">No apto</button></div></div>`);if(gs.length)h+='<div class="card"><div class="section-label">Grupos pendientes de decisión</div></div>'+gs.map(x=>`<div class="v8-item"><div class="v8-item-title">Grupo ${v8Esc(x.ID_GRUPO)}</div><div class="v8-item-meta">${v8Esc(x.PLACA||'')} · ${v8Esc(x.SECTOR||'')}</div><div class="v8-actions"><button class="v8-action good" onclick="v917DecisionGrupo('${v8Esc(x.ID_GRUPO)}','APROBADO')">Aprobado</button><button class="v8-action bad" onclick="v917DecisionGrupo('${v8Esc(x.ID_GRUPO)}','NO_APROBADO')">No aprobado</button></div></div>`).join('');cont.innerHTML=h}catch(e){cont.innerHTML=`<div class="v8-empty">No fue posible cargar CCTV.<br><small>${v8Esc(e.message||e)}</small></div>`}
+}
+
+/* Vista principal V9.23 con fallback a V9.17. */
+async function v8CargarVista(){
+  const b=document.getElementById('v8-role-body');if(!b)return;if(API_URL.includes('PEGA_AQUI')){b.innerHTML=v8VistaLocal();return}b.innerHTML='<div class="v8-empty">Cargando…</div>';
+  try{if(V8.rol==='supervisor')b.innerHTML=await v923Supervisor();else if(V8.rol==='cliente')b.innerHTML=await v923Contratista();else if(V8.rol==='inspector')b.innerHTML=await v923Inspector();else if(V8.rol==='oficina'){if(V8.tab==='agua')b.innerHTML=v917AguaVista();else b.innerHTML=v917OficinaVista(await v8ApiGet('tareas',{}))}}catch(e){b.innerHTML=`<div class="card"><div class="v8-empty">No fue posible cargar esta vista.<br><small>${v8Esc(e.message||e)}</small></div></div>`}
+}
+</script>
+
+\n<!-- ===== ESTÁNDAR HERMANO V9.24 · MEMORIA + MÍNIMO INGRESO + ENVÍO SEGURO ===== -->
+<style>
+.v924-note{font-size:12px;color:var(--muted);margin-top:7px}.v924-pending{border-left:4px solid var(--warn)}
+.v924-history{display:grid;gap:7px;margin-top:10px}.v924-history>div{padding:9px 10px;border-left:2px solid var(--line);font-size:13px}
+.v924-warn{background:#fff6e8;border:1px solid #efd8aa;border-radius:12px;padding:10px;margin-top:9px;color:#704500}
+.v924-btn-sent{opacity:.72;pointer-events:none}
+</style>
+<script>
+const V924_NAV_KEY='mtto_multirrol_nav_v924';
+/* V9.24: una sola cola offline. La cola canónica SYNC_QUEUE_KEY conserva el payload completo,
+   incluido actionId y fechaHoraEvento. Evita que una misma acción viva en dos colas. */
+function v924Flush(){return procesarCola()}
+window.addEventListener('online',v924Flush);
+const _v8Tab924=v8Tab;v8Tab=function(t){V8.tab=t;v924SaveNav();return v8RenderRol()};
+const _v8RenderRol924=v8RenderRol;v8RenderRol=function(){v924SaveNav();return _v8RenderRol924()};
+async function v924Write(tipo,datos,btn,{confirmText='',key=''}={}){
+  if(btn?.dataset?.sending==='1')return {ok:false,duplicada:true};
+  if(confirmText&&!confirm(confirmText))return {ok:false,cancelada:true};
+  const actionId=btn?.dataset?.actionId||v924Id();if(btn){btn.dataset.actionId=actionId;btn.dataset.sending='1';btn.disabled=true;btn.dataset.oldText=btn.textContent;btn.textContent='Enviando…'}
+  const payload=Object.assign({},datos,{actionId,fechaHoraEvento:nowISO()});
+  try{const r=await enviarGestion(tipo,payload);if(r&&r.offline){if(btn)btn.textContent='⏳ Pendiente de sincronizar';toast('Guardado en el teléfono · pendiente de sincronización')}else{if(btn)btn.textContent='✓ Registrado';toast('✓ Registrado')}return r||{ok:true}}
+  catch(e){/* enviarGestion ya conserva el payload en la cola canónica cuando falla la transmisión. */if(btn)btn.textContent='⏳ Pendiente de sincronizar';toast('Guardado en el teléfono · pendiente de sincronización');return {ok:true,offline:true}}
+  finally{if(btn)setTimeout(()=>{btn.dataset.sending='0';btn.disabled=false;btn.textContent=btn.dataset.oldText||'Continuar';delete btn.dataset.actionId},1100)}
+}
+/* Inspector: lo conocido viene del sistema; solo Tarea + Fecha y filas Placa/Hora/ML. */
+async function v923Inspector(){
+  const d=await v923ApiPreferida('inspectorV923','misionesInspector',{inspector:V8.nombre||''});
+  const ms=d.misiones||d.verificaciones||[], tareas=d.tareas||[];V923_UI.cache.inspectorTareas=tareas;
+  let h='<div class="card"><div class="section-label">Mis misiones</div><div class="hint">El contexto conocido ya viene del sistema. Reporta únicamente lo observado.</div></div>';
+  if(!ms.length)h+=v923Empty('✓ Sin misiones pendientes.');
+  ms.slice(0,25).forEach(m=>{h+=`<div class="v8-item"><div class="v8-item-head"><div><div class="v8-item-title">${v8Esc(m.TIPO_MISION||m.TIPO||'Verificación')}</div><div class="v8-item-meta">${v8Esc(m.ID_TAREA||'')} ${m.PLACA?'· '+v8Esc(m.PLACA):''}</div></div>${v923Status(m.ESTADO)}</div><div class="v923-context">${v8Esc(m.CONTEXTO_MISION||m.MOTIVO||'')}</div></div>`});
+  const opts=tareas.map(t=>`<option value="${v8Esc(t.idTarea||t.ID_TAREA||'')}">${v8Esc((t.nombre||t.NOMBRE||t.idTarea||t.ID_TAREA||'')+' · '+(t.barrio||t.BARRIO||''))}</option>`).join('');
+  h+=`<div class="card v923-form"><div class="section-label">Cierre de contexto</div><div class="hint">Una fecha puede incluir varias placas. No se pide barrio, contratista, turno ni duración.</div><label>Tarea</label><select id="v923-ctx-tarea"><option value="">Seleccionar…</option>${opts}</select><label>Fecha</label><input id="v923-ctx-fecha" type="date"><div id="v924-ctx-rows"></div><button class="v8-action" type="button" onclick="v924AddCtxRow()">＋ Agregar placa</button><button class="btn" onclick="v924EnviarContexto(this)">Enviar cierre de contexto</button><div class="v924-note">La hora de envío se conserva automáticamente.</div></div>`;
+  h+=`<div class="card v923-form"><div class="section-label">Reportar observación</div><label>Tarea relacionada</label><select id="v923-obs-tarea"><option value="">Sin Tarea / no puedo determinar</option>${opts}</select><label>Placa, si la conoces</label><input id="v923-obs-placa" autocomplete="off"><label>¿Qué observaste?</label><textarea id="v923-obs-hecho" rows="3" maxlength="300"></textarea><label>Observación breve (opcional)</label><textarea id="v924-obs-breve" rows="2" maxlength="200"></textarea><button class="btn secondary" onclick="v924EnviarObservacion(this)">Registrar observación</button></div>`;
+  setTimeout(v924AddCtxRow,0);return h;
+}
+function v924AddCtxRow(){const c=document.getElementById('v924-ctx-rows');if(!c)return;const d=document.createElement('div');d.className='v923-inline';d.innerHTML='<div><label>Placa</label><input class="v924-placa" autocomplete="off" placeholder="Placa"></div><div><label>Hora inicio</label><input class="v924-hora" type="time"><label>ML totales</label><input class="v924-ml" type="number" min="0" step="0.01" inputmode="decimal"></div>';c.appendChild(d)}
+async function v924EnviarContexto(btn){const idTarea=v923Val('v923-ctx-tarea'),fecha=v923Val('v923-ctx-fecha');const rows=[...document.querySelectorAll('#v924-ctx-rows .v923-inline')].map(r=>({placa:r.querySelector('.v924-placa').value.trim().toUpperCase(),horaInicio:r.querySelector('.v924-hora').value,mlTotal:r.querySelector('.v924-ml').value})).filter(x=>x.placa||x.horaInicio||x.mlTotal!=='');if(!idTarea||!fecha||!rows.length||rows.some(x=>!x.placa||!x.horaInicio||x.mlTotal==='')){toast('Completa Tarea, fecha y cada placa con hora y ML');return}await v924Write('contextoInspectorTarea',{idTarea,fecha,registros:rows.map(x=>({...x,mlTotal:Number(x.mlTotal)}))},btn);v8CargarVista()}
+async function v924EnviarObservacion(btn){const hecho=v923Val('v923-obs-hecho');if(!hecho){toast('Describe lo observado');return}await v924Write('condicionInspector',{idTarea:v923Val('v923-obs-tarea'),placa:v923Val('v923-obs-placa').toUpperCase(),hecho,observacionBreve:v923Val('v924-obs-breve'),origenConocimiento:'DIRECTO'},btn);v8CargarVista()}
+/* Corte: concentración, no informe manual. */
+async function v917AbrirCorte(idTarea){try{const d=await v8ApiGet('corteSemanal',{idTarea});const c=d.corte||d;v924SaveNav({idTarea,corte:true});const b=document.getElementById('v8-role-body');const at=(c.atencion||c.pendientes||[]);b.innerHTML=`<button class="back" onclick="v8CargarVista()">‹ Cortes</button><div class="card"><div class="section-label">Corte semanal · ${v8Esc(idTarea)}</div><div class="hint">${v8Esc(c.periodo||'Período preparado por el Motor')}</div></div><div class="v8-kpi-grid"><div class="v8-kpi"><div class="n">${Number(c.mlComputable||c.ML_COMPUTABLE||0).toLocaleString('es-CO')}</div><div class="t">ML computables</div></div><div class="v8-kpi"><div class="n">${Number(c.intervenciones||c.jornadas||0)}</div><div class="t">Intervenciones</div></div></div>${Number(c.mlPorAclarar||0)>0?`<div class="v924-warn">⚠ ${Number(c.mlPorAclarar).toLocaleString('es-CO')} ML por aclarar</div>`:''}<div class="card"><div class="section-label">Requiere atención</div>${at.length?at.map(x=>`<div class="v924-warn">⚠ ${v8Esc(typeof x==='string'?x:(x.contexto||x.asunto||x.tipo||''))}</div>`).join(''):'<div class="v8-empty">✓ Sin acciones pendientes</div>'}</div><div class="card"><div class="section-label">Universo de Tarea</div><div class="v8-item-meta">Asignado: ${Number(c.metaMl||c.META_ML||0).toLocaleString('es-CO')} ML · Acumulado: ${Number(c.mlAcumulado||c.REAL_ML||0).toLocaleString('es-CO')} ML · Restante: ${Number(c.mlRestante||0).toLocaleString('es-CO')} ML</div><div class="v8-actions"><button class="v8-action good" onclick="v924DecisionCorte('${v8Esc(c.ID_CORTE||c.idCorte||'')}','CONTINUA',this)">Continúa</button><button class="v8-action warn" onclick="v924DecisionCorte('${v8Esc(c.ID_CORTE||c.idCorte||'')}','AJUSTA',this)">Ajusta</button><button class="v8-action bad" onclick="v924DecisionCorte('${v8Esc(c.ID_CORTE||c.idCorte||'')}','CIERRA',this)">Cierra</button></div></div>`}catch(e){toast('No fue posible preparar el corte: '+e.message)}}
+async function v924DecisionCorte(idCorte,decision,btn){let extra={};if(decision==='AJUSTA'){const ajuste=prompt('¿Qué debe ajustarse?','');if(!ajuste)return;extra.nota=ajuste}if(decision==='CIERRA'){if(!confirm('Cerrar la Tarea es una decisión definitiva. ¿Continuar?'))return;extra.queSalioBien=prompt('¿Qué salió bien?','')||'';extra.queSalioMal=prompt('¿Qué salió mal?','')||'';extra.aprendizaje=prompt('Aprendizaje','')||'';if(!extra.queSalioBien||!extra.queSalioMal||!extra.aprendizaje){toast('El cierre requiere las tres respuestas');return}}await v924Write('decisionCorte',Object.assign({idCorte,decision},extra),btn);v8CargarVista()}
+/* Gestión contratista: texto breve, contexto ya está en pantalla. */
+async function v923GestionContratista(ref,tipo,btn){const respuesta=prompt('Gestión realizada / estado actual (breve)','');if(!respuesta)return;const evento=tipo==='CCTV_NO_CONFORME'?'gestionContratistaCCTV':'respuestaContratista';const datos=evento==='gestionContratistaCCTV'?{idCCTV:ref,respuesta}:{idTestigo:ref,accion:'REPORTAR_GESTION',respuesta};await v924Write(evento,datos,btn);v8CargarVista()}
+setTimeout(()=>{const nav=v924LoadNav();if(nav&&Date.now()-nav.ts<86400000&&nav.nombre===V8.nombre&&nav.rol===V8.rol&&nav.tab)V8.tab=nav.tab;v924Flush()},250);
+</script>
+
+
+<script>
+/* V9.26 ROLES · contrato maestro. Oficina queda fuera del multirrol. */
+Object.assign(V8_ROLE_NAMES,{inspector:'Inspector',supervisor:'Supervisor',cliente:'Contratista',cctv:'CCTV'});
+delete V8_ROLE_NAMES.oficina;
+
+function v8RenderRol(){
+  mostrarPantalla('screen-rol-v8');
+  document.getElementById('v8-user-name').textContent=V8.nombre;
+  document.getElementById('v8-role-name').textContent=V8_ROLE_NAMES[V8.rol]||V8.rol;
+  const defs={
+    supervisor:{title:'Supervisor',sub:'Programa, decide y conduce la operación por excepción.',tabs:['inicio','tareas','inspector','cortes']},
+    inspector:{title:'Inspector',sub:'Verifica la realidad de campo y responde misiones.',tabs:['misiones','cierreInspector']},
+    cliente:{title:'Contratista',sub:'Administra su ejecución, placas y gestiones.',tabs:['pendientes','reporteJornada']}
+  };
+  const d=defs[V8.rol];
+  if(!d){v8CambiarRol();return;}
+  document.getElementById('v8-role-header').innerHTML=`<div class="card access-hero"><div class="brand-title" style="font-size:21px">${d.title}</div><div class="brand-sub">${d.sub}</div></div>`;
+  if(!d.tabs.includes(V8.tab))V8.tab=d.tabs[0];
+  document.getElementById('v8-tabs').innerHTML=d.tabs.map(t=>`<button class="v8-tab ${V8.tab===t?'on':''}" onclick="v8Tab('${t}')">${v8LabelTab(t)}</button>`).join('');
+  v8CargarVista();
+}
+function v8LabelTab(t){return ({inicio:'Decisiones',tareas:'Tareas',inspector:'Inspector',cortes:'Corte',misiones:'Misiones',cierreInspector:'Cierre jornada',pendientes:'Tareas y gestión',reporteJornada:'Reportar jornada'})[t]||t}
+
+async function v8CargarVista(){
+ const b=document.getElementById('v8-role-body'); if(!b)return;
+ b.innerHTML='<div class="v8-empty">Cargando…</div>';
+ try{
+  if(V8.rol==='supervisor'){
+    if(V8.tab==='inicio'){const d=await v8ApiGet('supervisorV923',{}); b.innerHTML=v926SupervisorDecisiones(d);}
+    else if(V8.tab==='tareas'){const d=await v8ApiGet('tareas',{}); b.innerHTML=v926SupervisorTareas(d);}
+    else if(V8.tab==='inspector'){const d=await v8ApiGet('supervisorV923',{}); b.innerHTML=v926SupervisorInspector(d);}
+    else if(V8.tab==='cortes'){const d=await v8ApiGet('cortesPendientes',{}); b.innerHTML=v926SupervisorCortes(d);}
+  }else if(V8.rol==='inspector'){
+    if(V8.tab==='misiones'){const d=await v8ApiGet('inspectorV923',{inspector:V8.nombre}); b.innerHTML=v926InspectorMisiones(d);}
+    else b.innerHTML=v926PendienteBackend('Cierre / verificación de jornada','Se habilitará cuando el Motor acepte ID_TAREA + ID_JORNADA y conserve ML, m³, horas y novedad como evidencia independiente del Inspector.');
+  }else if(V8.rol==='cliente'){
+    if(V8.tab==='pendientes'){const ct=v8DetectarContratista(); const d=await v8ApiGet('contratistaV923',{contratista:ct}); b.innerHTML=v926ContratistaPendientes(d,ct);}
+    else b.innerHTML=v926PendienteBackend('Reporte de jornada','Se habilitará cuando el Motor reciba el reporte del Contratista ligado a ID_TAREA + ID_JORNADA sin sobrescribir la evidencia del Operador.');
+  }
+ }catch(e){b.innerHTML='<div class="card"><div class="v8-empty">No fue posible consultar el Motor.</div></div>'}
+}
+function v926PendienteBackend(t,m){return `<div class="card"><div class="section-label">${v8Esc(t)}</div><div class="hint">${v8Esc(m)}</div></div>`}
+function v926SupervisorDecisiones(d){const xs=d.bandeja||[],r=d.resumen||{};let h=`<div class="v8-kpi-grid"><div class="v8-kpi"><div class="n">${r.requiereDecision||0}</div><div class="t">Requieren decisión</div></div><div class="v8-kpi"><div class="n">${r.enGestion||0}</div><div class="t">En gestión</div></div></div>`; if(!xs.length)return h+'<div class="card"><div class="v8-empty">Nada reclama intervención.</div></div>'; return h+xs.map(x=>`<div class="v8-item"><div class="v8-item-title">${v8Esc(x.ASUNTO||x.TIPO)}</div><div class="v8-item-meta">${v8Esc(x.ID_TAREA||'')} · ${v8Esc(x.PLACA||'')} · ${v8Esc(x.CONTEXTO||'')}</div></div>`).join('')}
+function v926SupervisorTareas(d){const xs=d.tareas||[];let h='<div class="card"><div class="section-label">Programación</div><div class="hint">La autoridad de programación pertenece al Supervisor. La creación se habilitará al consolidar el contrato único de crearTarea para no perder META_ML/META_JORNADAS.</div></div>';return h+(xs.length?xs.map(t=>`<div class="v8-item"><div class="v8-item-title">${v8Esc(t.NOMBRE||t.ID_TAREA)}</div><div class="v8-item-meta">${v8Esc(t.CONTRATISTA||'')} · ${v8Esc(t.BARRIO||'')} · Meta ${t.META_ML||0} ML · ${v8Esc(t.ESTADO||'')}</div></div>`).join(''):'<div class="card"><div class="v8-empty">Sin tareas.</div></div>')}
+function v926SupervisorInspector(d){const xs=(d.bandeja||[]).filter(x=>x.TIPO==='NECESIDAD_VERIFICACION');return xs.length?xs.map(x=>`<div class="v8-item"><div class="v8-item-title">Necesita verificación</div><div class="v8-item-meta">${v8Esc(x.ID_TAREA||'')} · ${v8Esc(x.PLACA||'')} · ${v8Esc(x.CONTEXTO||'')}</div><div class="hint">El Supervisor conserva la autoridad de asignar la Misión.</div></div>`).join(''):'<div class="card"><div class="v8-empty">Sin necesidades de verificación pendientes.</div></div>'}
+function v926SupervisorCortes(d){const xs=d.cortes||[];return xs.length?xs.map(x=>`<div class="v8-item"><div class="v8-item-title">${v8Esc(x.nombre||x.idTarea||'Tarea')}</div><div class="v8-item-meta">${v8Esc(x.contratista||'')} · ${v8Esc(x.barrio||'')}</div></div>`).join(''):'<div class="card"><div class="v8-empty">Sin cortes pendientes.</div></div>'}
+function v926InspectorMisiones(d){const xs=d.misiones||[];return xs.length?xs.map(x=>`<div class="v8-item"><div class="v8-item-title">${v8Esc(x.MOTIVO||x.TIPO_MISION||'Misión')}</div><div class="v8-item-meta">${v8Esc(x.ID_TAREA||'')} · ${v8Esc(x.PLACA||'')} · ${v8Esc(x.PRIORIDAD||'')}</div><div class="context-strip">${v8Esc(x.CONTEXTO_MISION||'')}</div></div>`).join(''):'<div class="card"><div class="v8-empty">Sin misiones pendientes.</div></div>'}
+function v926ContratistaPendientes(d,ct){const xs=d.pendientes||[];let h=`<div class="card"><div class="section-label">${v8Esc(ct||'Contratista')}</div><div class="hint">Aquí solo aparecen obligaciones que requieren actuación. Responder no equivale a resolver.</div></div>`;return h+(xs.length?xs.map(x=>`<div class="v8-item"><div class="v8-item-title">${v8Esc(x.ASUNTO||x.TIPO)}</div><div class="v8-item-meta">${v8Esc(x.ID_TAREA||'')} · ${v8Esc(x.PLACA||'')} · Tramo ${v8Esc(x.TRAMO||'')}</div><div class="context-strip">${v8Esc(x.CONTEXTO||'')}</div></div>`).join(''):'<div class="card"><div class="v8-empty">Sin gestiones pendientes.</div></div>')}
+</script>
+<style>
+/* V9.32 · Contratista integrado */
+.v932-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0 14px}
+.v932-kpi{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:12px;text-align:center}
+.v932-kpi b{display:block;font-size:22px;color:#111827}.v932-kpi span{font-size:11px;color:#6b7280}
+.v932-card{background:#fff;border:1px solid #e5e7eb;border-radius:15px;padding:14px;margin:10px 0}
+.v932-title{font-weight:800;font-size:15px;color:#111827}.v932-meta{font-size:12px;color:#6b7280;line-height:1.5;margin-top:4px}
+.v932-tag{display:inline-block;font-size:10px;font-weight:800;padding:4px 8px;border-radius:999px;background:#f3f4f6;color:#374151;margin-bottom:6px}
+.v932-tag.bad{background:#fee2e2;color:#991b1b}.v932-tag.good{background:#dcfce7;color:#166534}
+.v932-action{width:100%;border:0;border-radius:11px;padding:11px 12px;margin-top:10px;font-weight:800;background:#111827;color:white}
+.v932-empty{background:#fff;border:1px dashed #d1d5db;border-radius:15px;padding:22px;text-align:center;color:#6b7280;margin-top:12px}
+.v932-modal{position:fixed;inset:0;background:rgba(15,23,42,.62);display:none;align-items:flex-end;z-index:9999}
+.v932-modal.on{display:flex}.v932-sheet{background:#fff;width:100%;max-height:92vh;overflow:auto;border-radius:22px 22px 0 0;padding:18px}
+.v932-sheet h3{margin:0 0 4px}.v932-sheet label{display:block;font-size:12px;font-weight:700;margin:12px 0 5px}
+.v932-sheet input,.v932-sheet textarea{width:100%;box-sizing:border-box;border:1px solid #d1d5db;border-radius:10px;padding:11px;font:inherit}
+.v932-sheet textarea{min-height:76px}.v932-row{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.v932-cancel{width:100%;border:0;background:#f3f4f6;color:#374151;border-radius:11px;padding:11px;margin-top:8px;font-weight:700}
+@media(max-width:420px){.v932-kpis{grid-template-columns:1fr 1fr}.v932-kpi:last-child{grid-column:1/-1}}
+</style>
+<div class="v932-modal" id="v932-modal"><div class="v932-sheet" id="v932-sheet"></div></div>
+<script>
+/* V9.32 · BLOQUE CONTRATISTA INTEGRADO AL MULTIRROL
+   Motor requerido: 9.32-BLOQUE-CONTRATISTA */
+const V932_API='https://script.google.com/macros/s/AKfycbwDy1V9_-gn0p4fNwVFnQJKJgYewW5ZfjmkRJpV8ckUwXzXWExAIgbuw0x-dUXORV4T/exec';
+let V932_DATA=null;
+V8.token=V8.token||'';
+
+function v932Jsonp(action,params){
+  return new Promise((resolve,reject)=>{
+    const cb='v932cb_'+Math.random().toString(36).slice(2);
+    const s=document.createElement('script');
+    const tm=setTimeout(()=>{try{delete window[cb];s.remove()}catch(e){} reject(new Error('Sin respuesta del Motor'));},15000);
+    window[cb]=d=>{clearTimeout(tm);try{delete window[cb];s.remove()}catch(e){}; d&&d.ok?resolve(d):reject(new Error((d&&d.error)||'Respuesta no válida'));};
+    s.onerror=()=>{clearTimeout(tm);try{delete window[cb];s.remove()}catch(e){};reject(new Error('No fue posible conectar con el Motor'));};
+    s.src=V932_API+'?'+new URLSearchParams(Object.assign({action,callback:cb},params||{})).toString();
+    document.body.appendChild(s);
+  });
+}
+
+const v8EntrarBase=v8Entrar;
+v8Entrar=function(rol){
+  if(rol!=='cliente') return v8EntrarBase(rol);
+  const guardado=sessionStorage.getItem('mtto_v932_token')||'';
+  const token=prompt('Token de acceso del Contratista',guardado);
+  if(!token)return;
+  v932Jsonp('contratistaVista',{token:token.trim()}).then(d=>{
+    V932_DATA=d; V8.token=token.trim(); V8.rol='cliente'; V8.nombre=d.usuario.nombre||d.usuario.contratista||'Contratista'; V8.tab='tareasContratista';
+    sessionStorage.setItem('mtto_v932_token',V8.token);
+    localStorage.setItem('mtto_v8_nombre',V8.nombre);
+    v8RenderRol();
+  }).catch(e=>{toast('⛔ '+e.message);});
+};
+
+const v8CambiarRolBase=v8CambiarRol;
+v8CambiarRol=function(){V932_DATA=null;V8.token='';sessionStorage.removeItem('mtto_v932_token');v8CambiarRolBase();};
+
+const v8RenderRolBase=v8RenderRol;
+v8RenderRol=function(){
+  if(V8.rol!=='cliente')return v8RenderRolBase();
+  mostrarPantalla('screen-rol-v8');
+  document.getElementById('v8-user-name').textContent=V8.nombre;
+  document.getElementById('v8-role-name').textContent='Contratista';
+  document.getElementById('v8-role-header').innerHTML='<div class="card access-hero"><div class="brand-title" style="font-size:21px">Contratista</div><div class="brand-sub">Tareas · Gestión · Reportar Jornada</div></div>';
+  const tabs=['tareasContratista','gestionContratista','reporteJornada'];
+  if(!tabs.includes(V8.tab))V8.tab=tabs[0];
+  const labels={tareasContratista:'Tareas',gestionContratista:'Gestión',reporteJornada:'Reportar Jornada'};
+  document.getElementById('v8-tabs').innerHTML=tabs.map(t=>`<button class="v8-tab ${V8.tab===t?'on':''}" onclick="v8Tab('${t}')">${labels[t]}</button>`).join('');
+  v8CargarVista();
+};
+
+const v8CargarVistaBase=v8CargarVista;
+v8CargarVista=async function(){
+  if(V8.rol!=='cliente')return v8CargarVistaBase();
+  const b=document.getElementById('v8-role-body');b.innerHTML='<div class="v8-empty">Cargando…</div>';
+  try{
+    V932_DATA=await v932Jsonp('contratistaVista',{token:V8.token});
+    V8.nombre=V932_DATA.usuario.nombre||V932_DATA.usuario.contratista||V8.nombre;
+    document.getElementById('v8-user-name').textContent=V8.nombre;
+    if(V8.tab==='tareasContratista')b.innerHTML=v932VistaTareas(V932_DATA);
+    else if(V8.tab==='gestionContratista')b.innerHTML=v932VistaGestion(V932_DATA);
+    else b.innerHTML=v932VistaJornadas(V932_DATA);
+  }catch(e){b.innerHTML=`<div class="v932-empty">No fue posible consultar el Motor.<br><small>${v8Esc(e.message)}</small></div>`;}
+};
+
+function v932Kpis(d){const r=d.resumen||{};return `<div class="v932-kpis"><div class="v932-kpi"><b>${r.tareasActivas||0}</b><span>Tareas activas</span></div><div class="v932-kpi"><b>${r.gestionesCCTV||0}</b><span>Gestiones CCTV</span></div><div class="v932-kpi"><b>${r.jornadasPorReportar||0}</b><span>Jornadas por reportar</span></div></div>`;}
+function v932VistaTareas(d){
+  let h=v932Kpis(d)+`<div class="card"><div class="section-label">${v8Esc(d.usuario.contratista)}</div><div class="hint">Solo se muestran las tareas activas de tu contrato.</div></div>`;
+  const xs=d.tareas||[];if(!xs.length)return h+'<div class="v932-empty">Sin tareas activas.</div>';
+  return h+xs.map(t=>`<div class="v932-card"><span class="v932-tag">${v8Esc(t.estado||'ACTIVA')}</span><div class="v932-title">${v8Esc(t.nombre||t.idTarea)}</div><div class="v932-meta">${v8Esc(t.barrio||'')} · Meta ${Number(t.metaMl||0).toLocaleString('es-CO')} ML<br>${v8Esc(t.objetivo||'')}${t.proximoCorte?'<br>Próximo corte: '+v8Esc(t.proximoCorte):''}</div></div>`).join('');
+}
+function v932VistaGestion(d){
+  let h=v932Kpis(d)+'<div class="card"><div class="section-label">Gestión</div><div class="hint">Aquí aparecen los NO APTO CCTV que requieren relimpieza. La reinspección queda a cargo de CCTV.</div></div>';
+  const xs=(d.gestion&&d.gestion.cctvPendientes)||[];if(!xs.length)return h+'<div class="v932-empty">✓ Sin gestiones CCTV pendientes.</div>';
+  return h+xs.map(x=>`<div class="v932-card"><span class="v932-tag bad">NO APTO CCTV</span><div class="v932-title">Tramo ${v8Esc(x.tramo||'')}</div><div class="v932-meta">${v8Esc(x.idTarea||'')} · ${v8Esc(x.barrio||'')}<br>${v8Esc(x.placa||'')} · ${Number(x.ml||0).toLocaleString('es-CO')} ML</div><button class="v932-action" onclick='v932AbrirRelimpieza(${JSON.stringify(JSON.stringify(x))})'>Reportar relimpieza</button></div>`).join('');
+}
+function v932VistaJornadas(d){
+  let h=v932Kpis(d)+'<div class="card"><div class="section-label">Reportar Jornada</div><div class="hint">Declara tus datos. El sistema conserva por separado la evidencia del Operador.</div></div>';
+  const xs=(d.jornadas||[]).filter(j=>!j.reportadaContratista);if(!xs.length)return h+'<div class="v932-empty">✓ No tienes jornadas pendientes de reporte.</div>';
+  return h+xs.map(j=>`<div class="v932-card"><span class="v932-tag">${v8Esc(j.fecha||'')}</span><div class="v932-title">${v8Esc(j.placa||'')} · ${v8Esc(j.barrio||'')}</div><div class="v932-meta">${v8Esc(j.idTarea||'')}<br>Referencia Operador: ${Number(j.mlTrazable||0).toLocaleString('es-CO')} ML · ${Number(j.m3Trazable||0).toLocaleString('es-CO')} m³</div><button class="v932-action" onclick='v932AbrirReporte(${JSON.stringify(JSON.stringify(j))})'>Reportar esta Jornada</button></div>`).join('');
+}
+function v932CerrarModal(){document.getElementById('v932-modal').classList.remove('on');document.getElementById('v932-sheet').innerHTML='';}
+function v932AbrirRelimpieza(raw){const x=JSON.parse(raw);const sh=document.getElementById('v932-sheet');sh.innerHTML=`<h3>Reportar relimpieza</h3><div class="v932-meta">Tramo ${v8Esc(x.tramo||'')} · ${v8Esc(x.placa||'')}</div><label>Tramo(s) realmente relimpiados</label><input id="v932-re-tramos" value="${v8Esc(x.tramo||'')}"><label>Observación</label><textarea id="v932-re-obs" placeholder="Opcional"></textarea><button class="v932-action" onclick="v932EnviarRelimpieza('${v8Esc(x.idCCTV||'')}',this)">Confirmar relimpieza</button><button class="v932-cancel" onclick="v932CerrarModal()">Cancelar</button>`;document.getElementById('v932-modal').classList.add('on');}
+async function v932EnviarRelimpieza(idCCTV,btn){const tr=document.getElementById('v932-re-tramos').value.trim();if(!tr){toast('Indica el tramo relimpiado');return;}btn.disabled=true;try{await v932Jsonp('cctvRelimpieza',{token:V8.token,idCCTV,tramos:tr,observacion:document.getElementById('v932-re-obs').value.trim(),actionId:'REL-'+Date.now()});toast('✅ Relimpieza registrada');v932CerrarModal();v8CargarVista();}catch(e){toast('⛔ '+e.message);btn.disabled=false;}}
+function v932AbrirReporte(raw){const j=JSON.parse(raw);const sh=document.getElementById('v932-sheet');sh.innerHTML=`<h3>Reportar Jornada</h3><div class="v932-meta">${v8Esc(j.fecha||'')} · ${v8Esc(j.placa||'')} · ${v8Esc(j.barrio||'')}</div><div class="v932-row"><div><label>Hora inicio</label><input id="v932-r-ini" type="time"></div><div><label>Hora fin</label><input id="v932-r-fin" type="time"></div></div><div class="v932-row"><div><label>ML declarados</label><input id="v932-r-ml" type="number" min="0" step="0.01" inputmode="decimal"></div><div><label>m³ declarados</label><input id="v932-r-m3" type="number" min="0" step="0.01" inputmode="decimal"></div></div><label>Novedad / observación</label><textarea id="v932-r-obs" placeholder="Opcional"></textarea><button class="v932-action" onclick="v932EnviarReporte('${v8Esc(j.idJornada||'')}','${v8Esc(j.fecha||'')}',this)">Registrar declaración</button><button class="v932-cancel" onclick="v932CerrarModal()">Cancelar</button>`;document.getElementById('v932-modal').classList.add('on');}
+async function v932EnviarReporte(idJornada,fecha,btn){const ini=document.getElementById('v932-r-ini').value,fin=document.getElementById('v932-r-fin').value,ml=document.getElementById('v932-r-ml').value,m3=document.getElementById('v932-r-m3').value;if(!ini||ml===''){toast('Hora de inicio y ML son obligatorios');return;}btn.disabled=true;try{await v932Jsonp('contratistaReportarJornada',{token:V8.token,idJornada,fecha,horaInicio:ini,horaFin:fin,mlDeclarado:ml,m3Declarado:m3,novedad:document.getElementById('v932-r-obs').value.trim(),actionId:'DJC-'+Date.now()});toast('✅ Jornada reportada');v932CerrarModal();v8CargarVista();}catch(e){toast('⛔ '+e.message);btn.disabled=false;}}
+</script>
+
+\n<script>\n/* V10 · ACCESO ÚNICO VALIDADO POR MOTOR */\nasync function v10Ingresar(){\n  const usuario=(document.getElementById('v8-identidad').value||'').trim();\n  const token=(document.getElementById('v10-token').value||'').trim();\n  const err=document.getElementById('v10-login-error');\n  const btn=document.getElementById('v10-login-btn');\n  err.classList.remove('show'); err.textContent='';\n  if(!usuario||!token){err.textContent='Ingresa usuario/identificación y token.';err.classList.add('show');return;}\n  btn.disabled=true; btn.textContent='Validando…';\n  try{\n    const d=await v932Jsonp('autenticarUsuario',{usuario,token});\n    const rol=String(d.usuario.rol||'').toLowerCase();\n    if(!['supervisor','inspector','cliente'].includes(rol)) throw new Error('Rol no habilitado en esta aplicación');\n    V8.token=token; V8.rol=rol; V8.nombre=d.usuario.nombre||usuario;\n    sessionStorage.setItem('mtto_v10_token',token);\n    sessionStorage.setItem('mtto_v10_usuario',usuario);\n    if(rol==='cliente'){\n      V932_DATA=await v932Jsonp('contratistaVista',{token});\n      V8.tab='tareasContratista';\n      sessionStorage.setItem('mtto_v932_token',token);\n    } else {\n      V8.tab=rol==='supervisor'?'inicio':'observar';\n    }\n    v8RenderRol();\n  }catch(e){err.textContent=e.message||'No fue posible validar el acceso';err.classList.add('show');}\n  finally{btn.disabled=false;btn.textContent='Ingresar';}\n}\n\nconst v8CambiarRolV10Base=v8CambiarRol;\nv8CambiarRol=function(){\n  V932_DATA=null; V8.token=''; V8.rol=null; V8.nombre='';\n  sessionStorage.removeItem('mtto_v10_token');\n  sessionStorage.removeItem('mtto_v10_usuario');\n  sessionStorage.removeItem('mtto_v932_token');\n  document.getElementById('v10-token').value='';\n  mostrarPantalla('screen-acceso-v8');\n};\n\ndocument.addEventListener('keydown',function(e){\n  if(e.key==='Enter' && document.getElementById('screen-acceso-v8').classList.contains('active')) v10Ingresar();\n});\n</script>\n
 </body>
 </html>
